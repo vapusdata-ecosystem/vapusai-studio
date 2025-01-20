@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+     {{ template "staticimports.html" . }}
+     {{ template "manage-platform-imports.html" . }}
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+    {{ template "main-sidebar.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+            <h1 class="text-2xl font-bold text-grey-900">{{ .SectionHeader }}</h1>
+            {{ template "create-new-resource.html" . }}
+        </div>
+        <section id="grids" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {{ template "dataproduct-listing-card.html" . }}
+            </div>
+        </section>
+    </div>
+    <div hidden id="createTemplate">{{ $.CreateTemplate }}</div>
+</div>
+<script>
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const sidebar = document.getElementById('sidebar');
+    //     const buttons = sidebar.getElementsByTagName('button');
+
+    //     for (let button of buttons) {
+    //         button.addEventListener('click', function() {
+    //             // Remove 'selected' class from all buttons
+    //             for (let btn of buttons) {
+    //                 btn.classList.remove('selected');
+    //             }
+    //             // Add 'selected' class to the clicked button
+    //             this.classList.add('selected');
+    //         });
+    //     }
+    // });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const menuitems = document.getElementById('menuitems');
+    //     const buttons = menuitems.getElementsByTagName('a');
+
+    //     for (let button of buttons) {
+    //         button.addEventListener('click', function() {
+    //             // Remove 'selected' class from all buttons
+    //             for (let btn of buttons) {
+    //                 btn.classList.remove('selected');
+    //             }
+    //             // Add 'selected' class to the clicked button
+    //             this.classList.add('selected');
+    //         });
+    //     }
+    // });
+    function createNewResource() {
+      document.getElementById('actionTitle').innerHTML = "";
+      document.getElementById('actionTitle').innerHTML = "Add New Data Product";
+      document.getElementById('yamlSpecTitle').innerHTML = "";
+      document.getElementById('yamlSpecTitle').innerHTML = `Enter your spec here`;
+      openYAMLedModal(`{{ .Response.ActionParams.API }}`,`{{ .GlobalContext.AccessTokenKey }}`,`createTemplate`);
+    }
+</script>
+
+</body>
+</html>

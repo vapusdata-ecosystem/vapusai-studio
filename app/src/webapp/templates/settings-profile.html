@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+  {{ template "header.html" . }}
+  {{ template "yaml-editor-modal.html" . }}
+  <div class="flex h-screen">
+    {{ template "main-sidebar.html" . }}
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+        <h1 class="text-2xl font-semibold mb-4">{{ .SectionHeader }} - {{ .GlobalContext.UserInfo.UserId }}</h1>
+        <div class="relative inline-block text-left">
+          {{ template "action-dropdown.html" . }}
+          <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+            <ul class="py-1 text-gray-700">
+              {{ range $k, $v := .Response.ActionParams.ActionMap }}
+              <!-- Edit Option -->
+              <li>
+                <a href="#" onclick="profileAction(`{{ $.GlobalContext.UserInfo.UserId }}-{{ $k }}`,`{{ $k }}`)"
+                  class="flex items-center px-4 py-2 hover:bg-gray-100">
+                  <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z" />
+                  </svg>
+                  {{ $k }}
+                </a>
+                <div hidden id="{{ $.GlobalContext.UserInfo.UserId }}-{{ $k }}">{{ $v }}</div>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+        <div class="max-w-8xl mx-auto bg-white rounded-lg shadow-lg p-6">
+          <!-- User Overview Section -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div class = "flex items-center">
+              <p class="detail-section-title">User ID</p>
+              <p class="detail-section-text">{{ .GlobalContext.UserInfo.UserId }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-section-title">Email</p>
+              <p class="detail-section-text">{{ .GlobalContext.UserInfo.Email }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-section-title">Display Name</p>
+              <p class="detail-section-text">{{ .GlobalContext.UserInfo.DisplayName }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-section-title">Status</p>
+              <p class="detail-section-text">
+                <span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .GlobalContext.UserInfo.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                  {{ .GlobalContext.UserInfo.Status }}
+                </span>
+              </p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-section-title">First Name</p>
+              <p class="detail-section-text">{{ .GlobalContext.UserInfo.FirstName }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-section-title">Last Name</p>
+              <p class="detail-section-text">{{ .GlobalContext.UserInfo.LastName }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="detail-section-title">Onboarding Type</p>
+              <p class="detail-section-text">{{ .GlobalContext.UserInfo.InvitedType }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Platform Roles</p>
+              <p class="detail-section-text">
+                {{ range $role := .GlobalContext.UserInfo.PlatformRoles }}
+                <span
+                  class="px-3 py-1 text-sm font-medium text-gray-800 bg-gray-200 rounded-full">
+                  {{ $role }}
+                </span>
+                {{ end }}</p>
+            </div>
+          </div>
+
+          <!-- Organization Roles Section -->
+          <h3 class="text-xl font-semibold text-gray-800">Organization Roles:</h3>
+          <div class="space-y-4">
+            {{ range $id, $val := .GlobalContext.UserInfo.OrganizationRoles }}
+            {{ if eq $val.OrganizationId $.GlobalContext.CurrentOrganization.OrganizationId }}
+            <div class="bg-gray-900 p-4 rounded-lg shadow-md">
+              <h4 class="text-lg font-semibold text-gray-100">Organization ID: {{ $val.OrganizationId }}</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold text-gray-100">Roles</p>
+                  <ul class="list-disc ml-5 text-gray-100">
+                    {{ range $role := $val.Role }}
+                    <li>{{ $role }}</li>
+                    {{ end }}
+                  </ul>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-100">Invited On</p>
+                  <p class="text-gray-50">{{ epochConverter $val.InvitedOn }}</p>
+                </div>
+              </div>
+            </div>
+            {{ else }} 
+            <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+              <h4 class="text-lg font-semibold text-gray-800">Organization ID: {{ $val.OrganizationId }}</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold text-gray-700">Roles</p>
+                  <ul class="list-disc ml-5 text-gray-600">
+                    {{ range $role := $val.Role }}
+                    <li>{{ $role }}</li>
+                    {{ end }}
+                  </ul>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-700">Invited On</p>
+                  <p class="detail-section-text">{{ epochConverter $val.InvitedOn }}</p>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+            {{ end }}
+          </div>
+        </div>
+      </div>
+  </div>
+  </div>
+  <script>
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+    function profileAction(destId, action) {
+      document.getElementById('actionTitle').innerHTML = "";
+      document.getElementById('actionTitle').innerHTML = action.toUpperCase();
+      document.getElementById('yamlSpecTitle').innerHTML = "";
+      document.getElementById('yamlSpecTitle').innerHTML = `Edit Profile`;
+      openYAMLedModal(`{{ .Response.ActionParams.API }}`,
+        `{{ .GlobalContext.AccessTokenKey }}`,
+        destId);
+    }
+  </script>
+</body>
+
+</html>

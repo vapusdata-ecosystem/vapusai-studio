@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+    <script>
+        // JavaScript function to toggle expand/collapse rows
+        function toggleRow(rowId) {
+          const expandedRow = document.getElementById(rowId);
+          expandedRow.classList.toggle("hidden");
+        }
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            section.classList.toggle("hidden");
+        }
+      </script>
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex flex-col md:flex-row h-screen">
+        {{ template "main-sidebar.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+          {{ template "section-headers.html" . }}
+        
+        <div class="relative inline-block text-left">
+          {{ template "action-dropdown.html" . }}
+            <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+              <ul class="py-1 text-gray-700">
+                {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                <!-- Edit Option -->
+                <li>
+                  <a href="#" onclick="dataSourceAction(`{{ $.Response.DataSource.DataSourceId }}-{{ $k }}`,`{{ $k }}`)" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z"/>
+                    </svg>
+                    {{ $k }}
+                  </a>
+                  <div hidden id="{{ $.Response.DataSource.DataSourceId }}-{{ $k }}">{{ $v }}</div>
+                </li>
+                {{ end }}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Tabs -->
+        <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+        <div class="flex border-b border-gray-200">
+          <button onclick="showTab('datasource')" class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Data Source</button>
+          <button onclick="showTab('source-metadata')" class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Source MetaData</button>
+        </div>
+    
+        <!-- Tab Content -->
+        <div id="datasource" class="tab-content mt-2">
+          <h3 class="text-xl font-semibold mb-4">Basic Information</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Name:</p>
+              <p class="text-gray-600 break-words p-2">{{ stringCheck .Response.DataSource.Name }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Id:</p>
+              <p class="text-gray-600 break-words p-2"
+                onclick="copyToClipboard('{{ .Response.DataSource.DataSourceId }}')">
+                {{stringCheck  .Response.DataSource.DataSourceId }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">DataSource Type:</p>
+              <p class="text-gray-600 break-words p-2">{{ .Response.DataSource.DataSourceType }}</p>
+            </div>
+            <div>
+                <p class="text-gray-900 font-medium">Tags:</p>
+                <p class="text-gray-600 break-words p-2">
+                    {{ range $tag := .Response.DataSource.Tags }}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-900">
+                        {{ stringCheck $tag }}
+                      </span>
+                    {{ end }}
+                </p>
+              </div>
+              <div>
+                <p class="text-gray-900 font-medium">Owners:</p>
+                <p class="text-gray-600 break-words p-2">
+                    {{ range $tag := .Response.DataSource.Owners }}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                        {{ stringCheck $tag }}
+                      </span>
+                    {{ end }}
+                </p>
+              </div>
+              <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Status:</p>
+              <p class="text-gray-600 break-words p-2">
+                <span class="px-3 py-1 text-sm font-medium {{ if eq .Response.DataSource.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                  {{ .Response.DataSource.Status }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </br>
+          <h3 class="text-xl font-semibold text-gray-800  pt-2 pb-2">Attributes</h3>
+          <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+              <h4 class="text-lg font-semibold text-gray-800">Storage Attributes</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold text-gray-700">Storage Engine</p>
+                  <p class="text-gray-600 break-words p-2">{{ .Response.DataSource.Attributes.StorageEngine }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-700">Service Name</p>
+                    <p class="text-gray-600 break-words p-2">{{ .Response.DataSource.Attributes.ServiceName }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-700">Service Provider</p>
+                    <p class="text-gray-600 break-words p-2">{{ .Response.DataSource.Attributes.ServiceProvider }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 pt-2 pb-2">Network</h3>
+          <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+              <h4 class="text-lg font-semibold text-gray-800">Address: {{ .Response.DataSource.NetParams.Address }}</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold text-gray-700">Port</p>
+                  <p class="text-gray-600 break-words p-2">{{ .Response.DataSource.NetParams.Port }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-700">Databases</p>
+                    <p class="text-gray-600 break-words p-2">
+                        {{ range $tag := .Response.DataSource.NetParams.Databases }}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                                {{ stringCheck $tag }}
+                            </span>
+                        {{ end }}
+                    </p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-700">Creds</p>
+                    <p class="text-gray-600 break-words p-2">
+                        <ul class="list-disc ml-5 text-gray-600">
+                            {{ range $obj := .Response.DataSource.NetParams.DsCreds }}
+                                <li class="break-words">{{ stringCheck $obj.SecretName }}</li>
+                            {{ end }}
+                        </ul>
+                    </p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-700">DatabasePrefixes</p>
+                    <p class="text-gray-600 break-words p-2">
+                        <ul class="list-disc ml-5 text-gray-600">
+                        {{ range $obj := .Response.DataSource.NetParams.DatabasePrefixes }}
+                            <li>{{ stringCheck $obj }}</li>
+                        {{ end }}
+                        </ul>
+                    </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <div id="source-metadata" class="tab-content mt-6 hidden">
+            <h3 class="text-lg font-medium">{{ .Response.DataSource.Name }} MetaData</h3>
+        {{ range $metadata := .Response.DataSourceMetadataList }}
+            {{ range $obj := $metadata.Lineage }}
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div>
+                        <p class="text-gray-900 font-medium">Sync At:</p>
+                        <p class="text-gray-600 break-words p-2">{{ epochConverter $obj.SyncAt }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-900 font-medium">Digest:</p>
+                        <p class="text-gray-600 break-words p-2">{{ $obj.Digest.Digest }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-900 font-medium">Workflow Id:</p>
+                        <p class="text-gray-600 break-words p-2">{{ stringCheck $obj.WorkflowId }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-900 font-medium">Is Latest:</p>
+                        <p class="text-gray-600 break-words p-2">{{ $obj.IsLatest }}</p>
+                    </div>
+                </div>
+                {{ end }}
+            {{ range $schema := $metadata.SourceSchemas }}
+            <div class="flex mb-4">
+                <button onclick="toggleSection(`{{ $schema.TrinoCatalog }}`)" class="px-4 py-2 mt-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">
+                    {{ $schema.Datastore }}
+                </button>
+                <h3 class="text-lg font-medium px-4 py-2 mt-4">
+                    Schemas:
+                    {{ range $tag := $schema.MetaSchemas }}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-900">
+                        {{ $tag }}
+                    </span>
+                    {{ end }}
+                </h3>
+            </div>
+                
+                
+                <div id = "{{ $schema.TrinoCatalog }}" class="overflow-x-auto bg-white rounded-lg shadow-md hidden">
+                    <h4 class="text-lg font-medium"> Tables </h4>
+                <table  class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Table</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Rows</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Length</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Average Row Length</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Schema</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Size</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    {{ range $table := $schema.DataTables }}
+                        <!-- Example Row -->
+                        <tr onclick="toggleRow(`{{ $table.FedTableName }}`)" class="cursor-pointer hover:bg-gray-100">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $table.Name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $table.TotalRows }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $table.DataLength }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $table.AverageRowLength }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $table.Schema }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $table.CreatedAt }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $table.TotalSize }}</td>
+                        </tr>
+
+                        <!-- Expanded Row Content -->
+                        <tr id="{{ $table.FedTableName }}" class="hidden">
+                            <td colspan="5" class="px-6 py-4 bg-gray-50">
+                            <h4 class="text-sm font-semibold mb-2">Fields</h4>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white divide-y divide-gray-200">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Null</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Default</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    {{ range $field := $table.Fields }}
+                                    <tr>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ $field.Field }}</td>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ $field.Type }}</td>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ $field.Null }}</td>
+                                    <td class="px-4 py-2 whitespace-nowrap">{{ $field.Default }}</td>
+                                    </tr>
+                                    {{ end }}
+                                </tbody>
+                                </table>
+                            </div>
+                            </td>
+                        </tr>
+                    {{ end }}
+                    <!-- Additional rows... -->
+                    </tbody>
+                </table>
+                <h4 class="text-lg font-medium p-3"> Compliance Fields </h4>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Classification</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Compliance Types</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Table</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Schema</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    {{ range $compliance := $schema.ComplianceFields }}
+                        <!-- Example Row -->
+                        <tr class="cursor-pointer hover:bg-gray-100">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $compliance.Name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $compliance.Description }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                                {{ $compliance.FieldType }}
+                            </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ range $tag := $compliance.ComplianceTypes }}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-900">
+                                    {{ $tag }}
+                                </span>
+                            {{ end }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $compliance.DataTable }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $compliance.Schema }}</td>
+                        </tr>
+                    {{ end }}
+                    </tbody>
+                </table>
+
+                <h4 class="text-lg font-medium p-3"> Constraints </h4>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Table </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enforced</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Schema</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    {{ range $constraints := $schema.Constraints }}
+                        <!-- Example Row -->
+                        <tr class="cursor-pointer hover:bg-gray-100">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.ConstraintType }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.ConstraintName }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.FieldName }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.TableName }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.Enforced }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.Schema }}</td>
+                        </tr>
+                    {{ end }}
+                    </tbody>
+                </table>
+
+                </div>
+            {{ end}}
+
+        {{ end }}
+        </div>
+</div>
+      </div>
+    </div>
+      <!-- JavaScript for Tabs -->
+      <script>
+        function showTab(tabId) {
+          const tabs = document.querySelectorAll('.tab-content');
+          tabs.forEach(tab => tab.classList.add('hidden'));
+    
+          document.getElementById(tabId).classList.remove('hidden');
+          
+          const buttons = document.querySelectorAll('.tab-button');
+          buttons.forEach(button => button.classList.remove('active-tab'));
+          
+          document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+        }
+    
+        // Show the first tab by default
+        document.addEventListener('DOMContentLoaded', () => {
+          showTab('datasource');
+        });
+
+        // Close dropdown if clicked outside
+        document.addEventListener("click", (event) => {
+          const dropdown = document.getElementById("actionDropdownMenu");
+          const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+          if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+            dropdown.classList.add("hidden");
+          }
+        });
+        function dataSourceAction(destId,action) {
+          document.getElementById('actionTitle').innerHTML = "";
+          document.getElementById('actionTitle').innerHTML = action.toUpperCase();
+          document.getElementById('yamlSpecTitle').innerHTML = "";
+          document.getElementById('yamlSpecTitle').innerHTML = `Edit {{ .Response.DataSource.Name }} Spec`;
+          openYAMLedModal(`{{ .Response.ActionParams.API }}`,
+          `{{ .GlobalContext.AccessTokenKey }}`,
+          destId);
+        }
+
+      </script>
+
+</body>
+</html>

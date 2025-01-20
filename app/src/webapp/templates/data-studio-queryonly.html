@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  <script type="module" src="/static/js/dataserver.js"></script>
+  <script type="module" src="/static/js/indexdb.js"></script>
+  <script src="/static/js/agent-studio.js"></script>
+  <script>
+    // JavaScript function to toggle expand/collapse rows
+    function toggleRow(rowId) {
+      const expandedRow = document.getElementById(rowId);
+      expandedRow.classList.toggle("hidden");
+    }
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.classList.toggle("hidden");
+    }
+  </script>
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+  {{ template "header.html" . }}
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="flex-grow flex overflow-y-auto">
+    {{ template "main-sidebar.html" . }}
+    <!-- Chat and Editor Section -->
+    <div class="flex bg-white shadow-md rounded-lg p-2 flex-col w-2/3 mt-4">
+      <!-- Chat Area -->
+      <div id="dataServerOutput"
+        style="background: radial-gradient(circle, black -25%, transparent 10%) 0 0, radial-gradient(circle, black -25%, transparent 10%) 10px 10px; background-size: 20px 20px;"
+        class="flex-grow p-4 border border-gray-200 rounded-lg mb-6 bg-gray-50 table-container overflow-y-auto">
+        <!-- Example Messages or Content Goes Here -->
+        <!-- <div id="outputMetadata" class="mt-1 hidden bg-blue-950 text-white rounded-lg p-2">
+          <h2 class="text-medium font-semibold mb-4">Metadata</h2>
+        </div>
+        <div id="responseTableContainer" class="mt-3 hidden">
+          <h2 class="text-medium font-semibold mb-4">Result</h2>
+          <table id="responseTableSet" class="min-w-full bg-white rounded-lg shadow-md">
+            <thead id="responseTableSetHeader">
+            </thead>
+            <tbody id="responseTableBody">
+            </tbody>
+          </table>
+        </div> -->
+        <!-- Add more messages here as needed -->
+      </div>
+      <!-- Input Area with Dropdown -->
+      <div class="mt-4">
+        <div class="flex items-center mb-2 hidden">
+          <label for="inputTypeSelect" class="mr-2 text-gray-700 font-medium">Input Type:</label>
+          <select id="inputFormat"
+            class="w-40 px-3 py-2 border bg-blue-950 text-gray-100 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+            onchange="toggleInputType()">
+            <option value="text" selected>Natural Text</option>
+            <option value="query">Query</option>
+          </select>
+          </label>
+          <!-- <label class="flex items-center pl-8">
+            <input type="radio" id="streamChat" value="false" class="form-radio text-blue-600 h-4 w-4">
+            <span class="ml-2 text-gray-700">Streaming Mode</span>
+          </label> -->
+        </div>
+        <!-- Text Input -->
+        <textarea id="textInput" onkeydown="EnterInput(event)"
+          class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200"
+          placeholder="Type your message here..."></textarea>
+        <!-- JSON Editor (Initially hidden) -->
+        <div id="jsonEditorContainer" class="hidden">
+          <!-- <textarea id="jsonInput" class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-200" placeholder="Type your JSON here..."></textarea> -->
+          <div class="bg-white p-2 rounded-lg shadow-md max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+              <!-- Limit Input -->
+              <div class="col-span-1">
+                <label for="limitInput" class="block text-gray-700 font-medium mb-1">Limit</label>
+                <input type="number" id="limitInput" placeholder="Enter Limit"
+                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200" />
+              </div>
+
+              <!-- Order Field Input -->
+              <div class="col-span-1">
+                <label for="orderFieldInput" class="block text-gray-700 font-medium mb-1">Order Field</label>
+                <input type="text" id="orderFieldInput" placeholder="Order Field"
+                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200" />
+              </div>
+
+              <!-- Order By Dropdown -->
+              <div class="col-span-1">
+                <label for="orderByInput" class="block text-gray-700 font-medium mb-1">Order By</label>
+                <select id="orderByInput"
+                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200">
+                  <option value="ASC">Ascending</option>
+                  <option value="DESC">Descending</option>
+                </select>
+              </div>
+
+              <!-- Data Tables Input -->
+              <div class="col-span-1">
+                <label for="dataTablesInput" class="block text-gray-700 font-medium mb-1">Data Tables</label>
+                <input type="text" id="dataTablesInput" placeholder="Enter Data Tables (comma separated)"
+                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200" />
+              </div>
+
+              <!-- Filters Input -->
+              <div class="col-span-2 sm:col-span-2">
+                <label for="filtersInput" class="block text-gray-700 font-medium mb-1">Filters</label>
+                <textarea id="filtersInput" placeholder='Enter Filters as JSON Array (e.g., [{"key": "value"}])'
+                  class="w-full px-3 py-2 h-48 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200 font-mono"></textarea>
+              </div>
+
+              <!-- Columns Input -->
+              <div class="col-span-2 sm:col-span-2">
+                <label for="columnsInput" class="block text-gray-700 font-medium mb-1">Columns</label>
+                <input type="text" id="columnsInput" placeholder="Enter Columns (comma separated)"
+                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="mt-2 px-4 py-2 bg-green-700 text-white rounded-lg w-24 hover:bg-green-800"
+          onclick="dataFabricAction(`{{ .GlobalContext.AccessTokenKey }}`,`{{ .QueryServerUrl}}`,`{{ .AgentServerUrl }}`)">Ask</button>
+        <button class="mt-2 px-4 py-2 bg-yellow-800 text-white rounded-lg w-auto" onclick="showPrompts()">Prompt
+          Suggestions</button>
+      </div>
+    </div>
+    <aside class="w-1/3 bg-white shadow-md p-4 rounded-lg mr-2 mt-4">
+      <div class="mb-4">
+        <label for="dataProduct" class="block bg-white font-semibold text-lg mb-1">Data Products</label>
+
+        <div class="vapus-dropdown-toggle rounded-lg bg-blue-950 text-white dataproduct-dropdown-toggle">Select Data
+          Products
+        </div>
+        <div class="vapus-dropdown-menu dataproduct-dropdown-menu rounded-lg">
+          <!-- Parent Items -->
+          {{ range $id, $val := .Response.DataProducts }}
+          <div class="vapus-dropdown-item text-sm child rounded-lg m-2" data-value="{{ $val.DataProductId }}"
+            data-displayName="{{ $val.Name }}">{{ $val.Name }}</div>
+          {{ end }}
+        </div>
+      </div>
+      <input type="text" id="dataProduct" hidden value="">
+      <div class="mb-4">
+        <label for="exportFormat" class="block bg-white font-semibold text-lg mb-1">Data Export Format</label>
+
+        <div class="vapus-dropdown-toggle rounded-lg bg-blue-950 text-white exportfile-dropdown-toggle">Export File
+          Format
+        </div>
+        <div class="vapus-dropdown-menu exportfile-dropdown-menu rounded-lg">
+          <!-- Parent Items -->
+          <div class="vapus-dropdown-item text-sm child rounded-lg m-2" data-value="JSON" data-displayName="JSON">JSON
+          </div>
+          <div class="vapus-dropdown-item text-sm child rounded-lg m-2" data-value="CSV" data-displayName="CSV">CSV
+          </div>
+        </div>
+        <input type="text" id="exportFormat" hidden value="CSV">
+      </div>
+      <div class="mb-4">
+        <label for="exportFormat" class="block bg-white font-semibold text-lg mb-1">Vapus Agents</label>
+
+        <!-- Parent Items -->
+        <div class="button-stack-container overflow-y-auto h-48">
+          {{ range $id, $val := .Response.AIAgents }}
+          <div class="button-stack w-full text-sm flex flex-grow p-2 break-words" id="{{ $val.AgentId }}" data-button-id="{{ $val.AgentId }}">{{ $val.Name }}</div>
+          {{ end }}
+          <!-- Add more buttons as needed -->
+        </div>
+        <input type="text" id="vapusAgents" hidden value="">
+      </div>
+    </aside>
+  </div>
+  <!-- <div class="hidden" id="actionUris">{{ .Response.ActionUrisJson }}</div> -->
+  <script>
+
+
+    // Function to initialize buttons
+    function initializeButtons() {
+      const buttons = document.querySelectorAll('.button-stack');
+
+      buttons.forEach(button => {
+        // Assign a random background color
+        // const randomColor = getRandomColor();
+
+        // Optional: Ensure text is readable by adjusting text color based on background
+        // Calculate brightness (simple approximation)
+        // const r = parseInt(randomColor.substr(1, 2), 16);
+        // const g = parseInt(randomColor.substr(3, 2), 16);
+        // const b = parseInt(randomColor.substr(5, 2), 16);
+        // const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // button.style.color = 'white';
+        // button.classList.add('hover:bg-yellow-950');
+
+        // Add click event listener
+        button.addEventListener('click', () => {
+          document.getElementById('vapusAgents').value = button.getAttribute('data-button-id');
+          selectAgents(button.getAttribute('data-button-id'));
+          // Or perform any other action you need
+          console.log('Button clicked:', button.getAttribute('data-button-id'));
+        });
+
+        // Add keyboard accessibility (if using divs)
+        button.setAttribute('tabindex', '0');
+        button.setAttribute('role', 'button');
+        button.setAttribute('aria-pressed', 'false');
+
+        button.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            button.click();
+          }
+        });
+      });
+    }
+    function selectAgents(id){
+      console.log(id);
+      document.getElementById('vapusAgents').value = id;
+      agent = document.getElementById(id);
+      console.log(agent.classList);
+      const buttons = document.querySelectorAll('.button-stack');
+      buttons.forEach(button => {
+        button.classList.remove('button-stack-selected');
+      });
+      agent.classList.add('button-stack-selected');
+      console.log(agent.classList);
+    }
+    // Initialize buttons when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', initializeButtons);
+    setupDropdown({
+      dropdownToggleSelector: '.dataproduct-dropdown-toggle',
+      dropdownMenuSelector: '.dataproduct-dropdown-menu',
+      inputFieldSelector: '#dataProduct',// Optional, for updating a hidden input or text field
+      parentClass: 'parent',
+      childClass: 'child',
+      displayAttribute: 'data-displayName', // Default transform for display text,
+      valueTransform: (value) => value,
+    })
+    setupDropdown({
+      dropdownToggleSelector: '.exportfile-dropdown-toggle',
+      dropdownMenuSelector: '.exportfile-dropdown-menu',
+      inputFieldSelector: '#exportFormat',// Optional, for updating a hidden input or text field
+      parentClass: 'parent',
+      childClass: 'child',
+      displayAttribute: 'data-displayName', // Default transform for display text,
+      valueTransform: (value) => value,
+    })
+    function EnterInput(event) {
+      if (event.key === "Enter") {
+        dataFabricAction(`{{ .GlobalContext.AccessTokenKey }}`, `{{ .FabricServer}}`,`{{ .AgentServerUrl }}`);
+      }
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/vapusai.proto";
+import "protos/models/v1alpha1/common.proto";
+import "google/protobuf/struct.proto";
+
+package vapusai.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/vapusai/v1alpha1";
+
+service AIModelStudio {
+    // Generates embeddings for the given input text.
+    // @param {EmbeddingsInterface} request - The request object containing the embeddings interface.
+    // @returns {EmbeddingsResponse} The response object containing the embeddings.
+    rpc GenerateEmbeddings(EmbeddingsInterface) returns(EmbeddingsResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/embeddings"
+            body: "*"
+        };
+    }
+
+    // Generates content based on the given prompt parameters.
+    // @param {ChatRequest} request - The request object containing the generate interface.
+    // @returns {ChatResponse} The response object containing the generated content.
+    rpc Chat(ChatRequest) returns(ChatResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/chat"
+            body: "*"
+        };
+    }
+
+    // Generates content in a streaming fashion based on the given prompt parameters.
+    // @param {ChatRequest} request - The request object containing the generate interface.
+    // @returns {stream GenerateStreamResponse} The response object containing the generated content in a stream.
+    rpc ChatStream(ChatRequest) returns(stream ChatResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/chat-stream"
+            body: "*"
+        };
+    }
+}
+
+enum AIInterfaceMode {
+    P2P = 0;
+    CHAT_MODE = 1;
+}
+
+enum AIMessageRoles {
+    USER = 0;
+    SYSTEM = 1;
+    ASSISTANT = 2;
+    TOOL = 3;
+    FUNCTION = 4;
+    VAPUSGUARD = 5;
+}
+
+enum AIMessageTypes {
+    TEXT = 0;
+    IMAGE_URL = 1;
+    INPUT_AUDIO = 2;
+}
+
+message ChatRequest {
+    repeated ChatMessageObject messages = 1; // @gotags: yaml:"messages"
+    repeated models.v1alpha1.Mapper contexts = 2; // @gotags: yaml:"contexts"
+    float temperature = 3; // @gotags: yaml:"temperature"
+    AIInterfaceMode mode = 4; // @gotags: yaml:"maxOutputTokens"
+    string model_node_id = 5; // @gotags: yaml:"modelNodeId"
+    string model = 6; // @gotags: yaml:"model"
+    string prompt_id = 7; // @gotags: yaml:"promptId"
+    int32 max_output_tokens = 8; // @gotags: yaml:"maxOutputTokens"
+    double top_p = 9; // @gotags: yaml:"topP"
+    double top_k = 10; // @gotags: yaml:"topK"
+    models.v1alpha1.ResponseFormat response_format = 11; // @gotags: yaml:"responseFormat"
+    repeated models.v1alpha1.ToolCall tools = 12; // @gotags: yaml:"toolCalls"
+    string tool_name = 13; // @gotags: yaml:"toolName"
+}
+
+message ChatMessageObject {
+    AIMessageRoles role = 1; // @gotags: yaml:"role"
+    string content = 2; // @gotags: yaml:"content"
+    repeated RequestContentPart content_parts = 3; // @gotags: yaml:"contentParts"
+    repeated models.v1alpha1.ToolCall tool_calls = 4; // @gotags: yaml:"toolCalls"
+}
+
+message EmbeddingsInterface {
+    string model_node_id = 1; // @gotags: yaml:"modelNodeId"
+    string ai_model = 2; // @gotags: yaml:"aiModel"
+    int64 dimension = 3; // @gotags: yaml:"dimension"
+    string input_text = 4; // @gotags: yaml:"inputText"
+}
+
+message EmbeddingsResponse {
+    models.v1alpha1.Embeddings output = 1; // @gotags: yaml:"output"
+}
+
+message StreamChatResponse {
+    ChatResponse output = 1; // @gotags: yaml:"output"
+}
+
+message ChatResponse {
+    int64 created = 1; // @gotags: yaml:"created"
+    string model = 2; // @gotags: yaml:"model"
+    string object = 3; // @gotags: yaml:"object"
+    repeated ChatResponseChoice choices = 4; // @gotags: yaml:"choices"
+    repeated google.protobuf.Struct usage = 5; // @gotags: yaml:"usage"
+    string event = 6; // @gotags: yaml:"event"
+}
+
+message RequestContentPart {
+    AIMessageTypes type  = 1; // @gotags: yaml:"type"
+    string text = 2; // @gotags: yaml:"text"
+    string image_url = 3; // @gotags: yaml:"imageUrl"
+    string input_audio = 4; // @gotags: yaml:"inputAudio"
+}
+
+message ChatResponseChoice {
+    ChatMessageObject messages = 1; // @gotags: yaml:"messages"
+    string finish_reason = 2; // @gotags: yaml:"finishReason"
+    int64 index = 3; // @gotags: yaml:"index"
+}

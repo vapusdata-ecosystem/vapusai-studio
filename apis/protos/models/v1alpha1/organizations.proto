@@ -1,0 +1,103 @@
+/**
+ * @fileoverview
+ * This file contains the protocol buffer definitions for the datamarketplace models.
+ * It defines various enums and messages related to account, datamarketplace, credentials, and authentication.
+ */
+
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/enums.proto";
+
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+/**
+ * Message representing an account.
+ */
+message Account {
+	string name = 1; // @gotags: yaml:"name"
+	string account_id = 2; // @gotags: yaml:"accountId"
+	string status = 3; // @gotags: yaml:"status"
+	AuthnMethod authn_method  = 4; // @gotags: yaml:"authnMethod"
+	JWTParams dm_access_jwt_keys = 5; // @gotags: yaml:"dmAccessJWTKeys"
+	BackendStorages backend_secret_storage = 6; // @gotags: yaml:"backendSecretStorage"
+	BackendStorages backend_data_storage = 7; // @gotags: yaml:"backendDataStorage"
+	AuthnOIDC oidc_params = 8; // @gotags: yaml:"oidcParams"
+	AccountProfile profile = 9; // @gotags: yaml:"profile"
+	AIAttributes ai_attributes = 10; // @gotags: yaml:"aiAttributes"
+	AccountSettings settings = 11; // @gotags: yaml:"settings"
+}
+
+message AIAttributes {
+	string embedding_model_node = 1; // @gotags: yaml:"embeddingModelNode"
+	string embedding_model = 2; // @gotags: yaml:"embeddingModel"
+	string generative_model_node = 3; // @gotags: yaml:"generativeModelNode"
+	string generative_model = 4; // @gotags: yaml:"generativeModel"
+	string guardrail_model_node = 5; // @gotags: yaml:"guardrailModelNode"
+	string guardrail_model = 6; // @gotags: yaml:"guardrailModel"
+}
+
+message Organization {
+	string name = 1; // @gotags: yaml:"name"
+	string display_name = 2; // @gotags: yaml:"displayName"
+	string org_id = 3; // @gotags: yaml:"orgId"
+	repeated string users = 4; // @gotags: yaml:"users"
+	CredentialSalt secret_passcode = 5; // @gotags: yaml:"secretPasscode"
+	string status = 6; // @gotags: yaml:"status"
+	BackendStorages backend_secret_storage = 7; // @gotags: yaml:"backendSecretStorage"
+	BackendStorages artifact_storage = 8; // @gotags: yaml:"artifactStorage"
+	VapusBase resource_base = 9; // @gotags: yaml:"resourceBase"
+	OrganizationTypes org_type = 10; // @gotags: yaml:"orgType"
+}
+
+/**
+ * Message representing the LDAP authentication parameters.
+ */
+message AuthnLDAP {
+  string v_id = 1; // @gotags: yaml:"vId"
+}
+
+message VapusStudioSettings {
+	string service_address = 1; // @gotags: yaml:"serviceAddress"
+}
+
+message Plugin {
+	string status = 1; // @gotags: yaml:"status,omitempty"
+	IntegrationPluginTypes plugin_type = 2; // @gotags: yaml:"pluginType,omitempty"
+	string name = 3; // @gotags: yaml:"name,omitempty"
+	PluginNetworkParams network_params = 4; // @gotags: yaml:"networkParams,omitempty"
+	repeated Mapper dynamic_params = 5; // @gotags: yaml:"dynamicParams,omitempty"
+	string scope = 6; // @gotags: yaml:"scope,omitempty"
+	string org = 7; // @gotags: yaml:"org,omitempty"
+	bool editable = 8; // @gotags: yaml:"editable,omitempty"
+	IntegrationPlugins plugin_service = 9; // @gotags: yaml:"pluginService,omitempty"
+	string plugin_id = 10; // @gotags: yaml:"pluginId,omitempty"
+	VapusBase resource_base = 11; // @gotags: yaml:"resourceBase"
+}
+
+message PluginNetworkParams {
+	string url = 1; // @gotags: yaml:"url,omitempty"
+	string port = 2; // @gotags: yaml:"port,omitempty"
+	string version = 3; // @gotags: yaml:"version,omitempty"
+	GenericCredentialObj credentials = 4; // @gotags: yaml:"credentials,omitempty"
+	string name = 5; // @gotags: yaml:"name"
+	bool is_already_in_secret_bs = 6; // @gotags: yaml:"isAlreadyInSecretBS"
+	string secret_name = 7; // @gotags: yaml:"secretName"
+}
+
+message AccountProfile {
+	repeated Address addresses = 1; // @gotags: yaml:"addresses"
+	string logo = 2; // @gotags: yaml:"logo"
+	string description = 3; // @gotags: yaml:"description"
+	string moto = 4; // @gotags: yaml:"moto"
+	string favicon = 5; // @gotags: yaml:"favicon"
+}
+
+message AccountSettings {
+	string google_analytics_tag_id = 1; // @gotags: yaml:"googleAnalyticsTagId"
+}

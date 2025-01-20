@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+  {{ template "header.html" . }}
+
+  <div class="flex flex-col md:flex-row h-screen">
+    {{ template "main-sidebar.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+          {{ template "section-headers.html" . }}
+
+          <div class="relative inline-block text-left">
+            {{ template "action-dropdown.html" . }}
+            <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+              <ul class="py-1 text-gray-700">
+                {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                <!-- Edit Option -->
+                <li>
+                  <a href="#" onclick="aiGuardrailAction(`{{ $.Response.AIGuardrail.GuardrailId }}-{{ $k }}`,`{{ $k }}`)"
+                    class="flex items-center px-4 py-2 hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z" />
+                    </svg>
+                    {{ $k }}
+                  </a>
+                  <div hidden id="{{ $.Response.AIGuardrail.GuardrailId }}-{{ $k }}">{{ $v }}</div>
+                </li>
+                {{ end }}
+                <li>
+                  <div hidden id="yamlSpec">{{ .YamlSpec }}</div>
+                  <a href="#" onclick="downloadElementIntoYAML('yamlSpec',`{{ .Response.AIGuardrail.GuardrailId }}`)"
+                    class="flex items-center px-4 py-2 hover:bg-gray-100" target="_blank">
+                    <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24" fill="none" class="mr-2"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M5 20h14v2H5v-2zm7-2c-.28 0-.53-.11-.71-.29L8 13.41l1.41-1.41L11 14.17V4h2v10.17l1.59-1.59L16 13.41l-3.29 3.29c-.18.18-.43.29-.71.29z"
+                        fill="#000" />
+                    </svg>
+                    Download Yaml Spec
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Tabs -->
+        <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+        <div class="flex border-b border-gray-200">
+          <button onclick="showTab('spec')"
+            class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Spec</button>
+            <button onclick="showTab('schema')"
+            class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none ">Schema</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="spec" class="tab-content mt-2">
+          <h3 class="text-xl font-semibold mb-4">Basic Information</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Name:</p>
+              <p class="text-gray-600 break-words p-2">{{ stringCheck .Response.AIGuardrail.Name }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ .Response.AIGuardrail.GuardrailId }}`)">Id:</p>
+              <p class="text-gray-600 break-words p-2">{{stringCheck .Response.AIGuardrail.GuardrailId }}</p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">Labels:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ range $obj := .Response.AIGuardrail.Base.Labels }}
+                <span class="px-3 py-1 text-sm font-medium rounded-full text-yellow-800 bg-yellow-100">
+                  {{ $obj }}
+                </span>
+                {{ end }}
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">Owners :</p>
+              <p class="text-gray-600 break-words p-2">
+              <ul class="list-disc ml-5 text-gray-600">
+                {{ range $v := .Response.AIGuardrail.Base.Owners }}
+                <li>{{ $v }}</li>
+                {{ end }}
+              </ul>
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">Description:</p>
+              <p class="text-gray-600 break-words p-2" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ .Response.AIGuardrail.Description }}`)">
+                {{ limitWords .Response.AIGuardrail.Description 30 }}
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">Failure Message:</p>
+              <p class="text-gray-600 break-words p-2" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ .Response.AIGuardrail.FailureMessage }}`)">
+                {{ limitWords .Response.AIGuardrail.FailureMessage 30 }}
+              </p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Organization:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ .Response.AIGuardrail.Base.Organization }}
+              </p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Scan Mode:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ .Response.AIGuardrail.ScanMode }}
+              </p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Status:</p>
+              <p class="text-gray-600 break-words p-2">
+                <span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .Response.AIGuardrail.Base.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                  {{ .Response.AIGuardrail.Base.Status }}
+                </span>
+              </p>
+            </div>
+          </div>
+          {{ if .Response.AIGuardrail.GuardModel }}
+          <div class="mt-4">
+            <h3 class="text-xl font-semibold">Guard Model</h3>
+            <div class="w-full bg-gray-50 p-4 rounded-lg shadow-md">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model Node Id</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ .Response.AIGuardrail.GuardModel.ModelNodeId }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ .Response.AIGuardrail.GuardModel.ModelId }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {{ end }}
+          <div class="mt-4">
+            <h3 class="text-xl font-semibold">Content Rules</h3>
+            <div class="w-full bg-gray-50 p-4 rounded-lg shadow-md">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hate Speech</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Insults</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sexual</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Threats</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Misconduct</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ enumoTitle .Response.AIGuardrail.Contents.HateSpeech }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ enumoTitle .Response.AIGuardrail.Contents.Insults }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ enumoTitle .Response.AIGuardrail.Contents.Sexual }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ enumoTitle .Response.AIGuardrail.Contents.Threats }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ enumoTitle .Response.AIGuardrail.Contents.Misconduct }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h3 class="text-xl font-semibold">Topics Rules</h3>
+            <div class="w-full bg-gray-50 p-4 rounded-lg shadow-md">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Topic</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Samples</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  {{ range $obj := .Response.AIGuardrail.Topics }}
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 break-words p-2">{{ $obj.Topic }}</td>
+                    <td class="px-6 py-4 break-words p-2">{{ $obj.Description }}</td>
+                    <td class="px-6 py-4 break-words p-2">
+                      <ul class="list-disc ml-5 text-gray-600">
+                        {{ range $v := $obj.Samples }}
+                        <li>{{ $v }}</li>
+                        {{ end }}
+                      </ul>
+                    </td>
+                  </tr>
+                  {{ else }}
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">No Topics guard rule</td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h3 class="text-xl font-semibold">Word Rules</h3>
+            <div class="w-full bg-gray-50 p-4 rounded-lg shadow-md">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Words</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Path</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  {{ range $obj := .Response.AIGuardrail.Words }}
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 break-words p-2">{{ joinSlice $obj.Words  " | " }}</td>
+                    <td class="px-6 py-4 break-words p-2">{{ $obj.FileLocation }}</td>
+                  </tr>
+                  {{ else }}
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">No Words guard rule</td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mt-4">
+            <h3 class="text-xl font-semibold">Data Sentivity Rules</h3>
+            <div class="w-full bg-gray-50 p-4 rounded-lg shadow-md">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PII Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Regex</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  {{ range $obj := .Response.AIGuardrail.SensitiveDataset }}
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 break-words p-2">{{ $obj.PiiType }}</td>
+                    <td class="px-6 py-4 break-words p-2">{{ $obj.Regex }}</td>
+                    <td class="px-6 py-4 break-words p-2">{{ $obj.Action }}</td>
+                  </tr>
+                  {{ else }}
+                  <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">No SensitiveDataset guard rule</td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="schema" class="tab-content mt-2">
+          <!-- <pre>  {{ .Response.AIGuardrail.Schema }}</pre> -->
+          
+
+          <div class="json-box-container">
+            <div class="json-box-header rounded-lg">
+              <button class="copy-button p-2" onclick="copyToClipboard(`{{ .Response.AIGuardrail.Schema }}`)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="16" stroke="currentColor" viewBox="0 0 24 24" width="16" fill="#000">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                </svg>
+                  Copy
+              </button>
+            </div>
+            <div class="json-box rounded-lg" id="json-box">
+              <pre>  {{ .Response.AIGuardrail.Schema }}</pre>
+            </div>
+          </div>
+
+
+
+        </div>
+        </div>
+    </div>
+  </div>
+  <!-- JavaScript for Tabs -->
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active-tab'));
+
+      document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+    }
+
+    // Show the first tab by default
+    document.addEventListener('DOMContentLoaded', () => {
+      showTab('spec');
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+    function aiGuardrailAction(destId, action) {
+      document.getElementById('actionTitle').innerHTML = "";
+      document.getElementById('actionTitle').innerHTML = action.toUpperCase();
+      document.getElementById('yamlSpecTitle').innerHTML = "";
+      document.getElementById('yamlSpecTitle').innerHTML = `Edit {{ .Response.AIGuardrail.DisplayName }} Spec`;
+      openYAMLedModal(`{{ .Response.ActionParams.API }}`,
+        `{{ .GlobalContext.AccessTokenKey }}`,
+        destId);
+    }
+
+
+  </script>
+
+</body>
+
+</html>

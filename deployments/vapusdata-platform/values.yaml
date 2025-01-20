@@ -1,0 +1,148 @@
+affinity: {}
+aistudio:
+  artifacts:
+    digest: sha256:02d27f15cd7d8c99fda963172fd0358e3bfa03083aae8544b3782f88e0a1cda5
+    image: vapusdata-ecosystem/aistudio
+    pullPolicy: IfNotPresent
+    tag: v0.0.232
+  autoscaling:
+    enabled: false
+    maxReplicas: 10
+    minReplicas: 1
+    targetCPUUtilizationPercentage: 80
+  containerName: aistudio
+  enabled: true
+  fullname: aistudio
+  name: aistudio
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 512m
+      memory: 512Mi
+    requests:
+      cpu: 256m
+      memory: 256Mi
+  service:
+    grpc:
+      name: aistudiogrpc
+      port: 9012
+      targetPort: 9012
+      type: grpc
+    svcPort: 9012
+    type: ClusterIP
+  serviceAccount:
+    annotations: null
+    clusterRole:
+      name: vapusdata-aistudio-master-cr
+    clusterRoleBinding:
+      name: vapusdata-aistudio-master-crb
+    create: true
+    name: vapusdata-aistudio-master-sa
+  volumePaths:
+    certMount:
+      name: tls-secrets
+      path: /certs
+    networkConfig:
+      path: /network
+    secretsMount:
+      name: aistudio-secrets
+      path: /secrets
+    serviceConfig:
+      name: aistudio-service-config
+      path: /config
+app:
+  podMountPath: /data/vapusdata
+auth:
+  oidc:
+    callback: /auth/callback
+    login: /login
+    logout: /logout
+genServiceAccount:
+  annotations: null
+  clusterRole:
+    name: vapusdata-gen-cr
+  clusterRoleBinding:
+    name: vapusdata-gen-crb
+  create: true
+  name: vapusdata-gen-sa
+imagePullSecrets:
+- name: vapusdata-ecosystem-pls
+ingress:
+  annotations: {}
+  className: gce
+  enabled: true
+  name: vapusdata-gateway
+  paths:
+  - backend:
+      service:
+        name: webapp
+        port:
+          number: 9013
+    path: /
+    pathType: Prefix
+nodeSelector: {}
+tolerations: []
+vapusDataArtifacts:
+  dataworker:
+    digest: sha256:95f8cd4838127db8a09513b6ac3a7fbb1001a87e48be477e3dd5a92e770e6b4c
+    image: asia-south1-docker.pkg.dev/vapusdata-beta/vapusdata-ecosystem/dataworker
+    tag: v0.0.232
+  vdc:
+    digest: sha256:b638fd1eeaf658dc20a220dbe1f16e10a551a1138bc677f57d2ea7e55e9d2d3d
+    image: asia-south1-docker.pkg.dev/vapusdata-beta/vapusdata-ecosystem/vapus-containers
+    tag: v0.0.232
+vapusdata:
+  globalConfigs:
+    networkConfig:
+      fileName: network-config.yaml
+      name: network-config
+    policyConfig:
+      fileName: policy/global-policies-config.yaml
+      name: global-policies-config
+  globalSecrets:
+    backend:
+      secretStore: be-secret-storage
+      secretStoreFileName: be-secret-storage.yaml
+    certs:
+      tlsSecret: vapusdatademotls
+  registry: asia-south1-docker.pkg.dev/vapusdata-beta/
+webapp:
+  artifacts:
+    digest: sha256:8ecb074abd9bb3aa3a4bbd3ec9ab04e8076d59a8450bba3f41a02846cc45f01f
+    image: vapusdata-ecosystem/webapp
+    pullPolicy: IfNotPresent
+    tag: v0.0.232
+  autoscaling:
+    enabled: false
+    maxReplicas: 10
+    minReplicas: 2
+    targetCPUUtilizationPercentage: 80
+  containerName: webapp
+  enabled: true
+  fullname: webapp
+  name: webapp
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 512m
+      memory: 512Mi
+    requests:
+      cpu: 256m
+      memory: 256Mi
+  service:
+    http:
+      name: webapp
+      port: 9013
+      targetPort: 9013
+      type: http
+    svcPort: 9013
+    type: ClusterIP
+  volumePaths:
+    certMount:
+      name: tls-secrets
+      path: /certs
+    networkConfig:
+      path: /network
+    serviceConfig:
+      name: webapp-service-config
+      path: /config

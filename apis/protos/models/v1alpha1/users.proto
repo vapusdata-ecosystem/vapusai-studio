@@ -1,0 +1,135 @@
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+import "protos/models/v1alpha1/common.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+
+enum StudioUserRoles {
+    ANONYMOUS = 0;
+    STUDIO_OWNERS = 1;
+    STUDIO_OPERATORS = 2;
+    ORG_OWNERS = 3;
+    ORG_USERS = 4;
+    STUDIO_USERS = 5;
+}
+
+enum VapusRoleScope {
+    DOMAIN_ROLES = 0;
+    STUDIO_ROLES = 1;
+    MARKETPLACE_ROLES = 2;
+}
+
+enum UserInviteType {
+    REQUEST_ACCESS = 0;
+    INVITE_ACCESS = 1;
+    STUDIO_SETUP = 2;
+}
+
+message User {
+    string display_name = 1; // @gotags: yaml:"displayName"
+    string user_id = 2; // @gotags: yaml:"userId"
+    string email = 3; // @gotags: yaml:"email"
+    repeated UserOrganizationRole organization_roles = 4; // @gotags: yaml:"organizationRoles"
+    string invite_id = 5; // @gotags: yaml:"inviteId"
+    repeated StudioUserRoles studio_roles = 6; // @gotags: yaml:"StudioRoles"
+    string status = 7; // @gotags: yaml:"status"
+    int64 invited_on = 8; // @gotags: yaml:"invitedOn"
+    int64 invite_expires_on = 9; // @gotags: yaml:"inviteExpiresOn"
+    string first_name = 10; // @gotags: yaml:"firstName"
+    string last_name = 11; // @gotags: yaml:"lastName"
+    UserInviteType invited_type = 12; // @gotags: yaml:"invitedType"
+    repeated string studio_policies = 13; // @gotags: yaml:"StudioPolicies"
+    UserProfile profile = 14; // @gotags: yaml:"profile"
+}
+
+message UserProfile {
+    repeated Address addresses = 1; // @gotags: yaml:"addresses"
+    string avatar = 2; // @gotags: yaml:"avatar"
+    string description = 3; // @gotags: yaml:"description"
+}
+
+message UserShort {
+    string user_id = 1; // @gotags: yaml:"userId"
+    string role = 2; // @gotags: yaml:"role"
+}
+
+message UserValidT {
+    User user = 1; // @gotags: yaml:"user"
+    string valid_till = 2; // @gotags: yaml:"validTill"
+}
+
+message OrganizationUserOps {
+    string user_id = 1; // @gotags: yaml:"userId"
+    int64 valid_till = 2; // @gotags: yaml:"validTill"
+    repeated string role = 3; // @gotags: yaml:"role"
+    bool added = 4; // @gotags: yaml:"added"
+    bool invite_if_not_found = 5; // @gotags: yaml:"inviteIfNotfound"
+}
+
+message UserInvite {
+    string email = 1; // @gotags: yaml:"email"
+    int64 invited_on = 2; // @gotags: yaml:"invitedOn"
+    int64 invite_expires_on = 3; // @gotags: yaml:"inviteExpiresOn"
+    string invite_id = 4; // @gotags: yaml:"inviteId"
+    string role = 5; // @gotags: yaml:"role"
+    repeated UserOrganizationRole organization_roles = 6; // @gotags: yaml:"organizationRoles"
+    string name = 7; // @gotags: yaml:"name"
+}
+
+message Team {
+    string name = 1; // @gotags: yaml:"name"
+    repeated User users = 2; // @gotags: yaml:"users"
+    string description = 3; // @gotags: yaml:"description"
+    string team_id = 4; // @gotags: yaml:"teamId"
+}
+
+message UserOrganizationRole {
+    string organization_id = 1; // @gotags: yaml:"organizationId"
+    repeated string role = 2; // @gotags: yaml:"role"
+    int64 invited_on = 3; // @gotags: yaml:"invitedOn"
+    int64 valid_till = 4; // @gotags: yaml:"validTill"
+    repeated string policies = 5; // @gotags: yaml:"policies"
+    bool is_default = 6; // @gotags: yaml:"isDefault"
+}
+
+message VapusRoles {
+    string name = 1; // @gotags: yaml:"name"
+    string action = 2; // @gotags: yaml:"action"
+    string arn = 3; // @gotags: yaml:"arn"
+    VapusRoleScope scope = 4; // @gotags: yaml:"scope"
+    string description = 5; // @gotags: yaml:"description"
+}
+
+// message UserRoleMap {
+//     string role = 1; // @gotags: yaml:"role"
+//     string user_id = 2; // @gotags: yaml:"userId"
+//     string organization_id = 3; // @gotags: yaml:"organizationId"
+//     int64 valid_till = 4; // @gotags: yaml:"validTill"
+//     bool is_default = 6; // @gotags: yaml:"isDefault"
+// }
+
+message RefreshToken {
+    string jwt_id = 1; // @gotags: yaml:"jwtId"
+    string valid_till = 2; // @gotags: yaml:"validTill"
+    string status = 3; // @gotags: yaml:"status"
+    string user_id = 4; // @gotags: yaml:"userId"
+    string organization = 5; // @gotags: yaml:"organization"
+}
+
+message VapusResourceArn {
+    string resource_name = 1; // @gotags: yaml:"resourceName"
+    string resource_id = 2; // @gotags: yaml:"resourceId"
+    string resource_arn = 3; // @gotags: yaml:"resourceARN"
+    repeated ResourceAclMap allowed_rules = 4; // @gotags: yaml:"allowedRules"
+    repeated ResourceAclMap blocked_rules = 5; // @gotags: yaml:"blockedRules"
+    repeated string blocked_users = 6; // @gotags: yaml:"blockedUsers"
+}
+
+message ResourceAclMap {
+    string organization = 1; // @gotags: yaml:"organization"
+    repeated string users = 2; // @gotags: yaml:"users"
+}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  <script src="/static/js/manage.js"></script>
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+  {{ template "header.html" . }}
+
+  <div class="flex h-screen">
+    {{ template "main-sidebar.html" . }}
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+          {{ template "section-headers.html" . }}
+          <div class="relative inline-block text-left">
+            {{ template "action-dropdown.html" . }}
+            <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+              <ul class="py-1 text-gray-700">
+                {{ if eq .Response.VdcDeployment.Status `OFFLINE` }}
+                <li>
+                  <div hidden id="yamlSpec">{{ .Response.VdcDeployment.YamlSpec }}</div>
+                  <a href="#" onclick="downloadElementIntoYAML('yamlSpec',`{{ .Response.VdcDeployment.DeploymentId }}`)"
+                    class="flex items-center px-4 py-2 hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" class="mr-2"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M5 20h14v2H5v-2zm7-2c-.28 0-.53-.11-.71-.29L8 13.41l1.41-1.41L11 14.17V4h2v10.17l1.59-1.59L16 13.41l-3.29 3.29c-.18.18-.43.29-.71.29z"
+                        fill="#000" />
+                    </svg>
+                    Download K8S YAML
+                  </a>
+                </li>
+                {{ else}}
+                {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                <!-- Edit Option -->
+                <li>
+                  <a href="#" onclick="vdcDeploymentAction(`{{ $v }}`)"
+                    class="flex items-center px-4 py-2 hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z" />
+                    </svg>
+                    {{ $k }}
+                  </a>
+                </li>
+                {{ else }}
+                <li class="flex items-center px-4 py-2 hover:bg-gray-100"> No Action Needed</li>
+                {{ end }}
+                {{ end }}
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+        <div class="flex border-b border-gray-200">
+          <button onclick="showTab('spec')"
+            class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Deployment Spec</button>
+        </div>
+        <div id="spec" class="overflow-x-auto bg-white rounded-lg shadow-md tab-content">
+          <div class="max-w-8xl mx-auto bg-white rounded-lg shadow-lg p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div class = "flex items-center">
+                <h3 class="detail-section-title">Data Product</h3>
+                <p class="detail-section-text">{{ .Response.VdcDeployment.DataProductId }}</p>
+              </div>
+              <div class = "flex items-center">
+                <h3 class="detail-section-title">Deployment Id</h3>
+                <p class="detail-section-text">{{ .Response.VdcDeployment.DeploymentId }}</p>
+              </div>
+              <div class = "flex items-center">
+                <h3 class="detail-section-title">Infra Id</h3>
+                <p class="detail-section-text">{{ .Response.VdcDeployment.InfraId }}</p>
+              </div>
+              <div class = "flex items-center">
+                <h3 class="detail-section-title">Marketplace</h3>
+                <p class="detail-section-text">{{ .Response.VdcDeployment.MarketplaceId }}</p>
+              </div>
+              <div class = "flex items-center">
+                <h3 class="detail-section-title">Deployed At</h3>
+                <p class="detail-section-text">{{ epochConverter .Response.VdcDeployment.DeployedAt }}</p>
+              </div>
+              <div class = "flex items-center">
+                <h3 class="detail-section-title">Status: </h3>
+                <span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .Response.VdcDeployment.Status `FAILED_ERR` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }} rounded-full">{{
+                  .Response.VdcDeployment.Status }}</span>
+              </div>
+            </div>
+
+            <!-- Organization Roles Section -->
+            <h3 class="text-xl font-semibold text-gray-900 underline rounded-lg uppercase">K8S Spec</h3>
+            <div class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 bg-white-50 p-4 rounded-lg shadow-md">
+                <div class = "flex items-center">
+                  <p class="detail-section-title">ArtifactPullSecrets</p>
+                  <p class="detail-section-text">{{ .Response.VdcDeployment.ArtifactPullSecrets }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <h3 class="detail-section-title">K8S Namespace</h3>
+                  <p class="detail-section-text">{{ .Response.VdcDeployment.Namespace }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Log</p>
+                  <p class="detail-section-text">{{ stringCheck .Response.VdcDeployment.Log }}</p>
+                </div>
+                <div>
+                  <p class="detail-section-title">Artifact</p>
+                  <p class="detail-section-text">{{ .Response.VdcDeployment.Artifact }}</p>
+                </div>
+              </div>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 underline uppercase rounded-lg">Deployment Spec</h3>
+            <div class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 bg-white-50 p-4 rounded-lg shadow-md">
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Svc</p>
+                  <p class="detail-section-text" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ .Response.VdcDeployment.DeploymentSpec.Svc }}`)">{{
+                    .Response.VdcDeployment.DeploymentSpec.Svc }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Deployment</p>
+                  <p class="detail-section-text" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ .Response.VdcDeployment.DeploymentSpec.Deployment }}`)">{{
+                    .Response.VdcDeployment.DeploymentSpec.Deployment }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Svc Port</p>
+                  <p class="detail-section-text" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ .Response.VdcDeployment.DeploymentSpec.SvcPort }}`)">{{
+                    .Response.VdcDeployment.DeploymentSpec.SvcPort }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Container Port:</p>
+                  <p class="detail-section-text" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ .Response.VdcDeployment.DeploymentSpec.Port }}`)">{{
+                    .Response.VdcDeployment.DeploymentSpec.Port }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Svc Type:</p>
+                  <p class="detail-section-text">{{ .Response.VdcDeployment.DeploymentSpec.SvcType }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Svc Address:</p>
+                  <p class="detail-section-text" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ .Response.VdcDeployment.DeploymentSpec.SvcAddress }}`)">{{
+                    .Response.VdcDeployment.DeploymentSpec.SvcAddress }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Config:</p>
+                  <p class="detail-section-text" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ .Response.VdcDeployment.DeploymentSpec.SvcConfig }}`)">{{
+                    .Response.VdcDeployment.DeploymentSpec.SvcConfig }}</p>
+                </div>
+                <div class = "flex items-center">
+                  <p class="detail-section-title">Secret:</p>
+                  <p class="detail-section-text" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ .Response.VdcDeployment.DeploymentSpec.SvcSecret }}`)">{{
+                    .Response.VdcDeployment.DeploymentSpec.SvcSecret }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+    function vdcDeploymentAction(action) {
+      ShowConfirm("Confirm Action", "Are you sure you want to proceed?", () => {
+        console.log("Confirmed!");
+        ManageVDCDeployment(action,
+          `{{ .Response.VdcDeployment.DeploymentId }}`,
+          `{{ .Response.ActionParams.API }}`,
+          `{{ .GlobalContext.AccessTokenKey }}`)
+      });
+    }
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+      console.log(tabId);
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active-tab'));
+
+      document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+    }
+
+    // Show the first tab by default
+    document.addEventListener('DOMContentLoaded', () => {
+      showTab('spec');
+    });
+  </script>
+</body>
+
+</html>

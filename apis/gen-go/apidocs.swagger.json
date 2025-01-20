@@ -1,0 +1,4448 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "protos/models/v1alpha1/enums.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AIAgents"
+    },
+    {
+      "name": "AIAgentStudio"
+    },
+    {
+      "name": "AIGuardrails"
+    },
+    {
+      "name": "AIModels"
+    },
+    {
+      "name": "AIPrompts"
+    },
+    {
+      "name": "AIModelStudio"
+    },
+    {
+      "name": "StudioService"
+    },
+    {
+      "name": "UtilityService"
+    },
+    {
+      "name": "PluginService"
+    },
+    {
+      "name": "UserManagementService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1alpha1/Studio": {
+      "get": {
+        "summary": "*\nRetrieves information about theaccount.\n@param {AccountManager} request - The account creation request.\n@returns {AccountResponse} - The account creation response.",
+        "operationId": "StudioService_AccountGetter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "tags": [
+          "StudioService"
+        ]
+      },
+      "post": {
+        "summary": "*\nCreates a new account with the specified name.\n@param {AccountManager} request - The account creation request.\n@returns {AccountResponse} - The account creation response.",
+        "operationId": "StudioService_AccountManager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AccountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "*\nThe AccountManagerRequest message contains the information required to create or retrieve an account.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "StudioService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/authz": {
+      "get": {
+        "summary": "*\nRetrieves authorization information.\n@param {AuthzGetterRequest} request - The request object.\n@returns {AuthzResponse} The response object.",
+        "operationId": "UserManagementService_AuthzGetter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AuthzResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "roleArn",
+            "description": "@gotags: yaml:\"roleArn\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      },
+      "post": {
+        "summary": "*\nManages authorization operations.\n@param {AuthzManagerRequest} request - The request object.\n@returns {AuthzResponse} The response object.",
+        "operationId": "UserManagementService_AuthzManager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AuthzResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuthzManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/login": {
+      "get": {
+        "summary": "*\nHandles login requests.\n@param {models.v1alpha1.EmptyRequest} request - The request object.\n@returns {LoginHandlerResponse} The response object.",
+        "operationId": "UserManagementService_LoginHandler",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginHandlerResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/login/callback": {
+      "post": {
+        "summary": "*\nHandles login callbacks.\n@param {LoginCallBackRequest} request - The request object.\n@returns {AccessTokenResponse} The response object.",
+        "operationId": "UserManagementService_LoginCallback",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AccessTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginCallBackRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/orgs": {
+      "post": {
+        "summary": "*\nManages a org.\n@param {OrganizationManagerRequest} request - The request object containing the org details.\n@returns {OrganizationResponse} The response object containing the result of the org management actions.",
+        "operationId": "StudioService_OrganizationManager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/OrganizationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "*\n@typedef {Object} ManageOrganizationRequest\n@property {OrganizationAgentActions} actions - The actions to perform on the org.\n@property {models.v1alpha1.Organization} spec - The request body containing the org details.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrganizationManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "StudioService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/orgs/{orgId}": {
+      "get": {
+        "summary": "*\nRetrieves a org.\n@param {OrganizationGetterRequest} request - The request object containing the org ID.\n@returns {OrganizationResponse} The response object containing the retrieved org.",
+        "operationId": "StudioService_OrganizationGetter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/OrganizationResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orgId",
+            "description": "The org ID to retrieve\n\n@gotags: yaml:\"orgId\"",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "StudioService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/public-info": {
+      "get": {
+        "operationId": "StudioService_StudioPublicInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/StudioPublicInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "tags": [
+          "StudioService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/refresh-token": {
+      "get": {
+        "operationId": "UserManagementService_RefreshTokenGetter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RefreshTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "refreshToken",
+            "description": "@gotags: yaml:\"refreshToken\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      },
+      "post": {
+        "operationId": "UserManagementService_RefreshTokenManager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RefreshTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RefreshTokenManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/secrets": {
+      "post": {
+        "summary": "*\nStores the specified data marketplace secrets.\n@param {StoreDMSecretsRequest} request - The data marketplace secrets storage request.\n@returns {StoreDMSecretsResponse} - The data marketplace secrets storage response.",
+        "operationId": "UtilityService_StoreDMSecrets",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/StoreDMSecretsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "*\nThe StoreDMSecretsRequest message contains the information required to store data marketplace secrets.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StoreDMSecretsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UtilityService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/users": {
+      "post": {
+        "summary": "*\nManages user operations.\n@param {UserManagerRequest} request - The request object.\n@returns {UserResponse} The response object.",
+        "operationId": "UserManagementService_UserManager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/Studio/users/{userId}": {
+      "get": {
+        "summary": "*\nRetrieves user information.\n@param {UserGetterRequest} request - The request object.\n@returns {UserResponse} The response object.",
+        "operationId": "UserManagementService_UserGetter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "description": "@gotags: yaml:\"userId\"",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "action",
+            "description": "@gotags: yaml:\"action\"",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "GET_USER",
+              "LIST_USERS",
+              "LIST_STUDIO_USERS"
+            ],
+            "default": "GET_USER"
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/agents": {
+      "post": {
+        "operationId": "AIAgents_Manager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AgentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgentManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIAgents"
+        ]
+      }
+    },
+    "/api/v1alpha1/agents/invoke": {
+      "post": {
+        "operationId": "AIAgentStudio_Chat",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AgentInvokeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgentInvokeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIAgentStudio"
+        ]
+      }
+    },
+    "/api/v1alpha1/agents/run": {
+      "post": {
+        "operationId": "AIAgentStudio_ChatStream",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/AgentInvokeStreamResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/Status"
+                }
+              },
+              "title": "Stream result of AgentInvokeStreamResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AgentInvokeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIAgentStudio"
+        ]
+      }
+    },
+    "/api/v1alpha1/agents/{agentId}": {
+      "get": {
+        "operationId": "AIAgents_Getter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AgentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "agentId",
+            "description": "@gotags: yaml:\"agentId\"",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AIAgents"
+        ]
+      }
+    },
+    "/api/v1alpha1/auth/token": {
+      "post": {
+        "summary": "*\nGenerates a access token for the given user.\n@param {AccessTokenInterfaceRequest} request - The request object.\n@returns {AccessTokenResponse} The response object.",
+        "operationId": "UserManagementService_AccessTokenInterface",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AccessTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "*\nRepresents a request to generate a Studio access token.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccessTokenInterfaceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/chat": {
+      "post": {
+        "summary": "Generates content based on the given prompt parameters.\n@param {ChatRequest} request - The request object containing the generate interface.\n@returns {ChatResponse} The response object containing the generated content.",
+        "operationId": "AIModelStudio_Chat",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ChatResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChatRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIModelStudio"
+        ]
+      }
+    },
+    "/api/v1alpha1/chat-stream": {
+      "post": {
+        "summary": "Generates content in a streaming fashion based on the given prompt parameters.\n@param {ChatRequest} request - The request object containing the generate interface.\n@returns {stream GenerateStreamResponse} The response object containing the generated content in a stream.",
+        "operationId": "AIModelStudio_ChatStream",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/ChatResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/Status"
+                }
+              },
+              "title": "Stream result of ChatResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChatRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIModelStudio"
+        ]
+      }
+    },
+    "/api/v1alpha1/embeddings": {
+      "post": {
+        "summary": "Generates embeddings for the given input text.\n@param {EmbeddingsInterface} request - The request object containing the embeddings interface.\n@returns {EmbeddingsResponse} The response object containing the embeddings.",
+        "operationId": "AIModelStudio_GenerateEmbeddings",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/EmbeddingsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EmbeddingsInterface"
+            }
+          }
+        ],
+        "tags": [
+          "AIModelStudio"
+        ]
+      }
+    },
+    "/api/v1alpha1/guardrails": {
+      "post": {
+        "operationId": "AIGuardrails_Manager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GuardrailsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GuardrailsManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIGuardrails"
+        ]
+      }
+    },
+    "/api/v1alpha1/guardrails/{guardrailId}": {
+      "get": {
+        "operationId": "AIGuardrails_Getter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GuardrailsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "guardrailId",
+            "description": "@gotags: yaml:\"guardrailId\"",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AIGuardrails"
+        ]
+      }
+    },
+    "/api/v1alpha1/models-nodes": {
+      "post": {
+        "summary": "*\nRetrieves a data worker deployment.\n@param {Manager} request - The request object containing the AI model node configurator.\n@returns {AIModelNodeResponse} The response object containing the AI model node configurator.",
+        "operationId": "AIModels_Manager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1.AIModelNodeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AIModelNodeConfiguratorRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIModels"
+        ]
+      }
+    },
+    "/api/v1alpha1/models-nodes/{aiModelNodeId}": {
+      "get": {
+        "summary": "*\nRetrieves a data worker deployment.\n@param {AIModelNodeGetterRequest} request - The request object containing the AI model node getter.\n@returns {AIModelNodeResponse} The response object containing the AI model node getter.",
+        "operationId": "AIModels_Getter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1.AIModelNodeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "aiModelNodeId",
+            "description": "@gotags: yaml:\"aiModelNodeId\"",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AIModels"
+        ]
+      }
+    },
+    "/api/v1alpha1/plugins": {
+      "post": {
+        "operationId": "PluginService_PluginManager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PluginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PluginManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PluginService"
+        ]
+      }
+    },
+    "/api/v1alpha1/plugins/{pluginId}": {
+      "get": {
+        "operationId": "PluginService_PluginGetter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PluginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pluginId",
+            "description": "@gotags: yaml:\"pluginId\"",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PluginService"
+        ]
+      }
+    },
+    "/api/v1alpha1/prompts": {
+      "post": {
+        "summary": "Creates a new prompt.\n@param {PromptManagerRequest} request - The request object containing the prompt manager.\n@returns {PromptResponse} The response object containing the created prompt.",
+        "operationId": "AIPrompts_Manager",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PromptResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PromptManagerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIPrompts"
+        ]
+      }
+    },
+    "/api/v1alpha1/prompts/{promptId}": {
+      "get": {
+        "summary": "Retrieves a prompt.\n@param {PromptGetterRequest} request - The request object containing the prompt getter.\n@returns {PromptResponse} The response object containing the retrieved prompt.",
+        "operationId": "AIPrompts_Getter",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PromptResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "promptId",
+            "description": "@gotags: yaml:\"promptId\"",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "searchParam.q",
+            "description": "@gotags: yaml:\"q\"",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AIPrompts"
+        ]
+      }
+    },
+    "/api/v1alpha1/register": {
+      "post": {
+        "operationId": "UserManagementService_RegisterUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/AccessTokenResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegisterUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserManagementService"
+        ]
+      }
+    },
+    "/api/v1alpha1/utility/upload": {
+      "post": {
+        "operationId": "UtilityService_Upload",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UploadResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UploadRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UtilityService"
+        ]
+      }
+    },
+    "/api/v1alpha1/utility/upload-stream": {
+      "post": {
+        "operationId": "UtilityService_UploadStream",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/UploadResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UploadRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UtilityService"
+        ]
+      }
+    },
+    "/vapusai.v1alpha1.PluginService/PluginAction": {
+      "post": {
+        "operationId": "PluginService_PluginAction",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PluginActionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PluginActionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PluginService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AIAgentContextKeys": {
+      "type": "string",
+      "enum": [
+        "TEXT_CONTEXT",
+        "DATASET_CONTEXT",
+        "WEBSITE_CONTEXT",
+        "FILE_CONTEXT"
+      ],
+      "default": "TEXT_CONTEXT"
+    },
+    "AIAgentSettings": {
+      "type": "object",
+      "properties": {
+        "toolCallSchema": {
+          "type": "string",
+          "title": "@gotags: yaml:\"toolCallSchema\""
+        }
+      }
+    },
+    "AIAttributes": {
+      "type": "object",
+      "properties": {
+        "embeddingModelNode": {
+          "type": "string",
+          "title": "@gotags: yaml:\"embeddingModelNode\""
+        },
+        "embeddingModel": {
+          "type": "string",
+          "title": "@gotags: yaml:\"embeddingModel\""
+        },
+        "generativeModelNode": {
+          "type": "string",
+          "title": "@gotags: yaml:\"generativeModelNode\""
+        },
+        "generativeModel": {
+          "type": "string",
+          "title": "@gotags: yaml:\"generativeModel\""
+        },
+        "guardrailModelNode": {
+          "type": "string",
+          "title": "@gotags: yaml:\"guardrailModelNode\""
+        },
+        "guardrailModel": {
+          "type": "string",
+          "title": "@gotags: yaml:\"guardrailModel\""
+        }
+      }
+    },
+    "AIGuardrailScanMode": {
+      "type": "string",
+      "enum": [
+        "BIDIRECTIONAL",
+        "INPUT",
+        "OUTPUT"
+      ],
+      "default": "BIDIRECTIONAL"
+    },
+    "AIGuardrails": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"displayName\""
+        },
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "minConfidence": {
+          "type": "number",
+          "format": "double",
+          "title": "@gotags: yaml:\"minConfidence\""
+        },
+        "maxConfidence": {
+          "type": "number",
+          "format": "double",
+          "title": "@gotags: yaml:\"maxConfidence\""
+        },
+        "contents": {
+          "$ref": "#/definitions/ContentGuardrailLevel",
+          "title": "@gotags: yaml:\"contents\""
+        },
+        "topics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/TopicGuardrails"
+          },
+          "title": "@gotags: yaml:\"topics\""
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/WordGuardRails"
+          },
+          "title": "@gotags: yaml:\"words\""
+        },
+        "sensitiveDataset": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/SensitiveDataGuardrails"
+          },
+          "title": "@gotags: yaml:\"sensitiveDataset\""
+        },
+        "description": {
+          "type": "string",
+          "title": "@gotags: yaml:\"description\""
+        },
+        "failureMessage": {
+          "type": "string",
+          "title": "@gotags: yaml:\"failureMessage\""
+        },
+        "guardrailId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"guardrailId\""
+        },
+        "base": {
+          "$ref": "#/definitions/Resourcebase",
+          "title": "@gotags: yaml:\"base\""
+        },
+        "schema": {
+          "type": "string",
+          "title": "@gotags: yaml:\"schema\""
+        },
+        "scanMode": {
+          "$ref": "#/definitions/AIGuardrailScanMode",
+          "title": "@gotags: yaml:\"scanMode\""
+        },
+        "guardModel": {
+          "$ref": "#/definitions/GuardModels",
+          "title": "@gotags: yaml:\"guardModel\""
+        },
+        "eligibleModelNodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"eligibleModelNodes\""
+        },
+        "resourceBase": {
+          "$ref": "#/definitions/VapusBase",
+          "title": "@gotags: yaml:\"resourceBase\""
+        }
+      }
+    },
+    "AIInterfaceMode": {
+      "type": "string",
+      "enum": [
+        "P2P",
+        "CHAT_MODE"
+      ],
+      "default": "P2P"
+    },
+    "AIMessageRoles": {
+      "type": "string",
+      "enum": [
+        "USER",
+        "SYSTEM",
+        "ASSISTANT",
+        "TOOL",
+        "FUNCTION",
+        "VAPUSGUARD"
+      ],
+      "default": "USER"
+    },
+    "AIMessageTypes": {
+      "type": "string",
+      "enum": [
+        "TEXT",
+        "IMAGE_URL",
+        "INPUT_AUDIO"
+      ],
+      "default": "TEXT"
+    },
+    "AIModelBase": {
+      "type": "object",
+      "properties": {
+        "modelName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelName\""
+        },
+        "modelId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelId\""
+        },
+        "modelType": {
+          "$ref": "#/definitions/AIModelType",
+          "title": "@gotags: yaml:\"modelType\""
+        },
+        "ownedBy": {
+          "type": "string",
+          "title": "@gotags: yaml:\"ownedBy\""
+        }
+      }
+    },
+    "AIModelMap": {
+      "type": "object",
+      "properties": {
+        "modelNodeId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelNodeId\""
+        },
+        "modelName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelName\""
+        }
+      }
+    },
+    "AIModelNode": {
+      "type": "object",
+      "properties": {
+        "modelNodeId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelNodeId\""
+        },
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "attributes": {
+          "$ref": "#/definitions/AIModelNodeAttributes",
+          "title": "@gotags: yaml:\"attributes\""
+        },
+        "nodeOwners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"nodeOwners\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "org": {
+          "type": "string",
+          "title": "@gotags: yaml:\"org\""
+        },
+        "securityGuardrails": {
+          "$ref": "#/definitions/SecurityGuardrails",
+          "title": "@gotags: yaml:\"securityGuardrails\""
+        },
+        "resourceBase": {
+          "$ref": "#/definitions/VapusBase",
+          "title": "@gotags: yaml:\"resourceBase\""
+        }
+      }
+    },
+    "AIModelNodeAttributes": {
+      "type": "object",
+      "properties": {
+        "generativeModels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIModelBase"
+          },
+          "title": "@gotags: yaml:\"generativeModels\""
+        },
+        "embeddingModels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIModelBase"
+          },
+          "title": "@gotags: yaml:\"embeddingModels\""
+        },
+        "discoverModels": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"discoverModels\""
+        },
+        "networkParams": {
+          "$ref": "#/definitions/AIModelNodeNetworkParams",
+          "title": "@gotags: yaml:\"networkParams\""
+        },
+        "scope": {
+          "$ref": "#/definitions/ResourceScope",
+          "title": "@gotags: yaml:\"scope\""
+        },
+        "approvedOrgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"approvedDomains\""
+        },
+        "hosting": {
+          "$ref": "#/definitions/AIModelNodeHosting",
+          "title": "@gotags: yaml:\"hosting\""
+        },
+        "serviceProvider": {
+          "$ref": "#/definitions/LLMServiceProvider",
+          "title": "@gotags: yaml:\"serviceProvider\""
+        }
+      }
+    },
+    "AIModelNodeConfiguratorActions": {
+      "type": "string",
+      "enum": [
+        "INVALID_AINODE_CONFIG_ACTION",
+        "CONFIGURE_AIMODEL_NODES",
+        "PATCH_AIMODEL_NODES",
+        "DELETE_AIMODEL_NODES",
+        "SYNC_AI_MODELS"
+      ],
+      "default": "INVALID_AINODE_CONFIG_ACTION"
+    },
+    "AIModelNodeConfiguratorRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/AIModelNodeConfiguratorActions",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "spec": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIModelNode"
+          },
+          "title": "@gotags: yaml:\"spec\""
+        }
+      }
+    },
+    "AIModelNodeHosting": {
+      "type": "string",
+      "enum": [
+        "INVALID_MODEL_HOSTING",
+        "LOCAL_AIHOST",
+        "OPEN_SOURCE_AIHOST",
+        "MANAGED_AIHOST"
+      ],
+      "default": "INVALID_MODEL_HOSTING"
+    },
+    "AIModelNodeNetworkParams": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "@gotags: yaml:\"url\""
+        },
+        "apiVersion": {
+          "type": "string",
+          "title": "@gotags: yaml:\"apiVersion\""
+        },
+        "localPath": {
+          "type": "string",
+          "title": "@gotags: yaml:\"localPath\""
+        },
+        "credentials": {
+          "$ref": "#/definitions/GenericCredentialObj",
+          "title": "@gotags: yaml:\"credentials\""
+        },
+        "secretName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"secretName\""
+        },
+        "isAlreadyInSecretBs": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"isAlreadyInSecretBS\""
+        }
+      }
+    },
+    "AIModelNodeResponse.AIModelNodeResponse": {
+      "type": "object",
+      "properties": {
+        "aiModelNodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIModelNode"
+          },
+          "title": "@gotags: yaml:\"aiModelNodes\""
+        },
+        "availableModelsPool": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/MapList"
+          },
+          "title": "@gotags: yaml:\"availableModelsPool\""
+        }
+      }
+    },
+    "AIModelPrompt": {
+      "type": "object",
+      "properties": {
+        "promptId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"promptId\""
+        },
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "promptTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"promptTypes\""
+        },
+        "preferredModels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"preferredModels\""
+        },
+        "editable": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"editable\""
+        },
+        "org": {
+          "type": "string",
+          "title": "@gotags: yaml:\"org\""
+        },
+        "scope": {
+          "$ref": "#/definitions/ResourceScope",
+          "title": "@gotags: yaml:\"scope\""
+        },
+        "prompt": {
+          "$ref": "#/definitions/Prompt",
+          "title": "@gotags: yaml:\"prompt\""
+        },
+        "isJsonPrompt": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"isJsonPrompt\""
+        },
+        "template": {
+          "type": "string",
+          "title": "@gotags: yaml:\"template\""
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"labels\""
+        },
+        "userTemplate": {
+          "type": "string",
+          "title": "@gotags: yaml:\"userTemplate\""
+        },
+        "resourceBase": {
+          "$ref": "#/definitions/VapusBase",
+          "title": "@gotags: yaml:\"resourceBase\""
+        }
+      }
+    },
+    "AIModelType": {
+      "type": "string",
+      "enum": [
+        "INVALID_AIMODEL_TYPE",
+        "LLM",
+        "SLM",
+        "EMBEDDING",
+        "GUARDRAIL"
+      ],
+      "default": "INVALID_AIMODEL_TYPE"
+    },
+    "AIResponseFormat": {
+      "type": "string",
+      "enum": [
+        "TEXT",
+        "JSON_SCHEMA"
+      ],
+      "default": "TEXT"
+    },
+    "AWSCreds": {
+      "type": "object",
+      "properties": {
+        "accessKeyId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"accessKeyId\""
+        },
+        "secretAccessKey": {
+          "type": "string",
+          "title": "@gotags: yaml:\"secretAccessKey\""
+        },
+        "region": {
+          "type": "string",
+          "title": "@gotags: yaml:\"region\""
+        },
+        "sessionToken": {
+          "type": "string",
+          "title": "@gotags: yaml:\"sessionToken\""
+        },
+        "roleArn": {
+          "type": "string",
+          "title": "@gotags: yaml:\"roleArn\""
+        }
+      }
+    },
+    "AccessToken": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "title": "@gotags: yaml:\"accessToken\""
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"validFrom\""
+        },
+        "validTill": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"validTill\""
+        },
+        "idToken": {
+          "type": "string",
+          "title": "@gotags: yaml:\"idToken\""
+        }
+      },
+      "description": "*\nRepresents a Studio access token."
+    },
+    "AccessTokenAgentUtility": {
+      "type": "string",
+      "enum": [
+        "INVALID_ACCESS_TOKEN_OPERATION",
+        "ORG_LOGIN",
+        "REFRESH_TOKEN_LOGIN"
+      ],
+      "default": "INVALID_ACCESS_TOKEN_OPERATION"
+    },
+    "AccessTokenInterfaceRequest": {
+      "type": "object",
+      "properties": {
+        "utility": {
+          "$ref": "#/definitions/AccessTokenAgentUtility",
+          "title": "@gotags: yaml:\"utility\""
+        },
+        "idToken": {
+          "type": "string",
+          "title": "@gotags: yaml:\"idToken\""
+        },
+        "organization": {
+          "type": "string",
+          "title": "@gotags: yaml:\"organization\""
+        },
+        "dataProduct": {
+          "type": "string",
+          "title": "@gotags: yaml:\"dataProduct\""
+        },
+        "refreshToken": {
+          "type": "string",
+          "title": "@gotags: yaml:\"refreshToken\""
+        }
+      },
+      "description": "*\nRepresents a request to generate a Studio access token."
+    },
+    "AccessTokenResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "token": {
+          "$ref": "#/definitions/AccessToken",
+          "title": "@gotags: yaml:\"token\""
+        },
+        "tokenScope": {
+          "$ref": "#/definitions/AccessTokenScope",
+          "title": "@gotags: yaml:\"tokenScope\""
+        }
+      },
+      "description": "*\nRepresents a response containing a Studio access token."
+    },
+    "AccessTokenScope": {
+      "type": "string",
+      "enum": [
+        "INVALID_AT_SCOPE",
+        "DOMAIN_TOKEN",
+        "DATAPRODUCT_TOKEN"
+      ],
+      "default": "INVALID_AT_SCOPE"
+    },
+    "Account": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "accountId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"accountId\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "authnMethod": {
+          "$ref": "#/definitions/AuthnMethod",
+          "title": "@gotags: yaml:\"authnMethod\""
+        },
+        "dmAccessJwtKeys": {
+          "$ref": "#/definitions/JWTParams",
+          "title": "@gotags: yaml:\"dmAccessJWTKeys\""
+        },
+        "backendSecretStorage": {
+          "$ref": "#/definitions/BackendStorages",
+          "title": "@gotags: yaml:\"backendSecretStorage\""
+        },
+        "backendDataStorage": {
+          "$ref": "#/definitions/BackendStorages",
+          "title": "@gotags: yaml:\"backendDataStorage\""
+        },
+        "oidcParams": {
+          "$ref": "#/definitions/AuthnOIDC",
+          "title": "@gotags: yaml:\"oidcParams\""
+        },
+        "profile": {
+          "$ref": "#/definitions/AccountProfile",
+          "title": "@gotags: yaml:\"profile\""
+        },
+        "aiAttributes": {
+          "$ref": "#/definitions/AIAttributes",
+          "title": "@gotags: yaml:\"aiAttributes\""
+        },
+        "settings": {
+          "$ref": "#/definitions/AccountSettings",
+          "title": "@gotags: yaml:\"settings\""
+        }
+      },
+      "description": "*\nMessage representing an account."
+    },
+    "AccountAgentActions": {
+      "type": "string",
+      "enum": [
+        "INVALID_ACCOUNT_ACTION",
+        "CONFIGURE_AISTUDIO_MODEL",
+        "UPDATE_PROFILE"
+      ],
+      "default": "INVALID_ACCOUNT_ACTION"
+    },
+    "AccountManagerRequest": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "$ref": "#/definitions/AccountAgentActions",
+          "title": "@gotags: yaml:\"actions\""
+        },
+        "spec": {
+          "$ref": "#/definitions/Account",
+          "title": "@gotags: yaml:\"spec\""
+        }
+      },
+      "description": "*\nThe AccountManagerRequest message contains the information required to create or retrieve an account."
+    },
+    "AccountProfile": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Address"
+          },
+          "title": "@gotags: yaml:\"addresses\""
+        },
+        "logo": {
+          "type": "string",
+          "title": "@gotags: yaml:\"logo\""
+        },
+        "description": {
+          "type": "string",
+          "title": "@gotags: yaml:\"description\""
+        },
+        "moto": {
+          "type": "string",
+          "title": "@gotags: yaml:\"moto\""
+        },
+        "favicon": {
+          "type": "string",
+          "title": "@gotags: yaml:\"favicon\""
+        }
+      }
+    },
+    "AccountResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "$ref": "#/definitions/Account",
+          "title": "@gotags: yaml:\"output\""
+        }
+      },
+      "description": "*\nThe AccountResponse message contains the response to an account creation or retrieval request."
+    },
+    "AccountSettings": {
+      "type": "object",
+      "properties": {
+        "googleAnalyticsTagId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"googleAnalyticsTagId\""
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "streetAddress1": {
+          "type": "string",
+          "title": "@gotags: yaml:\"streetAddress1\""
+        },
+        "streetAddress2": {
+          "type": "string",
+          "title": "@gotags: yaml:\"streetAddress2\""
+        },
+        "city": {
+          "type": "string",
+          "title": "@gotags: yaml:\"city\""
+        },
+        "state": {
+          "type": "string",
+          "title": "@gotags: yaml:\"state\""
+        },
+        "zipCode": {
+          "type": "string",
+          "title": "@gotags: yaml:\"zipCode\""
+        },
+        "country": {
+          "type": "string",
+          "title": "@gotags: yaml:\"country\""
+        },
+        "others": {
+          "type": "string",
+          "title": "@gotags: yaml:\"others\""
+        }
+      }
+    },
+    "AgentInvokeLink": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"agentId\""
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ChatStep"
+          },
+          "title": "@gotags: yaml:\"steps\""
+        },
+        "modelNodeId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelNodeId\""
+        },
+        "modelName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelName\""
+        },
+        "input": {
+          "type": "string",
+          "title": "@gotags: yaml:\"input\""
+        },
+        "contexts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/LinkContext"
+          },
+          "title": "@gotags: yaml:\"contexts\""
+        },
+        "fileData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/FileData"
+          },
+          "title": "@gotags: yaml:\"fileData\""
+        }
+      }
+    },
+    "AgentInvokeRequest": {
+      "type": "object",
+      "properties": {
+        "chain": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AgentInvokeLink"
+          },
+          "title": "@gotags: yaml:\"chain\""
+        }
+      }
+    },
+    "AgentInvokeResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/VapusContentObject"
+          },
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "AgentInvokeStreamResponse": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"statusCode\""
+        },
+        "output": {
+          "$ref": "#/definitions/VapusStreamResponse",
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "AgentManagerRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/VapusAIAgentAction",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "spec": {
+          "$ref": "#/definitions/VapusAIAgent",
+          "title": "@gotags: yaml:\"spec\""
+        }
+      }
+    },
+    "AgentResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/VapusAIAgent"
+          },
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "AgentShort": {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "type": "string",
+          "title": "@gotags: yaml:\"agent\""
+        },
+        "agentType": {
+          "type": "string",
+          "title": "@gotags: yaml:\"agentType\""
+        },
+        "goalStatus": {
+          "type": "string",
+          "title": "@gotags: yaml:\"goalStatus\""
+        },
+        "error": {
+          "type": "string",
+          "title": "@gotags: yaml:\"error\""
+        },
+        "result": {
+          "type": "string",
+          "title": "@gotags: yaml:\"result\""
+        }
+      }
+    },
+    "AgentStepEnum": {
+      "type": "string",
+      "enum": [
+        "INVALID_STEP_ENUM",
+        "AGENTST_CONTENT_FORMAT",
+        "AGENTST_EMAIL_BODY",
+        "AGENTST_EMAIL_RECIEVER",
+        "AGENTST_EMAIL_SUBJECT",
+        "AGENTST_PDF_FORMAT",
+        "AGENTST_PPT_FORMAT",
+        "AGENTST_RECURRING_JOB_CONFIG",
+        "AGENTST_CHART_TYPE",
+        "AGENTST_DATASET",
+        "AGENTST_FILEPATH",
+        "AGENTST_FILENAME"
+      ],
+      "default": "INVALID_STEP_ENUM"
+    },
+    "AgentStepValueType": {
+      "type": "string",
+      "enum": [
+        "STRING",
+        "OBJECT",
+        "INTEGER",
+        "FLOAT",
+        "BOOLEAN",
+        "ARRAY"
+      ],
+      "default": "STRING"
+    },
+    "Any": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "A URL/resource name that uniquely identifies the type of the serialized\nprotocol buffer message. This string must contain at least\none \"/\" character. The last segment of the URL's path must represent\nthe fully qualified name of the type (as in\n`path/google.protobuf.Duration`). The name should be in a canonical form\n(e.g., leading \".\" is not accepted).\n\nIn practice, teams usually precompile into the binary all types that they\nexpect it to use in the context of Any. However, for URLs which use the\nscheme `http`, `https`, or no scheme, one can optionally set up a type\nserver that maps type URLs to message definitions as follows:\n\n* If no scheme is provided, `https` is assumed.\n* An HTTP GET on the URL must yield a [google.protobuf.Type][]\n  value in binary format, or produce an error.\n* Applications are allowed to cache lookup results based on the\n  URL, or have them precompiled into a binary to avoid any\n  lookup. Therefore, binary compatibility needs to be preserved\n  on changes to types. (Use versioned type names to manage\n  breaking changes.)\n\nNote: this functionality is not currently available in the official\nprotobuf release, and it is not used for type URLs beginning with\ntype.googleapis.com. As of May 2023, there are no widely used type server\nimplementations and no plans to implement one.\n\nSchemes other than `http`, `https` (or the empty scheme) might be\nused with implementation specific semantics."
+        }
+      },
+      "additionalProperties": {},
+      "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nProtobuf library provides support to pack/unpack Any values in the form\nof utility functions or additional generated methods of the Any type.\n\nExample 1: Pack and unpack a message in C++.\n\n    Foo foo = ...;\n    Any any;\n    any.PackFrom(foo);\n    ...\n    if (any.UnpackTo(\u0026foo)) {\n      ...\n    }\n\nExample 2: Pack and unpack a message in Java.\n\n    Foo foo = ...;\n    Any any = Any.pack(foo);\n    ...\n    if (any.is(Foo.class)) {\n      foo = any.unpack(Foo.class);\n    }\n    // or ...\n    if (any.isSameTypeAs(Foo.getDefaultInstance())) {\n      foo = any.unpack(Foo.getDefaultInstance());\n    }\n\n Example 3: Pack and unpack a message in Python.\n\n    foo = Foo(...)\n    any = Any()\n    any.Pack(foo)\n    ...\n    if any.Is(Foo.DESCRIPTOR):\n      any.Unpack(foo)\n      ...\n\n Example 4: Pack and unpack a message in Go\n\n     foo := \u0026pb.Foo{...}\n     any, err := anypb.New(foo)\n     if err != nil {\n       ...\n     }\n     ...\n     foo := \u0026pb.Foo{}\n     if err := any.UnmarshalTo(foo); err != nil {\n       ...\n     }\n\nThe pack methods provided by protobuf library will by default use\n'type.googleapis.com/full.type.name' as the type URL and the unpack\nmethods only use the fully qualified type name after the last '/'\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\nname \"y.z\".\n\nJSON\n====\nThe JSON representation of an `Any` value uses the regular\nrepresentation of the deserialized, embedded message, with an\nadditional field `@type` which contains the type URL. Example:\n\n    package google.profile;\n    message Person {\n      string first_name = 1;\n      string last_name = 2;\n    }\n\n    {\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\n      \"firstName\": \u003cstring\u003e,\n      \"lastName\": \u003cstring\u003e\n    }\n\nIf the embedded message type is well-known and has a custom JSON\nrepresentation, that representation will be embedded adding a field\n`value` which holds the custom JSON in addition to the `@type`\nfield. Example (for message [google.protobuf.Duration][]):\n\n    {\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n      \"value\": \"1.212s\"\n    }"
+    },
+    "ApiTokenType": {
+      "type": "string",
+      "enum": [
+        "BASIC",
+        "BEARER",
+        "APIKEY"
+      ],
+      "default": "BASIC"
+    },
+    "AuthnMethod": {
+      "type": "string",
+      "enum": [
+        "AM_INVALID",
+        "OIDC",
+        "LDAP"
+      ],
+      "default": "AM_INVALID"
+    },
+    "AuthnOIDC": {
+      "type": "object",
+      "properties": {
+        "callback": {
+          "type": "string",
+          "title": "@gotags: yaml:\"callback\""
+        },
+        "clientId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"clientId\""
+        },
+        "clientSecret": {
+          "type": "string",
+          "title": "@gotags: yaml:\"clientSecret\""
+        },
+        "vId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"vId\""
+        },
+        "isAlreadyInSecretBs": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"isAlreadyInSecretBS\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        }
+      },
+      "description": "*\nMessage representing the OIDC authentication parameters."
+    },
+    "AuthzAgentActions": {
+      "type": "string",
+      "enum": [
+        "INVALID_AUTHZ_OPERATION",
+        "LIST_ROLES",
+        "LIST_ACTIONS",
+        "ADD_ROLE",
+        "MODIFY_ROLE",
+        "REMOVE_ROLE",
+        "ADD_MARKETPLACE_ROLE",
+        "MODIFY_MARKETPLACE_ROLE",
+        "REMOVE_MARKETPLACE_ROLE"
+      ],
+      "default": "INVALID_AUTHZ_OPERATION"
+    },
+    "AuthzManagerRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/AuthzAgentActions",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "spec": {
+          "$ref": "#/definitions/VapusRoles",
+          "title": "@gotags: yaml:\"user\""
+        }
+      }
+    },
+    "AuthzResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "$ref": "#/definitions/AuthzRoles",
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "AuthzRoles": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/VapusRoles"
+          },
+          "title": "@gotags: yaml:\"user\""
+        }
+      }
+    },
+    "AzureCreds": {
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"tenantId\""
+        },
+        "clientId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"clientId\""
+        },
+        "clientSecret": {
+          "type": "string",
+          "title": "@gotags: yaml:\"clientSecret\""
+        }
+      }
+    },
+    "BackendStorageOnboarding": {
+      "type": "string",
+      "enum": [
+        "BSO_INVALID",
+        "BSO_INBUILT",
+        "BE_BYOS",
+        "BE_BUILD",
+        "BE_DEFAULT_STUDIO"
+      ],
+      "default": "BSO_INVALID",
+      "description": "*\nEnum representing the onboarding options for backend storage."
+    },
+    "BackendStorages": {
+      "type": "object",
+      "properties": {
+        "besType": {
+          "$ref": "#/definitions/DataSourceType",
+          "title": "@gotags: yaml:\"besType\""
+        },
+        "besOnboarding": {
+          "$ref": "#/definitions/BackendStorageOnboarding",
+          "title": "@gotags: yaml:\"besOnboarding\""
+        },
+        "besService": {
+          "$ref": "#/definitions/StorageService",
+          "title": "@gotags: yaml:\"besService\""
+        },
+        "netParams": {
+          "$ref": "#/definitions/NetworkParams",
+          "title": "@gotags: yaml:\"netParams\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "besEngine": {
+          "$ref": "#/definitions/StorageEngine",
+          "title": "@gotags: yaml:\"besEngine\""
+        }
+      },
+      "description": "*\nMessage representing the backend storages."
+    },
+    "ChatMessageObject": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "$ref": "#/definitions/AIMessageRoles",
+          "title": "@gotags: yaml:\"role\""
+        },
+        "content": {
+          "type": "string",
+          "title": "@gotags: yaml:\"content\""
+        },
+        "contentParts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/RequestContentPart"
+          },
+          "title": "@gotags: yaml:\"contentParts\""
+        },
+        "toolCalls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ToolCall"
+          },
+          "title": "@gotags: yaml:\"toolCalls\""
+        }
+      }
+    },
+    "ChatRequest": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ChatMessageObject"
+          },
+          "title": "@gotags: yaml:\"messages\""
+        },
+        "contexts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Mapper"
+          },
+          "title": "@gotags: yaml:\"contexts\""
+        },
+        "temperature": {
+          "type": "number",
+          "format": "float",
+          "title": "@gotags: yaml:\"temperature\""
+        },
+        "mode": {
+          "$ref": "#/definitions/AIInterfaceMode",
+          "title": "@gotags: yaml:\"maxOutputTokens\""
+        },
+        "modelNodeId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelNodeId\""
+        },
+        "model": {
+          "type": "string",
+          "title": "@gotags: yaml:\"model\""
+        },
+        "promptId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"promptId\""
+        },
+        "maxOutputTokens": {
+          "type": "integer",
+          "format": "int32",
+          "title": "@gotags: yaml:\"maxOutputTokens\""
+        },
+        "topP": {
+          "type": "number",
+          "format": "double",
+          "title": "@gotags: yaml:\"topP\""
+        },
+        "topK": {
+          "type": "number",
+          "format": "double",
+          "title": "@gotags: yaml:\"topK\""
+        },
+        "responseFormat": {
+          "$ref": "#/definitions/ResponseFormat",
+          "title": "@gotags: yaml:\"responseFormat\""
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ToolCall"
+          },
+          "title": "@gotags: yaml:\"toolCalls\""
+        },
+        "toolName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"toolName\""
+        }
+      }
+    },
+    "ChatResponse": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"created\""
+        },
+        "model": {
+          "type": "string",
+          "title": "@gotags: yaml:\"model\""
+        },
+        "object": {
+          "type": "string",
+          "title": "@gotags: yaml:\"object\""
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ChatResponseChoice"
+          },
+          "title": "@gotags: yaml:\"choices\""
+        },
+        "usage": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "title": "@gotags: yaml:\"usage\""
+        },
+        "event": {
+          "type": "string",
+          "title": "@gotags: yaml:\"event\""
+        }
+      }
+    },
+    "ChatResponseChoice": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "$ref": "#/definitions/ChatMessageObject",
+          "title": "@gotags: yaml:\"messages\""
+        },
+        "finishReason": {
+          "type": "string",
+          "title": "@gotags: yaml:\"finishReason\""
+        },
+        "index": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"index\""
+        }
+      }
+    },
+    "ChatStep": {
+      "type": "object",
+      "properties": {
+        "stepId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"stepId\""
+        },
+        "input": {
+          "type": "string",
+          "title": "@gotags: yaml:\"input\""
+        },
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "title": "@gotags: yaml:\"data\""
+        }
+      }
+    },
+    "ContentFormats": {
+      "type": "string",
+      "enum": [
+        "YAML",
+        "JSON",
+        "TOML",
+        "PLAIN_TEXT",
+        "CSV",
+        "PDF",
+        "PNG",
+        "JPG",
+        "JPEG",
+        "DATASET",
+        "HTML"
+      ],
+      "default": "YAML"
+    },
+    "ContentGuardrailLevel": {
+      "type": "object",
+      "properties": {
+        "hateSpeech": {
+          "$ref": "#/definitions/GuardRailLevels",
+          "title": "@gotags: yaml:\"hateSpeech\""
+        },
+        "insults": {
+          "$ref": "#/definitions/GuardRailLevels",
+          "title": "@gotags: yaml:\"insults\""
+        },
+        "sexual": {
+          "$ref": "#/definitions/GuardRailLevels",
+          "title": "@gotags: yaml:\"sexual\""
+        },
+        "threats": {
+          "$ref": "#/definitions/GuardRailLevels",
+          "title": "@gotags: yaml:\"threats\""
+        },
+        "misconduct": {
+          "$ref": "#/definitions/GuardRailLevels",
+          "title": "@gotags: yaml:\"misconduct\""
+        }
+      }
+    },
+    "CredentialSalt": {
+      "type": "object",
+      "properties": {
+        "saltVal": {
+          "type": "string",
+          "title": "@gotags: yaml:\"saltVal\""
+        }
+      },
+      "description": "*\n@message\nRepresents the credential salt value."
+    },
+    "DMResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "@gotags: yaml:\"message\""
+        },
+        "dmStatusCode": {
+          "type": "string",
+          "title": "@gotags: yaml:\"dmStatusCode\""
+        },
+        "customMessage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/MapList"
+          },
+          "title": "@gotags: yaml:\"customMessage\""
+        },
+        "agents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AgentShort"
+          },
+          "title": "@gotags: yaml:\"agents\""
+        }
+      }
+    },
+    "DataSourceType": {
+      "type": "string",
+      "enum": [
+        "INVALID_DST",
+        "DSDT_DATABASE",
+        "DSDT_ARTIFACT",
+        "DSDT_BLOB"
+      ],
+      "default": "INVALID_DST",
+      "description": "*\n@enum\nEnumerates the types of content in data sources."
+    },
+    "EOSReasons": {
+      "type": "string",
+      "enum": [
+        "SERVER_ERROR",
+        "DATA_ERROR",
+        "WAIT_TIMEOUT",
+        "SUCCESSFULL",
+        "EOF",
+        "INVALID_PARAMS",
+        "DONE"
+      ],
+      "default": "SERVER_ERROR"
+    },
+    "EmbeddingType": {
+      "type": "string",
+      "enum": [
+        "FLOAT_32",
+        "FLOAT_64"
+      ],
+      "default": "FLOAT_32"
+    },
+    "Embeddings": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/EmbeddingType",
+          "title": "@gotags: yaml:\"type\""
+        },
+        "dimension": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"dimension\""
+        },
+        "embeddings32": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "float"
+          },
+          "title": "@gotags: yaml:\"embeddings32\""
+        },
+        "embeddings64": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": "@gotags: yaml:\"embeddings64\""
+        }
+      }
+    },
+    "EmbeddingsInterface": {
+      "type": "object",
+      "properties": {
+        "modelNodeId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelNodeId\""
+        },
+        "aiModel": {
+          "type": "string",
+          "title": "@gotags: yaml:\"aiModel\""
+        },
+        "dimension": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"dimension\""
+        },
+        "inputText": {
+          "type": "string",
+          "title": "@gotags: yaml:\"inputText\""
+        }
+      }
+    },
+    "EmbeddingsResponse": {
+      "type": "object",
+      "properties": {
+        "output": {
+          "$ref": "#/definitions/Embeddings",
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "EncryptionAlgo": {
+      "type": "string",
+      "enum": [
+        "JSA_INVALID",
+        "ED25519",
+        "ECDSA",
+        "RSA"
+      ],
+      "default": "JSA_INVALID"
+    },
+    "FileData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "title": "@gotags: yaml:\"data\""
+        },
+        "format": {
+          "$ref": "#/definitions/ContentFormats",
+          "title": "@gotags: yaml:\"format\""
+        },
+        "path": {
+          "type": "string",
+          "title": "@gotags: yaml:\"path\""
+        },
+        "eof": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"eof\""
+        }
+      }
+    },
+    "FunctionCall": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "arguments": {
+          "type": "string",
+          "title": "@gotags: yaml:\"arguments\""
+        },
+        "description": {
+          "type": "string",
+          "title": "@gotags: yaml:\"description\""
+        },
+        "requiredFields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"requiredFields\""
+        }
+      }
+    },
+    "GCPCreds": {
+      "type": "object",
+      "properties": {
+        "serviceAccountKey": {
+          "type": "string",
+          "title": "@gotags: yaml:\"serviceAccountKey\""
+        },
+        "base64Encoded": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"base64Encoded\""
+        },
+        "region": {
+          "type": "string",
+          "title": "@gotags: yaml:\"region\""
+        },
+        "projectId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"projectId\""
+        },
+        "zone": {
+          "type": "string",
+          "title": "@gotags: yaml:\"zone\""
+        }
+      }
+    },
+    "GenericCredentialObj": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "title": "@gotags: yaml:\"username\""
+        },
+        "password": {
+          "type": "string",
+          "title": "@gotags: yaml:\"password\""
+        },
+        "apiToken": {
+          "type": "string",
+          "title": "@gotags: yaml:\"apiToken\""
+        },
+        "apiTokenType": {
+          "$ref": "#/definitions/ApiTokenType",
+          "title": "@gotags: yaml:\"apiTokenType\""
+        },
+        "awsCreds": {
+          "$ref": "#/definitions/AWSCreds",
+          "title": "@gotags: yaml:\"awsCreds\""
+        },
+        "gcpCreds": {
+          "$ref": "#/definitions/GCPCreds",
+          "title": "@gotags: yaml:\"gcpCreds\""
+        },
+        "azureCreds": {
+          "$ref": "#/definitions/AzureCreds",
+          "title": "@gotags: yaml:\"azureCreds\""
+        },
+        "clientId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"clientId\""
+        },
+        "clientSecret": {
+          "type": "string",
+          "title": "@gotags: yaml:\"clientSecret\""
+        }
+      }
+    },
+    "GuardModels": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelId\""
+        },
+        "modelNodeId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"modelNodeId\""
+        }
+      }
+    },
+    "GuardRailLevels": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "default": "NONE"
+    },
+    "GuardrailsManagerRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/VapusAIGuardrailsAction",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "spec": {
+          "$ref": "#/definitions/AIGuardrails",
+          "title": "@gotags: yaml:\"spec\""
+        }
+      }
+    },
+    "GuardrailsResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIGuardrails"
+          },
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "IntegrationPluginTypes": {
+      "type": "string",
+      "enum": [
+        "INVALID_PLUGIN_TYPE",
+        "EMAIL",
+        "SMS",
+        "MESSAGING",
+        "CODE_REPOSITORY",
+        "FILE_STORE"
+      ],
+      "default": "INVALID_PLUGIN_TYPE"
+    },
+    "IntegrationPlugins": {
+      "type": "string",
+      "enum": [
+        "INVALID_PLUGIN",
+        "SENDGRID",
+        "SLACK",
+        "JIRA",
+        "GMAIL",
+        "AMAZON_SES",
+        "SALESFORCE",
+        "GOOGLE_DRIVE"
+      ],
+      "default": "INVALID_PLUGIN"
+    },
+    "JWTParams": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "publicJwtKey": {
+          "type": "string",
+          "title": "@gotags: yaml:\"publicJWTKey\""
+        },
+        "privateJwtKey": {
+          "type": "string",
+          "title": "@gotags: yaml:\"privateJWTKey\""
+        },
+        "vId": {
+          "type": "string",
+          "title": "Ignore in Requests"
+        },
+        "signingAlgorithm": {
+          "$ref": "#/definitions/EncryptionAlgo",
+          "title": "@gotags: yaml:\"signingAlgorithm\""
+        },
+        "isAlreadyInSecretBs": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"isAlreadyInSecretBS\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "generateInStudio": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"generateInStudio\""
+        }
+      }
+    },
+    "LLMServiceProvider": {
+      "type": "string",
+      "enum": [
+        "INVALID_SP",
+        "OPENAI",
+        "MISTRAL",
+        "HUGGING_FACE",
+        "VAPUS",
+        "OLLAMA",
+        "AZURE_OPENAI",
+        "AZURE_PHI",
+        "GEMINI",
+        "AWS",
+        "META",
+        "ANTHROPIC"
+      ],
+      "default": "INVALID_SP"
+    },
+    "LinkContext": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/AIAgentContextKeys"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginCallBackRequest": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "title": "@gotags: yaml:\"code\""
+        },
+        "host": {
+          "type": "string",
+          "title": "@gotags: yaml:\"host\""
+        }
+      }
+    },
+    "LoginHandlerResponse": {
+      "type": "object",
+      "properties": {
+        "loginUrl": {
+          "type": "string",
+          "title": "@gotags: yaml:\"loginURL\""
+        },
+        "callbackUrl": {
+          "type": "string",
+          "title": "@gotags: yaml:\"callbackURL\""
+        },
+        "redirectUri": {
+          "type": "string",
+          "title": "@gotags: yaml:\"redirectURI\""
+        }
+      }
+    },
+    "MapList": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "@gotags: yaml:\"key\""
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"values\""
+        }
+      }
+    },
+    "Mapper": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "@gotags: yaml:\"key\""
+        },
+        "value": {
+          "type": "string",
+          "title": "@gotags: yaml:\"value\""
+        }
+      }
+    },
+    "NetworkCredentials": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "isAlreadyInSecretBs": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"isAlreadyInSecretBS\""
+        },
+        "credentials": {
+          "$ref": "#/definitions/GenericCredentialObj",
+          "title": "@gotags: yaml:\"credentials\""
+        },
+        "priority": {
+          "type": "integer",
+          "format": "int32",
+          "title": "@gotags: yaml:\"priority\""
+        },
+        "db": {
+          "type": "string",
+          "title": "@gotags: yaml:\"db\""
+        },
+        "secretName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"secretName\""
+        }
+      }
+    },
+    "NetworkParams": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "title": "@gotags: yaml:\"address\""
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32",
+          "title": "@gotags: yaml:\"port\""
+        },
+        "databases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"databases\""
+        },
+        "dsCreds": {
+          "$ref": "#/definitions/NetworkCredentials",
+          "title": "@gotags: yaml:\"dsCreds\""
+        },
+        "databasePrefixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"databasePrefixes\""
+        },
+        "version": {
+          "type": "string",
+          "title": "@gotags: yaml:\"version\""
+        }
+      }
+    },
+    "NullValue": {
+      "type": "string",
+      "enum": [
+        "NULL_VALUE"
+      ],
+      "default": "NULL_VALUE",
+      "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\nThe JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
+    },
+    "ObjectUploadResult": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "$ref": "#/definitions/FileData",
+          "title": "@gotags: yaml:\"object\""
+        },
+        "responsePath": {
+          "type": "string",
+          "title": "@gotags: yaml:\"responsePath\""
+        },
+        "error": {
+          "type": "string",
+          "title": "@gotags: yaml:\"error\""
+        },
+        "fid": {
+          "type": "string",
+          "title": "@gotags: yaml:\"fid\""
+        }
+      }
+    },
+    "Organization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "displayName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"displayName\""
+        },
+        "orgId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"orgId\""
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"users\""
+        },
+        "secretPasscode": {
+          "$ref": "#/definitions/CredentialSalt",
+          "title": "@gotags: yaml:\"secretPasscode\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "backendSecretStorage": {
+          "$ref": "#/definitions/BackendStorages",
+          "title": "@gotags: yaml:\"backendSecretStorage\""
+        },
+        "artifactStorage": {
+          "$ref": "#/definitions/BackendStorages",
+          "title": "@gotags: yaml:\"artifactStorage\""
+        },
+        "resourceBase": {
+          "$ref": "#/definitions/VapusBase",
+          "title": "@gotags: yaml:\"resourceBase\""
+        },
+        "orgType": {
+          "$ref": "#/definitions/OrganizationTypes",
+          "title": "@gotags: yaml:\"orgType\""
+        }
+      }
+    },
+    "OrganizationAgentActions": {
+      "type": "string",
+      "enum": [
+        "INVALID_ORG_ACTION",
+        "CONFIGURE_ORG",
+        "DELETE_ORG",
+        "UPGRADE_ORG_ARTIFACTS",
+        "PATCH_ORG",
+        "LIST_ORGS",
+        "DESCRIBE_ORG",
+        "ADD_ORG_USER"
+      ],
+      "default": "INVALID_ORG_ACTION"
+    },
+    "OrganizationManagerRequest": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "$ref": "#/definitions/OrganizationAgentActions",
+          "description": "@gotags: yaml:\"actions\"",
+          "title": "The actions to perform on the org"
+        },
+        "spec": {
+          "$ref": "#/definitions/Organization",
+          "description": "@gotags: yaml:\"spec\"",
+          "title": "The request body containing the org details"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/OrganizationUserOps"
+          },
+          "description": "@gotags: yaml:\"users\"",
+          "title": "The list of org user operations"
+        }
+      },
+      "description": "*\n@typedef {Object} ManageOrganizationRequest\n@property {OrganizationAgentActions} actions - The actions to perform on the org.\n@property {models.v1alpha1.Organization} spec - The request body containing the org details."
+    },
+    "OrganizationOutput": {
+      "type": "object",
+      "properties": {
+        "orgs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Organization"
+          },
+          "description": "@gotags: yaml:\"orgs\"",
+          "title": "The list of orgs"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/OrganizationUsers"
+          },
+          "description": "@gotags: yaml:\"users\"",
+          "title": "The list of org users"
+        }
+      },
+      "title": "The list of orgs"
+    },
+    "OrganizationResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "description": "@gotags: yaml:\"dmResp\"",
+          "title": "The response from the org management service"
+        },
+        "output": {
+          "$ref": "#/definitions/OrganizationOutput",
+          "description": "@gotags: yaml:\"output\"",
+          "title": "The output of the org response"
+        }
+      }
+    },
+    "OrganizationTypes": {
+      "type": "string",
+      "enum": [
+        "CONSUMER_ORG",
+        "SERVICE_ORG"
+      ],
+      "default": "CONSUMER_ORG"
+    },
+    "OrganizationUserOps": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"userId\""
+        },
+        "validTill": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"validTill\""
+        },
+        "role": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"role\""
+        },
+        "added": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"added\""
+        },
+        "inviteIfNotFound": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"inviteIfNotfound\""
+        }
+      }
+    },
+    "OrganizationUsers": {
+      "type": "object",
+      "properties": {
+        "org": {
+          "type": "string",
+          "description": "@gotags: yaml:\"org\"",
+          "title": "The org"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/User"
+          },
+          "description": "@gotags: yaml:\"users\"",
+          "title": "The list of users"
+        }
+      },
+      "title": "The list of org users"
+    },
+    "Plugin": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status,omitempty\""
+        },
+        "pluginType": {
+          "$ref": "#/definitions/IntegrationPluginTypes",
+          "title": "@gotags: yaml:\"pluginType,omitempty\""
+        },
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name,omitempty\""
+        },
+        "networkParams": {
+          "$ref": "#/definitions/PluginNetworkParams",
+          "title": "@gotags: yaml:\"networkParams,omitempty\""
+        },
+        "dynamicParams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Mapper"
+          },
+          "title": "@gotags: yaml:\"dynamicParams,omitempty\""
+        },
+        "scope": {
+          "type": "string",
+          "title": "@gotags: yaml:\"scope,omitempty\""
+        },
+        "org": {
+          "type": "string",
+          "title": "@gotags: yaml:\"org,omitempty\""
+        },
+        "editable": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"editable,omitempty\""
+        },
+        "pluginService": {
+          "$ref": "#/definitions/IntegrationPlugins",
+          "title": "@gotags: yaml:\"pluginService,omitempty\""
+        },
+        "pluginId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"pluginId,omitempty\""
+        },
+        "resourceBase": {
+          "$ref": "#/definitions/VapusBase",
+          "title": "@gotags: yaml:\"resourceBase\""
+        }
+      }
+    },
+    "PluginActionRequest": {
+      "type": "object",
+      "properties": {
+        "pluginId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"pluginId\""
+        },
+        "pluginType": {
+          "type": "string",
+          "title": "@gotags: yaml:\"pluginType\""
+        },
+        "spec": {
+          "type": "string",
+          "format": "byte",
+          "title": "@gotags: yaml:\"spec\""
+        },
+        "callerResource": {
+          "type": "string",
+          "title": "@gotags: yaml:\"callerResource\""
+        },
+        "callerId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"callerId\""
+        }
+      }
+    },
+    "PluginActionResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        }
+      }
+    },
+    "PluginAgentAction": {
+      "type": "string",
+      "enum": [
+        "INVALID_PLUGIN_ACTION",
+        "CONFIGURE_PLUGIN",
+        "PATCH_PLUGIN",
+        "DELETE_PLUGIN",
+        "TEST_PLUGIN"
+      ],
+      "default": "INVALID_PLUGIN_ACTION"
+    },
+    "PluginManagerRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/PluginAgentAction",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "spec": {
+          "$ref": "#/definitions/Plugin",
+          "title": "@gotags: yaml:\"spec\""
+        }
+      }
+    },
+    "PluginNetworkParams": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "@gotags: yaml:\"url,omitempty\""
+        },
+        "port": {
+          "type": "string",
+          "title": "@gotags: yaml:\"port,omitempty\""
+        },
+        "version": {
+          "type": "string",
+          "title": "@gotags: yaml:\"version,omitempty\""
+        },
+        "credentials": {
+          "$ref": "#/definitions/GenericCredentialObj",
+          "title": "@gotags: yaml:\"credentials,omitempty\""
+        },
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "isAlreadyInSecretBs": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"isAlreadyInSecretBS\""
+        },
+        "secretName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"secretName\""
+        }
+      }
+    },
+    "PluginResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Plugin"
+          },
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "Prompt": {
+      "type": "object",
+      "properties": {
+        "systemMessage": {
+          "type": "string",
+          "title": "@gotags: yaml:\"systemMessage\""
+        },
+        "userMessage": {
+          "type": "string",
+          "title": "@gotags: yaml:\"userMessage\""
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ToolPrompts"
+          },
+          "title": "@gotags: yaml:\"tools\""
+        },
+        "inputTag": {
+          "type": "string",
+          "title": "@gotags: yaml:\"inputTag\""
+        },
+        "outputTag": {
+          "type": "string",
+          "title": "@gotags: yaml:\"outputTag\""
+        },
+        "contextTag": {
+          "type": "string",
+          "title": "@gotags: yaml:\"contextTag\""
+        },
+        "sample": {
+          "$ref": "#/definitions/Sample",
+          "title": "@gotags: yaml:\"sample\""
+        },
+        "customJson": {
+          "type": "string",
+          "title": "@gotags: yaml:\"customJson\""
+        }
+      }
+    },
+    "PromptAgentAction": {
+      "type": "string",
+      "enum": [
+        "INVALID_PROMPT_ACTION",
+        "CONFIGURE_PROMPT",
+        "ARCHIVE_PROMPT",
+        "PATCH_PROMPT"
+      ],
+      "default": "INVALID_PROMPT_ACTION"
+    },
+    "PromptManagerRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/PromptAgentAction",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "spec": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIModelPrompt"
+          },
+          "title": "@gotags: yaml:\"spec\""
+        }
+      }
+    },
+    "PromptResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIModelPrompt"
+          },
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "RefreshToken": {
+      "type": "object",
+      "properties": {
+        "jwtId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"jwtId\""
+        },
+        "validTill": {
+          "type": "string",
+          "title": "@gotags: yaml:\"validTill\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "userId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"userId\""
+        },
+        "organization": {
+          "type": "string",
+          "title": "@gotags: yaml:\"organization\""
+        }
+      }
+    },
+    "RefreshTokenAgentUtility": {
+      "type": "string",
+      "enum": [
+        "INVALID_REFRESH_TOKEN_OPERATION",
+        "GENERATE_REFRESH_TOKEN",
+        "REVOKE_REFRESH_TOKEN"
+      ],
+      "default": "INVALID_REFRESH_TOKEN_OPERATION"
+    },
+    "RefreshTokenManagerRequest": {
+      "type": "object",
+      "properties": {
+        "utility": {
+          "$ref": "#/definitions/RefreshTokenAgentUtility",
+          "title": "@gotags: yaml:\"utility\""
+        },
+        "validDayCount": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"validDayCount\""
+        }
+      }
+    },
+    "RefreshTokenResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/RefreshToken"
+          },
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "RegisterUserRequest": {
+      "type": "object",
+      "properties": {
+        "idToken": {
+          "type": "string",
+          "title": "@gotags: yaml:\"idToken\""
+        },
+        "organization": {
+          "type": "string",
+          "title": "@gotags: yaml:\"organization\""
+        }
+      }
+    },
+    "RequestContentPart": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/AIMessageTypes",
+          "title": "@gotags: yaml:\"type\""
+        },
+        "text": {
+          "type": "string",
+          "title": "@gotags: yaml:\"text\""
+        },
+        "imageUrl": {
+          "type": "string",
+          "title": "@gotags: yaml:\"imageUrl\""
+        },
+        "inputAudio": {
+          "type": "string",
+          "title": "@gotags: yaml:\"inputAudio\""
+        }
+      }
+    },
+    "ResourceScope": {
+      "type": "string",
+      "enum": [
+        "ORG_SCOPE",
+        "ACCOUNT_SCOPE",
+        "USER_SCOPE"
+      ],
+      "default": "ORG_SCOPE"
+    },
+    "Resourcebase": {
+      "type": "object",
+      "properties": {
+        "owners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"owners\""
+        },
+        "base": {
+          "$ref": "#/definitions/VapusBase",
+          "title": "@gotags: yaml:\"base\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "org": {
+          "type": "string",
+          "title": "@gotags: yaml:\"org\""
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"labels\""
+        },
+        "scope": {
+          "$ref": "#/definitions/ResourceScope",
+          "title": "@gotags: yaml:\"scope\""
+        }
+      }
+    },
+    "ResponseFormat": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/AIResponseFormat",
+          "title": "@gotags: yaml:\"type\""
+        },
+        "jsonSchema": {
+          "type": "string",
+          "title": "@gotags: yaml:\"jsonSchema\""
+        }
+      }
+    },
+    "Sample": {
+      "type": "object",
+      "properties": {
+        "inputText": {
+          "type": "string",
+          "title": "@gotags: yaml:\"inputText\""
+        },
+        "response": {
+          "type": "string",
+          "title": "@gotags: yaml:\"response\""
+        }
+      }
+    },
+    "SearchParam": {
+      "type": "object",
+      "properties": {
+        "q": {
+          "type": "string",
+          "title": "@gotags: yaml:\"q\""
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Mapper"
+          },
+          "title": "@gotags: yaml:\"filters\""
+        }
+      }
+    },
+    "SecurityGuardrails": {
+      "type": "object",
+      "properties": {
+        "guardrails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"guardrails\""
+        }
+      }
+    },
+    "SensitiveDataGuardrails": {
+      "type": "object",
+      "properties": {
+        "piiType": {
+          "type": "string",
+          "title": "@gotags: yaml:\"piiType\""
+        },
+        "action": {
+          "type": "string",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "regex": {
+          "type": "string",
+          "title": "@gotags: yaml:\"regex\""
+        }
+      }
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Any"
+          }
+        }
+      }
+    },
+    "Steps": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/AgentStepEnum",
+          "title": "@gotags: yaml:\"id\""
+        },
+        "prompt": {
+          "type": "string",
+          "title": "@gotags: yaml:\"prompt\""
+        },
+        "promptId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"promptId\""
+        },
+        "required": {
+          "type": "boolean",
+          "description": "@gotags: yaml:\"required\"",
+          "title": "repeated Mapper input_templates = 4; // @gotags: yaml:\"inputTemplates\""
+        },
+        "autoGenerate": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"autoGenerate\""
+        },
+        "valueType": {
+          "$ref": "#/definitions/AgentStepValueType",
+          "title": "@gotags: yaml:\"valueType\""
+        }
+      }
+    },
+    "StorageEngine": {
+      "type": "string",
+      "enum": [
+        "INVALID_STORAGE_ENGINE",
+        "HASHICORPVAULT",
+        "POSTGRES",
+        "OCI",
+        "BLOB",
+        "GRPC",
+        "AWS_VAULT",
+        "GCP_VAULT",
+        "AZURE_VAULT"
+      ],
+      "default": "INVALID_STORAGE_ENGINE",
+      "description": "*\n@enum\nEnumerates the storage engines supported by the Vapus Data Studio system."
+    },
+    "StorageService": {
+      "type": "string",
+      "enum": [
+        "INVALID_DS_SERVICE",
+        "RDS",
+        "GAR",
+        "ECR",
+        "AWS_SECRET_MANAGER",
+        "HASHICORP_VAULT",
+        "SELF_HOSTED",
+        "AWS_S3",
+        "GCP_CLOUD_STORAGE",
+        "GCP_SECRET_MANAGER",
+        "AZURE_SECRET_MANAGER",
+        "GCP_CLOUD_SQL"
+      ],
+      "default": "INVALID_DS_SERVICE",
+      "description": "*\n@enum\nEnumerates the storage services supported by the Vapus Data Studio system."
+    },
+    "StoreDMSecretsRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "vPath": {
+          "type": "string",
+          "title": "@gotags: yaml:\"vPath\""
+        },
+        "cData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Mapper"
+          },
+          "title": "@gotags: yaml:\"cData\""
+        }
+      },
+      "description": "*\nThe StoreDMSecretsRequest message contains the information required to store data marketplace secrets."
+    },
+    "StoreDMSecretsResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse"
+        },
+        "vPath": {
+          "type": "string",
+          "title": "@gotags: yaml:\"vPath\""
+        },
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        }
+      },
+      "description": "*\nThe StoreDMSecretsResponse message contains the response to a data marketplace secrets storage request."
+    },
+    "StudioPublicInfoResponse": {
+      "type": "object",
+      "properties": {
+        "logo": {
+          "type": "string"
+        },
+        "accountName": {
+          "type": "string"
+        },
+        "favicon": {
+          "type": "string"
+        }
+      }
+    },
+    "StudioUserRoles": {
+      "type": "string",
+      "enum": [
+        "ANONYMOUS",
+        "STUDIO_OWNERS",
+        "STUDIO_OPERATORS",
+        "ORG_OWNERS",
+        "ORG_USERS",
+        "STUDIO_USERS"
+      ],
+      "default": "ANONYMOUS"
+    },
+    "ToolCall": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "@gotags: yaml:\"id\""
+        },
+        "type": {
+          "type": "string",
+          "title": "@gotags: yaml:\"type\""
+        },
+        "functionSchema": {
+          "$ref": "#/definitions/FunctionCall",
+          "title": "@gotags: yaml:\"functionSchema\""
+        }
+      }
+    },
+    "ToolPrompts": {
+      "type": "object",
+      "properties": {
+        "toolSchema": {
+          "type": "string",
+          "title": "@gotags: yaml:\"toolSchema,omitempty\""
+        },
+        "autoGenerate": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"autoGenerate,omitempty\""
+        },
+        "sampleJson": {
+          "type": "string",
+          "title": "@gotags: yaml:\"sampleJson,omitempty\""
+        },
+        "type": {
+          "type": "string",
+          "title": "@gotags: yaml:\"type,omitempty\""
+        }
+      }
+    },
+    "TopicGuardrails": {
+      "type": "object",
+      "properties": {
+        "topic": {
+          "type": "string",
+          "title": "@gotags: yaml:\"topic\""
+        },
+        "description": {
+          "type": "string",
+          "title": "@gotags: yaml:\"description\""
+        },
+        "samples": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"samples\""
+        }
+      }
+    },
+    "UploadRequest": {
+      "type": "object",
+      "properties": {
+        "objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/FileData"
+          },
+          "title": "@gotags: yaml:\"objects\""
+        },
+        "resource": {
+          "type": "string",
+          "title": "@gotags: yaml:\"resource\""
+        },
+        "resourceId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"resourceId\""
+        }
+      }
+    },
+    "UploadResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ObjectUploadResult"
+          },
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"displayName\""
+        },
+        "userId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"userId\""
+        },
+        "email": {
+          "type": "string",
+          "title": "@gotags: yaml:\"email\""
+        },
+        "organizationRoles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/UserOrganizationRole"
+          },
+          "title": "@gotags: yaml:\"organizationRoles\""
+        },
+        "inviteId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"inviteId\""
+        },
+        "studioRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StudioUserRoles"
+          },
+          "title": "@gotags: yaml:\"StudioRoles\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "invitedOn": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"invitedOn\""
+        },
+        "inviteExpiresOn": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"inviteExpiresOn\""
+        },
+        "firstName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"firstName\""
+        },
+        "lastName": {
+          "type": "string",
+          "title": "@gotags: yaml:\"lastName\""
+        },
+        "invitedType": {
+          "$ref": "#/definitions/UserInviteType",
+          "title": "@gotags: yaml:\"invitedType\""
+        },
+        "studioPolicies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"StudioPolicies\""
+        },
+        "profile": {
+          "$ref": "#/definitions/UserProfile",
+          "title": "@gotags: yaml:\"profile\""
+        }
+      }
+    },
+    "UserAgentActions": {
+      "type": "string",
+      "enum": [
+        "INVALID_USER_OPERATION",
+        "INVITE_USERS",
+        "SELF_SIGNUP",
+        "REMOVE_USER",
+        "PATCH_USER"
+      ],
+      "default": "INVALID_USER_OPERATION"
+    },
+    "UserGetterActions": {
+      "type": "string",
+      "enum": [
+        "GET_USER",
+        "LIST_USERS",
+        "LIST_STUDIO_USERS"
+      ],
+      "default": "GET_USER"
+    },
+    "UserInviteType": {
+      "type": "string",
+      "enum": [
+        "REQUEST_ACCESS",
+        "INVITE_ACCESS",
+        "STUDIO_SETUP"
+      ],
+      "default": "REQUEST_ACCESS"
+    },
+    "UserManagerRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/UserAgentActions",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "spec": {
+          "$ref": "#/definitions/User",
+          "title": "@gotags: yaml:\"user\""
+        },
+        "organization": {
+          "type": "string",
+          "description": "The organization of the users to manage",
+          "title": "User Organization"
+        },
+        "roleArn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"roleArn\""
+        }
+      }
+    },
+    "UserOrganizationRole": {
+      "type": "object",
+      "properties": {
+        "organizationId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"organizationId\""
+        },
+        "role": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"role\""
+        },
+        "invitedOn": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"invitedOn\""
+        },
+        "validTill": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"validTill\""
+        },
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"policies\""
+        },
+        "isDefault": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"isDefault\""
+        }
+      }
+    },
+    "UserProfile": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Address"
+          },
+          "title": "@gotags: yaml:\"addresses\""
+        },
+        "avatar": {
+          "type": "string",
+          "title": "@gotags: yaml:\"avatar\""
+        },
+        "description": {
+          "type": "string",
+          "title": "@gotags: yaml:\"description\""
+        }
+      }
+    },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "$ref": "#/definitions/VapusUser",
+          "title": "@gotags: yaml:\"output\""
+        },
+        "organizationMap": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"organizationMap\""
+        }
+      }
+    },
+    "VapusAIAgent": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "type": "string",
+          "title": "@gotags: yaml:\"agentId\""
+        },
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "agentType": {
+          "$ref": "#/definitions/VapusAiAgentTypes",
+          "title": "@gotags: yaml:\"agentType\""
+        },
+        "description": {
+          "type": "string",
+          "title": "@gotags: yaml:\"description\""
+        },
+        "status": {
+          "type": "string",
+          "title": "@gotags: yaml:\"status\""
+        },
+        "agentVersion": {
+          "type": "string",
+          "title": "@gotags: yaml:\"agentVersion\""
+        },
+        "org": {
+          "type": "string",
+          "title": "@gotags: yaml:\"org\""
+        },
+        "owners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"owners\""
+        },
+        "aiModelMap": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AIModelMap"
+          },
+          "title": "@gotags: yaml:\"aiModelMap\""
+        },
+        "editable": {
+          "type": "boolean",
+          "title": "@gotags: yaml:\"editable\""
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/Steps"
+          },
+          "title": "@gotags: yaml:\"steps\""
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"labels\""
+        },
+        "settings": {
+          "$ref": "#/definitions/AIAgentSettings",
+          "title": "@gotags: yaml:\"settings\""
+        },
+        "resourceBase": {
+          "$ref": "#/definitions/VapusBase",
+          "title": "@gotags: yaml:\"resourceBase\""
+        }
+      }
+    },
+    "VapusAIAgentAction": {
+      "type": "string",
+      "enum": [
+        "INVALID_VAPUS_AGENT_ACTION",
+        "CONFIGURE_AIAGENT",
+        "ARCHIVE_AIAGENT",
+        "PATCH_AIAGENT"
+      ],
+      "default": "INVALID_VAPUS_AGENT_ACTION"
+    },
+    "VapusAIGuardrailsAction": {
+      "type": "string",
+      "enum": [
+        "INVALID_GUARDRAIL_ACTION",
+        "CONFIGURE_GUARDRAIL",
+        "ARCHIVE_GUARDRAIL",
+        "PATCH_GUARDRAIL"
+      ],
+      "default": "INVALID_GUARDRAIL_ACTION"
+    },
+    "VapusAiAgentTypes": {
+      "type": "string",
+      "enum": [
+        "INVALID_AGENT_TYPE",
+        "EMAILER",
+        "FILE_UPLOADER",
+        "DATAPRODUCT_QUERY_AGENT",
+        "MESSAGE_POSTER",
+        "CHART_GENERATOR",
+        "CHAT_AGENT",
+        "FILE_GENERATOR",
+        "SYNTHETIC_DATA_GENERATOR"
+      ],
+      "default": "INVALID_AGENT_TYPE"
+    },
+    "VapusBase": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"createdAt\""
+        },
+        "createdBy": {
+          "type": "string",
+          "title": "@gotags: yaml:\"createdBy\""
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"deletedAt\""
+        },
+        "deletedBy": {
+          "type": "string",
+          "title": "@gotags: yaml:\"deletedBy\""
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"updatedAt\""
+        },
+        "updatedBy": {
+          "type": "string",
+          "title": "@gotags: yaml:\"updatedBy\""
+        }
+      }
+    },
+    "VapusContentObject": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "$ref": "#/definitions/ContentFormats",
+          "title": "@gotags: yaml:\"contentType\""
+        },
+        "content": {
+          "type": "string",
+          "title": "@gotags: yaml:\"content\""
+        },
+        "final": {
+          "$ref": "#/definitions/VapusEOL",
+          "title": "@gotags: yaml:\"final\""
+        },
+        "dataset": {
+          "type": "object",
+          "title": "@gotags: yaml:\"dataset\""
+        }
+      }
+    },
+    "VapusEOL": {
+      "type": "object",
+      "properties": {
+        "reason": {
+          "$ref": "#/definitions/EOSReasons",
+          "title": "@gotags: yaml:\"reason\""
+        },
+        "metadata": {
+          "type": "string",
+          "title": "@gotags: yaml:\"metadata\""
+        }
+      }
+    },
+    "VapusRoleScope": {
+      "type": "string",
+      "enum": [
+        "DOMAIN_ROLES",
+        "STUDIO_ROLES",
+        "MARKETPLACE_ROLES"
+      ],
+      "default": "DOMAIN_ROLES"
+    },
+    "VapusRoles": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "@gotags: yaml:\"name\""
+        },
+        "action": {
+          "type": "string",
+          "title": "@gotags: yaml:\"action\""
+        },
+        "arn": {
+          "type": "string",
+          "title": "@gotags: yaml:\"arn\""
+        },
+        "scope": {
+          "$ref": "#/definitions/VapusRoleScope",
+          "title": "@gotags: yaml:\"scope\""
+        },
+        "description": {
+          "type": "string",
+          "title": "@gotags: yaml:\"description\""
+        }
+      }
+    },
+    "VapusStreamEvents": {
+      "type": "string",
+      "enum": [
+        "INVALID_EVENT",
+        "START",
+        "END",
+        "DATA",
+        "ABORTED",
+        "DATASET_START",
+        "DATASET_END",
+        "STATE",
+        "FILE_DATA",
+        "RESPONSE_ID"
+      ],
+      "default": "INVALID_EVENT"
+    },
+    "VapusStreamResponse": {
+      "type": "object",
+      "properties": {
+        "eventAt": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"eventAt\""
+        },
+        "event": {
+          "$ref": "#/definitions/VapusStreamEvents",
+          "title": "@gotags: yaml:\"event\""
+        },
+        "data": {
+          "$ref": "#/definitions/VapusContentObject",
+          "title": "@gotags: yaml:\"data\""
+        },
+        "files": {
+          "$ref": "#/definitions/FileData",
+          "title": "@gotags: yaml:\"files\""
+        }
+      }
+    },
+    "VapusUser": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/User"
+          },
+          "title": "@gotags: yaml:\"user\""
+        }
+      }
+    },
+    "WordGuardRails": {
+      "type": "object",
+      "properties": {
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "@gotags: yaml:\"words\""
+        },
+        "fileLocation": {
+          "type": "string",
+          "title": "@gotags: yaml:\"fileLocation\""
+        }
+      }
+    },
+    "v1alpha1.AIModelNodeResponse": {
+      "type": "object",
+      "properties": {
+        "dmResp": {
+          "$ref": "#/definitions/DMResponse",
+          "title": "@gotags: yaml:\"dmResp\""
+        },
+        "output": {
+          "$ref": "#/definitions/AIModelNodeResponse.AIModelNodeResponse",
+          "title": "@gotags: yaml:\"output\""
+        }
+      }
+    }
+  }
+}

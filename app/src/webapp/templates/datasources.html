@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+    {{ template "main-sidebar.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <section id="grids" class="space-y-6">
+            <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+                <h1 class="text-2xl font-bold text-grey-900">{{ .SectionHeader }}</h1>
+                {{ template "create-new-resource.html" . }}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {{ range $id, $val := .Response.DataSources }}
+                <div class="relative p-4 bg-white rounded-lg shadow-lg border border-gray-200">
+                    <a href="{{ $.Response.BackListingLink }}/{{ $val.DataSourceId }}" target="_blank" class="absolute top-2 right-2 text-blue-800 hover:underline">
+                        {{ template "view-details-svg.html" . }}
+                    </a>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">{{ $val.Name }}</h3>
+                    <div class="grid grid-cols-1 gap-2 text-sm text-gray-700">
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">ID:</span>
+                            <span>{{ limitletters $val.DataSourceId 25 }}<button onclick="copyToClipboard('{{ $val.DataSourceId }}')" title="Copy" class="ml-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600 hover:text-blue-500 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H5zm0 2h8v11H5V4zm2 2a1 1 0 011 1h4a1 1 0 110 2H8a1 1 0 01-1-1V6zm1 2a1 1 0 100 2h2a1 1 0 100-2H9z" clip-rule="evenodd" />
+                                </svg>
+                            </button></span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Owners:</span>
+                            <span class="flex items-center">{{ $val.Owners }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Source Type:</span>
+                            <span class="flex items-center">{{ $val.DataSourceType }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Status:</span>
+                            <span>
+                                <span class="px-3 py-1 text-sm font-medium {{ if eq $val.Status `CONFIGUR_ERR` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }} rounded-full">
+                                    {{ $val.Status }}
+                                </span>
+                                </span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Storage Engine:</span>
+                            <span class="flex items-center">{{ $val.Attributes.StorageEngine }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Service Provider:</span>
+                            <span class="flex items-center">{{ $val.Attributes.ServiceProvider }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Service Name:</span>
+                            <span class="flex items-center">{{ $val.Attributes.ServiceName }}</span>
+                        </div>
+                    </div>
+                </div>
+                {{ else }}
+                <div class="text-center text-gray-500 m-20 text-4xl  w-full">
+                    <p>No data sources available.</p>
+                </div>
+                {{ end }}
+            </div>
+        </section>
+    </div>
+    <div hidden id="createTemplate">{{ $.CreateTemplate }}</div>
+  </div>
+  <script>
+    function createNewResource() {
+      document.getElementById('actionTitle').innerHTML = "";
+      document.getElementById('actionTitle').innerHTML = "Add New Data Source";
+      document.getElementById('yamlSpecTitle').innerHTML = "";
+      document.getElementById('yamlSpecTitle').innerHTML = `Enter your spec here`;
+      openYAMLedModal(`{{ .Response.ActionParams.API }}`,`{{ .GlobalContext.AccessTokenKey }}`,`createTemplate`);
+    }
+</script>
+</body>
+</html>

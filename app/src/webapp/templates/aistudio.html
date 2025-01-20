@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  <script type="module" src="/static/js/ai-chat.js"></script>
+  <script type="module" src="/static/js/indexdb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // JavaScript function to toggle expand/collapse rows
+    function toggleRow(rowId) {
+      const expandedRow = document.getElementById(rowId);
+      expandedRow.classList.toggle("hidden");
+    }
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.classList.toggle("hidden");
+    }
+  </script>
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+  {{ template "header.html" . }}
+
+  <div class="flex-grow flex overflow-y-auto">
+    {{ template "main-sidebar.html" . }}
+    <!-- Sidebar -->
+    <!-- Chat and Editor Section -->
+    <div class="flex bg-white shadow-md rounded-lg p-2 w-5/6 mt-2">
+    <div class="flex-grow bg-white shadow-md rounded-lg p-2 flex flex-col w-4/5">
+
+      <div id="aiChatResult"
+        class="flex-grow p-4 border border-gray-200 rounded-lg mb-2 bg-gray-50 table-container overflow-y-auto "
+        style="height: 500px;background: radial-gradient(circle, black -25%, transparent 10%) 0 0, radial-gradient(circle, black -25%, transparent 10%) 10px 10px; background-size: 20px 20px;">
+
+      </div>
+      <!-- Input Area with Dropdown -->
+      <div class="flex items-center space-x-2">
+        <!-- Text Input -->
+        <textarea id="textInput" onkeydown="EnterInput(event)"
+          class="w-full h-24 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-pink-900"
+          placeholder="Type your message here..." onk></textarea>
+
+        <div class="flex flex-col items-center space-y-2">
+          <!-- Attach File Icon -->
+          <button id="addContextButton"
+            class="bg-orange-700  text-white px-2 py-1 hover:bg-pink-900 text-sm rounded-lg focus:outline-none"
+            onclick="toggleContextPopup()">
+            Add Context
+          </button>
+          <!-- Send Button -->
+          <button class="w-24 px-4 py-2 bg-black text-white text-sm rounded-lg hover:bg-pink-900" onclick="submitInput()">
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="w-1/5 bg-white overflow-y-auto shadow-md p-4 rounded-lg mr-2">
+
+      <div class="mb-2">
+        <label for="toggleStateLabel" id="toggleStateLabel" class="block text-gray-700 text-sm font-medium mb-1">Stream</label>
+        <!-- <div class="flex items-center space-x-3"> -->
+        <div class="relative">
+          <button id="toggleStreamButton"
+            class="relative inline-flex h-6 w-16 items-center rounded-full bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            role="switch" aria-checked="false" onclick="toggleStream(this)">
+            <span class="absolute left-1 w-6 h-6 bg-white rounded-full shadow-md transition-transform transform"></span>
+          </button>
+        </div>
+        <label for="aiInteractionMode" class="block text-gray-700 font-medium text-sm mb-1">Mode</label>
+        <div class="flex items-center space-x-4 mt-2">
+          <label class="inline-flex items-center">
+            <input type="radio" name="aiInteractionMode" value="P2P" class="form-radio text-blue-600" checked>
+            <span class="ml-2 text-gray-700 text-sm">Direct Messaging</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input type="radio" name="aiInteractionMode" value="CHAT_MODE" class="form-radio text-blue-600">
+            <span class="ml-2 text-gray-700 text-sm">Chat</span>
+          </label>
+        </div>
+        <div class="mb-2 mt-2">
+        <div class="vapus-dropdown-toggle rounded-lg bg-black text-sm text-white">Select AI Models</div>
+        <div class="vapus-dropdown-menu rounded-lg">
+          <!-- Parent Items -->
+          {{ range $id, $val := .Response.AIModelNodes }}
+          <div class="vapus-dropdown-item parent text-sm text-sm rounded-lg m-2">{{ $val.Name }}</div>
+          {{ range $model := $val.Attributes.GenerativeModels }}
+          <div class="vapus-dropdown-item text-sm child rounded-lg m-2"
+            data-value="{{ $val.ModelNodeId }}||{{ $model.ModelName }}" data-displayName="{{ $model.ModelName }}">{{
+            $model.ModelName }}</div>
+          {{ end }}
+          {{ end }}
+        </div>
+        <input type="text" id="aiModel" hidden value="">
+      </div>
+        
+        <div class="mb-2 mt-2">
+        <div class="vapus-dropdown-toggle rounded-lg bg-black text-sm text-white prompt-dropdown-toggle">Select Prompt
+        </div>
+        <div class="vapus-dropdown-menu prompt-dropdown-menu rounded-lg">
+          <!-- Parent Items -->
+          {{ range $id, $val := .Response.AIPrompts }}
+          <div class="vapus-dropdown-item text-sm child rounded-lg m-2 text-sm" data-value="{{ $val.PromptId }}"
+            data-displayName="{{ $val.Name }}">{{ $val.Name }}</div>
+          {{ end }}
+        </div>
+        <input type="text" id="promptId" hidden value="">
+      </div>
+      </div>
+      <label for="temperatureSelect" class="block text-gray-700  text-sm font-medium mb-1">Select Temperature</label>
+      <div id="temperatureSelect" class="flex items-center space-x-4 mt-2">
+        <!-- Slider -->
+        <input id="temperatureSlider" type="range" min="0.0" max="1.0" step="0.1" value="0.7"
+          class="w-full h-2 bg-red-500 rounded-lg appearance-none cursor-pointer"
+          onchange="updateTemperatureValue(this.value)" />
+        <!-- Numeric Value -->
+        <input id="temperatureValue" type="number" step="0.1" min="0.0" max="1.0" value="0.7"
+          class="w-16 px-2 py-1 border border-gray-300 rounded-lg text-center focus:outline-none focus:ring focus:ring-blue-200"
+          onchange="updateSliderValue(this.value)" />
+      </div>
+
+      <label for="maxTokens" class="block text-gray-700 text-sm font-medium mb-1">Max Tokens</label>
+      <input type="text" id="maxTokens" placeholder="Max Tokens..."
+        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200" />
+      <label for="topk" class="block text-gray-700 font-medium mb-1 text-sm">Top K</label>
+      <input type="text" id="topk" placeholder="value between 0 - 1000"
+        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200" />
+      <label for="topP" class="block text-gray-700 font-medium mb-1 text-sm">Top P</label>
+      <input type="text" id="topP" placeholder="value between 0.0 - 1.0"
+        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-200" />
+
+    </div>
+    </div>
+  </div>
+  {{ template "ai-context-popup.html" . }}
+  <script>
+    // Sync slider value with numeric input
+    function updateTemperatureValue(value) {
+      document.getElementById("temperatureValue").value = parseFloat(value).toFixed(1);
+    }
+
+    // Sync numeric input value with slider
+    function updateSliderValue(value) {
+      const numericValue = parseFloat(value);
+      if (numericValue >= 0.0 && numericValue <= 1.0) {
+        document.getElementById("temperatureSlider").value = numericValue.toFixed(1);
+      } else {
+        showAlert(AlertError, "Request Temperature", "Temperature must be between 0.0 and 1.0");
+      }
+    }
+
+    // Function to handle submission
+    function submitTemperature() {
+      const temperature = document.getElementById("temperatureValue").value;
+      showAlert(AlertInfo, "Request Temperature", `Temperature set to: ${temperature}`);
+      // You can replace this alert with actual API logic or application handling
+    }
+    function EnterInput(event) {
+      if (event.key === "Enter") {
+        submitInput();
+      }
+    }
+
+    function showModels(id) {
+      const models = document.getElementById(`models-` + id);
+      modelElems = document.getElementsByClassName("modelList");
+      for (let i = 0; i < modelElems.length; i++) {
+        modelElems[i].classList.add("hidden");
+      }
+      models.classList.remove("hidden");
+    }
+
+
+    // Toggle the popup visibility
+    function toggleContextPopup() {
+      const popup = document.getElementById('topKPopup');
+      popup.classList.toggle('hidden');
+    }
+
+    function connectGoogleDrive() {
+      showAlert(AlertInfo, "Connect to Google Drive", "Note: This feature is not yet implemented.");
+    }
+
+    function connectOneDrive() {
+      showAlert(AlertInfo, "Connect to One Drive", "Note: This feature is not yet implemented.");
+    }
+
+    function toggleURLCrawlFlag() {
+      const urlCrawlDiv = document.getElementById('urlCrawlDiv');
+      urlCrawlDiv.classList.toggle('hidden'); // Toggle visibility
+    }
+
+    function toggleStream(button) {
+      // Get current state from aria-checked attribute
+      const isOn = button.getAttribute("aria-checked") === "true";
+
+      // Toggle the state
+      const newState = !isOn;
+
+      // Update Button Appearance
+      button.classList.toggle("bg-blue-500", newState); // ON state color
+      button.classList.toggle("bg-gray-300", !newState); // OFF state color
+
+      // Update Indicator Position
+      const indicator = button.querySelector("span");
+      indicator.style.transform = newState ? "translateX(32px)" : "translateX(0)";
+
+      // Update Label
+      const label = document.getElementById("toggleStateLabel");
+      label.textContent = newState ? "Stream ON" : "Stream OFF";
+
+      // Update ARIA Attribute
+      button.setAttribute("aria-checked", newState.toString());
+    }
+
+    function getToggleStreamValue() {
+      // Get the toggle button
+      const toggleButton = document.getElementById("toggleStreamButton");
+
+      // Get its current value from aria-checked
+      const toggleValue = toggleButton.getAttribute("aria-checked");
+
+      return toggleValue;
+    }
+
+
+    function submitInput() {
+      inputArea = document.getElementById("textInput");
+      const textInput = inputArea.value;
+      // let modelNodeId = document.getElementById("aiModelNode").value;
+      const aiModel = document.getElementById("aiModel").value;
+      const temperature = document.getElementById("temperatureValue").value;
+      const maxTokens = document.getElementById("maxTokens").value;
+      const topk = document.getElementById("topk").value;
+      const topP = document.getElementById("topP").value;
+      const promptId = document.getElementById("promptId").value;
+      const contextType = document.getElementById("contextType").value;
+      const contextValue = document.getElementById("contextValue").value;
+
+      let modelName;
+      let modelNodeId;
+      // try {
+      //   modelIden = `aimodel-` + modelNodeId;
+      //   modelName = document.getElementById(modelIden).value;
+      // } catch (error) {
+      //   showAlert(AlertError, "Model Selection", "Please select a model");
+      //   return;
+      // }
+      let splitVal = aiModel.split("||");
+      modelNodeId = splitVal[0];
+      modelName = splitVal[1];
+      if ((modelName === "") || (modelNodeId === "")) {
+        showAlert(AlertError, "Model Selection", "Please select a model");
+        return;
+      }
+      inputArea.value = "";
+      inputArea.disabled = true;
+      addContextLocally({
+        content: textInput,
+        userId: `{{ .GlobalContext.UserInfo.UserId }}`,
+        Organization: `{{ .GlobalContext.CurrentOrganization.OrganizationId }}`
+      }, true);
+      aiInterfaceAction(
+        `{{ .Response.ActionParams.API }}`,
+        `{{ .Response.ActionParams.StreamAPI }}`,
+        `{{ .GlobalContext.AccessTokenKey }}`,
+        "aiChatResult", contextType, contextValue, modelNodeId, promptId, textInput, temperature, topP, modelName, maxTokens, topk)
+      inputArea.disabled = false;
+      document.getElementById("contextType").value = "";
+      document.getElementById("contextValue").value = "";
+    }
+    setupDropdown({
+      dropdownToggleSelector: '.vapus-dropdown-toggle',
+      dropdownMenuSelector: '.vapus-dropdown-menu',
+      inputFieldSelector: '#aiModel',// Optional, for updating a hidden input or text field
+      parentClass: 'parent',
+      childClass: 'child',
+      displayAttribute: 'data-displayName', // Default transform for display text,
+      valueTransform: (value) => value,
+    })
+    setupDropdown({
+      dropdownToggleSelector: '.prompt-dropdown-toggle',
+      dropdownMenuSelector: '.prompt-dropdown-menu',
+      inputFieldSelector: '#promptId',// Optional, for updating a hidden input or text field
+      parentClass: 'parent',
+      childClass: 'child',
+      displayAttribute: 'data-displayName', // Default transform for display text,
+      valueTransform: (value) => value,
+    })
+
+    // const dropdownToggle = document.querySelector('.vapus-dropdown-toggle');
+    // const dropdownMenu = document.querySelector('.vapus-dropdown-menu');
+    // const aiModel = document.getElementById('aiModel');
+
+    // dropdownToggle.addEventListener('click', () => {
+    //   dropdownMenu.classList.toggle('show');
+    // });
+
+    // // Close dropdown when clicking outside
+    // document.addEventListener('click', (event) => {
+    //   if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+    //     dropdownMenu.classList.remove('show');
+    //   }
+    // });
+
+    // // Handle selection of child items
+    // dropdownMenu.addEventListener('click', (event) => {
+    //   const item = event.target;
+
+    //   // Ignore clicks on parent items
+    //   if (item.classList.contains('parent')) {
+    //     return;
+    //   }
+
+    //   // Handle selection of child items
+    //   if (item.classList.contains('child')) {
+    //     const selectedValue = item.dataset.value;
+
+    //     // Update the toggle text
+    //     let displayValue = selectedValue.split("||")[1];
+    //     dropdownToggle.textContent = displayValue;
+
+    //     // Update the displayed selected value
+    //     aiModel.value = `${selectedValue}`;
+
+    //     // Close the dropdown
+    //     dropdownMenu.classList.remove('show');
+    //   }
+    // });
+
+  </script>
+</body>
+
+</html>

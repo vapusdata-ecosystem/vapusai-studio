@@ -1,0 +1,430 @@
+syntax = "proto3";
+
+//import "googleapis/v1/annotations.proto";
+// import "buf/validate/validate.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+enum ResourceScope {
+  ORG_SCOPE = 0;
+  ACCOUNT_SCOPE = 1;
+  USER_SCOPE = 2;
+}
+
+enum VapusSvcs {
+  AISTUDIO = 0;
+  WEBAPP = 1;
+  MLUTILITY = 2;
+}
+
+enum OrganizationTypes {
+  CONSUMER_ORG = 0;
+  SERVICE_ORG = 1;
+}
+
+enum Resources {
+  DATAMARKETPLACE = 0;
+  DATAPRODUCT = 1;
+  DATACONTAINER = 2;
+  DATACATALOG = 3;
+  AIMODELS = 4;
+  AIPROMPTS = 5;
+  AIAGENTS = 6;
+}
+
+enum AccessTokenScope {
+  INVALID_AT_SCOPE = 0;
+  DOMAIN_TOKEN = 1;
+  DATAPRODUCT_TOKEN = 2;
+}
+
+enum HashAlgos {
+  INVALID_HASH_ALGO = 0;
+  SHA_256 = 1;
+}
+
+enum LcAction {
+  INVALID_ACTION = 0;
+  ADD = 1;
+  DELETE = 2;
+  UPDATE = 3;
+  CREATE = 4;
+  RUN = 5;
+  BUILD = 6;
+  DEPLOY = 7;
+  GET = 8;
+  LIST = 9;
+}
+
+enum AuthnMethod {
+  AM_INVALID = 0;
+  OIDC = 1;
+  LDAP = 2;
+}
+
+enum TtlDuration {
+  DEFAULT_TTL = 0;
+  TTL_SECONDS = 1;
+  TTL_MINUTES = 2;
+  TTL_HOURS = 3;
+  TTL_DAYS = 4;
+  TTL_MONTHS = 5;
+  TTL_NEVER_EXPIRES = 6;
+}
+
+enum TTLStatus {
+  INVALID_TTLSTATUS = 0;
+  TTL_VALID = 1;
+  TTL_REVOKED = 2;
+  TTL_EXPIRED = 3;
+}
+
+enum EncryptionAlgo {
+  JSA_INVALID = 0;
+  ED25519 = 1;
+  ECDSA = 2;
+  RSA = 3;
+}
+
+enum BEStoreAccessScope {
+  READER = 0;
+  WRITER = 1;
+}
+
+enum CommonStatus {
+  INVALID_STATUS = 0;
+  ACTIVE = 1;
+  INACTIVE = 2;
+  VALIDATION_PENDING = 3;
+  DELETED = 4;
+  EXPIRED = 5;
+  INVALID = 6;
+  INVITED = 7;
+  FAILED = 8;
+  SUCCESS = 9;
+  ATTACHED = 10;
+  CONFIGURING = 11;
+  SYNCING = 12;
+  CONFIGUR_ERR = 13;
+  ACTIVE_READY = 14;
+}
+
+enum ContentFormats {
+  YAML = 0;
+  JSON = 1;
+  TOML = 2;
+  PLAIN_TEXT = 3;
+  CSV = 4;
+  PDF = 5;
+  PNG = 6;
+  JPG = 7;
+  JPEG = 8;
+  DATASET = 9;
+  HTML = 10;
+}
+
+enum TlsType {
+  INSECURE = 0;
+  PLAIN_TLS = 1;
+  MTLS = 2;
+}
+
+enum RequestObjects {
+  INVALID_REQUEST_OBJECT = 0;
+  ALL = 1;
+  VAPUS_DATAPRODUCTS = 2;
+  VAPUS_DATAWORKERS = 3;
+  VAPUS_DATASOURCES = 4;
+  VAPUS_DATASOURCE_CREDS = 5;
+  VAPUS_DOMAINS = 6;
+  VAPUS_DATA_CONTAINER_DEPLOYMENTS = 7;
+  VAPUS_AIMODEL_NODES = 8;
+  VAPUS_DATAMARKETPLACE = 9;
+  VAPUS_DATA_WORKER_DEPLOYMENTS = 10;
+  VAPUS_ACCOUNT = 11;
+  VAPUS_AIPROMPTS = 12;
+  VAPUS_AIAGENTS = 13;
+  VAPUS_PLUGINS = 14;
+  VAPUS_AIGUARDRAILS = 15;
+}
+
+enum ApiTokenType {
+  BASIC = 0;
+  BEARER = 1;
+  APIKEY = 2;
+}
+
+/**
+ * Enum representing the retention frequency for data compliance.
+ */
+enum Frequency {
+  INVALID_FREQUENCY = 0;
+  MONTH = 1;
+  WEEK = 2;
+  YEAR = 3;
+  HOUR = 4;
+  MINUTES = 5;
+  SECONDS = 6;
+  DAY = 7;
+}
+
+/**
+ * Enum representing the types of backend storage.
+ */
+enum BackendStorageTypes {
+  BST_INVALID = 0;
+  BST_SECRETS = 1;
+  BST_DATA = 2;
+  BST_FILE = 3;
+  BST_ARTIFACTS = 4;
+}
+
+/**
+ * Enum representing the onboarding options for backend storage.
+ */
+enum BackendStorageOnboarding {
+  BSO_INVALID = 0;
+  BSO_INBUILT = 1;
+  BE_BYOS = 2;
+  BE_BUILD = 3;
+  BE_DEFAULT_STUDIO = 4;
+}
+
+/**
+ * Enum representing the services for backend storage.
+ */
+enum BackendStorageServices {
+  BSS_INVALID = 0;
+  BSS_POSTGRES = 1;
+  BSS_HC_VAULT = 2;
+  BSS_AWS_SECRET_MANAGER = 3;
+  BSS_AWS_S3 = 4;
+  BSS_AZURE_KEY_VAULT = 5;
+  BSS_GCP_SECRET_MANAGER = 6;
+  BSS_OCI = 7;
+}
+
+/**
+ * @enum
+ * Enumerates the storage engines supported by the Vapus Data Studio system.
+ */
+enum StorageEngine {
+  INVALID_STORAGE_ENGINE = 0;
+  HASHICORPVAULT = 1;
+  POSTGRES = 2;
+  OCI = 3;
+  BLOB = 4;
+  GRPC = 5;
+  AWS_VAULT = 6;
+  GCP_VAULT = 7;
+  AZURE_VAULT = 8;
+}
+
+/**
+ * @enum
+ * Enumerates the storage services supported by the Vapus Data Studio system.
+ */
+enum StorageService {
+  INVALID_DS_SERVICE = 0;
+  RDS = 1;
+  GAR = 2;
+  ECR = 3;
+  AWS_SECRET_MANAGER = 4;
+  HASHICORP_VAULT = 5;
+  SELF_HOSTED = 6;
+  AWS_S3 = 7;
+  GCP_CLOUD_STORAGE = 8;
+  GCP_SECRET_MANAGER = 9;
+  AZURE_SECRET_MANAGER = 10;
+  GCP_CLOUD_SQL = 11;
+}
+
+/**
+ * @enum
+ * Enumerates the service providers supported by the Vapus Data Studio system.
+ */
+enum ServiceProvider {
+  INVALID_SSP = 0;
+  SSP_ON_PREM = 1;
+  SSP_INTERNAL_HOSTED = 2;
+  SSP_GCP = 3;
+  SSP_AWS = 4;
+  SSP_AZURE = 5;
+}
+
+/**
+ * @enum
+ * Enumerates the types of content in data sources.
+ */
+enum DataSourceType {
+  INVALID_DST = 0;
+  DSDT_DATABASE = 1;
+  DSDT_ARTIFACT = 2;
+  DSDT_BLOB = 3;
+}
+
+/**
+ * @enum
+ * Enumerates the types of packages.
+ */
+enum ArtifactTypes {
+  INVALID_PT = 0;
+  PT_OCI = 1;
+  PT_BLOBS = 2;
+  PT_MEDIA = 3;
+}
+
+enum LLMServiceProvider {
+  INVALID_SP = 0;
+  OPENAI = 1;
+  MISTRAL = 2;
+  HUGGING_FACE = 3;
+  VAPUS = 4;
+  OLLAMA = 5;
+  AZURE_OPENAI = 6;
+  AZURE_PHI = 7;
+  GEMINI = 8;
+  AWS = 9;
+  META = 10;
+  ANTHROPIC = 11;
+}
+
+enum LLMQueryType {
+  INVALID_EXPECTED_OUTPUT = 0;
+  GENERAL_TEXT = 1;
+  DATA_QUERY = 2;
+  GENERATE_SQL = 3;
+}
+
+enum DataSensitivityClassification {
+  PUBLIC = 0;
+  PII = 1;
+  CONFIDENTIAL = 2;
+  SENSITIVE = 3;
+  EPHII = 4;
+}
+
+enum ClassifiedTransformerActions {
+  REDACT = 0;
+  FAKE = 1;
+  DROP = 2;
+}
+
+enum VersionBumpType {
+  INVALID_BUMP_TYPE = 0;
+  PATCH = 1;
+  MINOR = 2;
+  MAJOR = 3;
+}
+
+enum OrderBys {
+  ASC = 0;
+  DESC = 1;
+}
+
+enum VapusAiAgentTypes {
+  INVALID_AGENT_TYPE = 0;
+  EMAILER = 1;
+  FILE_UPLOADER = 2;
+  DATAPRODUCT_QUERY_AGENT = 3;
+  MESSAGE_POSTER = 4;
+  CHART_GENERATOR = 5;
+  CHAT_AGENT = 6;
+  FILE_GENERATOR = 7;
+  SYNTHETIC_DATA_GENERATOR = 8;
+}
+
+enum IntegrationPlugins {
+  INVALID_PLUGIN = 0;
+  SENDGRID = 1;
+  SLACK = 2;
+  JIRA = 3;
+  GMAIL = 4;
+  AMAZON_SES = 5;
+  SALESFORCE = 6;
+  GOOGLE_DRIVE = 7;
+}
+
+enum IntegrationPluginTypes {
+  INVALID_PLUGIN_TYPE = 0;
+  EMAIL = 1;
+  SMS = 2;
+  MESSAGING = 3;
+  CODE_REPOSITORY = 4;
+  FILE_STORE = 5;
+}
+
+enum VapusStreamEvents {
+  INVALID_EVENT = 0;
+  START = 1;
+  END = 2;
+  DATA = 3;
+  ABORTED = 4;
+  DATASET_START = 5;
+  DATASET_END = 6;
+  STATE = 7;
+  FILE_DATA = 8;
+  RESPONSE_ID = 9;
+}
+
+enum EOSReasons {
+  SERVER_ERROR = 0;
+  DATA_ERROR = 1;
+  WAIT_TIMEOUT = 2;
+  SUCCESSFULL = 3;
+  EOF = 4;
+  INVALID_PARAMS = 5;
+  DONE = 6;
+}
+
+enum AgentStepEnum {
+  INVALID_STEP_ENUM = 0;
+  AGENTST_CONTENT_FORMAT = 1;
+  AGENTST_EMAIL_BODY = 2;
+  AGENTST_EMAIL_RECIEVER = 3;
+  AGENTST_EMAIL_SUBJECT = 4;
+  AGENTST_PDF_FORMAT = 5;
+  AGENTST_PPT_FORMAT = 6;
+  AGENTST_RECURRING_JOB_CONFIG = 7;
+  AGENTST_CHART_TYPE = 8;
+  AGENTST_DATASET = 9;
+  AGENTST_FILEPATH = 10;
+  AGENTST_FILENAME = 11;
+}
+
+enum EmailSettings {
+  SENDER_EMAIL = 0;
+  SENDER_NAME = 1;
+  BCC_LIST = 2;
+  FOOTER = 3;
+}
+
+enum AIToolCallType {
+  INVALID_TOOL_CALL = 0;
+  FUNCTION = 1;
+}
+
+enum AgentStepValueType {
+  STRING = 0;
+  OBJECT = 1;
+  INTEGER = 2;
+  FLOAT = 3;
+  BOOLEAN = 4;
+  ARRAY = 5;
+}
+
+enum GuardRailLevels {
+  NONE = 0;
+  LOW = 1;
+  MEDIUM = 2;
+  HIGH = 3;
+}
+
+enum InfraService {
+  INVALID_INFRA = 0;
+  GKE = 1;
+  EKS = 2;
+  AKS = 3;
+}

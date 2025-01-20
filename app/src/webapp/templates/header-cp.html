@@ -1,0 +1,47 @@
+<!-- header.html -->
+
+<header class="bg-white text-blue-900 shadow-md">
+    <div class="container mx-auto flex justify-between items-center p-4">
+        <!-- Logo and Centered Title -->
+        <div class="flex items-center justify-center space-x-3">
+            <img src="{{if .GlobalContext }}{{if .GlobalContext.Account }}{{if .GlobalContext.Account.Profile }}{{ .GlobalContext.Account.Profile.Logo }}{{ end }}{{ end }}{{ end }}" alt="Logo" class="h-10">
+        <div>
+            <h1 class="text-2xl font-semibold tracking-wide text-center">{{if .GlobalContext }}{{if .GlobalContext.Account }} {{ .GlobalContext.Account.Name }} {{ end }}{{ end }}</h1>
+            </div>
+        </div>
+        <!-- Organization Dropdown -->
+        <div class="relative">
+            <button id="OrganizationDropdownButton" class="flex items-center bg-blue-950 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Your Organizations
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div id="OrganizationItems" class="hidden absolute right-0 mt-2 w-64 bg-white text-blue-800 rounded-md shadow-lg z-10 w-auto">
+                <ul class="py-2" >
+                    {{if .GlobalContext }}{{if .GlobalContext.UserInfo }}
+                    {{ range $id, $val := .GlobalContext.UserInfo.OrganizationRoles }}
+                    <li ><a href="/ui/auth/Organization/{{ $val.OrganizationId }}" class="block px-4 py-2 hover:bg-blue-100 text-sm {{ if eq $val.OrganizationId $.GlobalContext.CurrentOrganization.OrganizationId }} selected {{ end }}" data-Organization="{{ $val.OrganizationId }}" style="width: 400px;">{{ $val.OrganizationId }}</a></li>
+                    {{ end }}
+                    {{ end }}
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<nav class="bg-white text-white py-3 pr-20 pl-20 shadow-md">
+    <div class="container mx-auto flex pt-3 pb-3 bg-blue-950 rounded-full justify-center space-x-4" id="menuitems">
+        {{if .GlobalContext }}
+            {{ range $id, $val := .GlobalContext.NavMenuMap }}
+                <a href="{{ $val.Url }}" id="{{ $val.ItemId }}"  class="px-4 py-2 rounded-full text-m font-medium transition hover:bg-pink-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 {{ if eq $val.ItemId $.GlobalContext.CurrentNav }} selected-header-nav {{ end }}">{{ $val.ItemName }}</a>
+                <!-- <a href="#" class="bg-black text-white px-4 py-2 mx-1 rounded hover:bg-gray-700">Data Marketplace</a>
+                <a href="#" class="bg-black text-white px-4 py-2 mx-1 rounded hover:bg-gray-700">AI Studio</a>
+                <a href="#" class="bg-black text-white px-4 py-2 mx-1 rounded hover:bg-gray-700">Query Ground</a>
+                <a href="#" class="bg-black text-white px-4 py-2 mx-1 rounded hover:bg-gray-700">My Organization</a>
+                <a href="#" class="bg-black text-white px-4 py-2 mx-1 rounded hover:bg-gray-700">Search</a>
+                <a href="#" class="bg-black text-white px-4 py-2 mx-1 rounded hover:bg-gray-700">Settings</a> -->
+            {{ end }}
+        {{ end }}
+    </div>
+</nav>

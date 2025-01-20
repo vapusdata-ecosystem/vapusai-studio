@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/vapusaiagents.proto";
+
+package vapusai.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/vapusai/v1alpha1";
+
+
+service AIAgents {
+    rpc Manager(AgentManagerRequest) returns(AgentResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/agents"
+            body: "*"
+        };
+    }
+
+    rpc Getter(AgentGetterRequest) returns(AgentResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/agents/{agent_id}"
+        };
+    }
+}
+
+service AIAgentStudio {
+    rpc ChatStream(AgentInvokeRequest) returns(stream AgentInvokeStreamResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/agents/run"
+            body: "*"
+        };
+    }
+
+    rpc Chat(AgentInvokeRequest) returns(AgentInvokeResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/agents/invoke"
+            body: "*"
+        };
+    }
+}
+
+enum VapusAIAgentAction {
+    INVALID_VAPUS_AGENT_ACTION = 0;
+    CONFIGURE_AIAGENT = 1;
+    ARCHIVE_AIAGENT = 2;
+    PATCH_AIAGENT = 3;
+}
+
+enum AIAgentContextKeys {
+    TEXT_CONTEXT = 0;
+    DATASET_CONTEXT = 1;
+    WEBSITE_CONTEXT = 2;
+    FILE_CONTEXT = 3;
+}
+
+message AgentManagerRequest {
+    VapusAIAgentAction action = 1; // @gotags: yaml:"action"
+    models.v1alpha1.VapusAIAgent spec = 2; // @gotags: yaml:"spec"
+}
+
+message AgentGetterRequest {
+    string agent_id = 1; // @gotags: yaml:"agentId"
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"SearchParam"
+}
+
+message AgentResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated models.v1alpha1.VapusAIAgent output = 2; // @gotags: yaml:"output"
+}
+
+message AgentInvokeRequest {
+    repeated AgentInvokeLink chain = 1; // @gotags: yaml:"chain"
+}
+
+message AgentInvokeLink {
+    string agent_id = 1; // @gotags: yaml:"agentId"
+    repeated ChatStep steps = 2; // @gotags: yaml:"steps"
+    string model_node_id = 3; // @gotags: yaml:"modelNodeId"
+    string model_name = 4; // @gotags: yaml:"modelName"
+    string input = 5; // @gotags: yaml:"input"
+    repeated LinkContext contexts = 6; // @gotags: yaml:"contexts"
+    repeated models.v1alpha1.FileData file_data = 7; // @gotags: yaml:"fileData"
+}
+
+message LinkContext {
+    AIAgentContextKeys key = 1;
+    string value = 2;
+}
+
+message ChatStep {
+    string step_id = 1; // @gotags: yaml:"stepId"
+    string input = 2; // @gotags: yaml:"input"
+    bytes data = 3; // @gotags: yaml:"data"
+}
+
+message AgentInvokeResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated models.v1alpha1.VapusContentObject output = 2; // @gotags: yaml:"output"
+}
+
+message AgentInvokeStreamResponse {
+    int64 status_code = 1; // @gotags: yaml:"statusCode"
+    models.v1alpha1.VapusStreamResponse output = 2; // @gotags: yaml:"output"
+}

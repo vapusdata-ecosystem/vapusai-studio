@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    <script src="/static/js/manage.js"></script>
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+        {{ template "main-sidebar.html" . }}
+        <div id="loadingOverlay" class="loading-overlay">
+          <div class="spinner"></div>
+        </div>
+        <div class="flex-grow p-4 overflow-y-auto w-5/6">
+            <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+              {{ template "section-headers.html" . }}
+                <div class="relative inline-block text-left">
+                  {{ template "action-dropdown.html" . }}
+                  <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+                  <ul class="py-1 text-gray-700">
+                      {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                      <!-- Edit Option -->
+                      <li>
+                      <a href="#" onclick="workerDeploymentAction(`{{ $v }}`)" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                          <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z"/>
+                          </svg>
+                          {{ $k }}
+                      </a>
+                      </li>
+                      {{ else }}
+                      <li class="flex items-center px-4 py-2 hover:bg-gray-100"> No Action Needed</li>
+                      {{ end }}
+                  </ul>
+                  </div>
+                </div>
+            </div>
+
+          <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+              <div class="max-w-8xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class = "flex items-center">
+                      <h3 class="text-lg font-semibold text-gray-900 underline uppercase rounded-lg">Data Worker</h3>
+                      <p class="detail-section-text">{{ .Response.DataWorkerDeployment.DataWorkerId }}<button onclick="copyToClipboard('{{ .Response.DataWorkerDeployment.DataWorkerId }}')" title="Copy" class="ml-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z"/>
+                          </svg>                                  
+                    </button></p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-section-title">K8S Namespace</p>
+                      <p class="detail-section-text">{{ .Response.DataWorkerDeployment.Namespace }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-section-title">Deployment Id</p>
+                      <p class="detail-section-text">{{ .Response.DataWorkerDeployment.DeploymentId }}<button onclick="copyToClipboard('{{ .Response.DataWorkerDeployment.DeploymentId }}')" title="Copy" class="ml-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z"/>
+                          </svg>                                  
+                    </button></p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-section-title">Infra Id</p>
+                      <p class="detail-section-text">{{ .Response.DataWorkerDeployment.InfraId }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-section-title">Deployed At</p>
+                      <p class="detail-section-text">{{ epochConverter .Response.DataWorkerDeployment.DeployedAt }}</p>
+                    </div>
+                    <div class = "flex items-center">
+                      <p class="detail-section-title">Status</p>
+                      <span class="px-3 py-1 text-sm font-medium {{ if eq .Response.DataWorkerDeployment.Status `FAILED_ERR` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }} rounded-full">{{ .Response.DataWorkerDeployment.Status }}</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Organization Roles Section -->
+                  <h3 class="text-xl font-semibold text-gray-900 underline uppercase rounded-lg">Deployment Spec</h3>
+                  <div class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 bg-white-50 p-4 rounded-lg shadow-md">
+                      <div class = "flex items-center">
+                          <p class="detail-section-title">ArtifactPullSecrets</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.ArtifactPullSecrets }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-section-title">RunType</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.RunType }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-section-title">Log</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.Log }}</p>
+                        </div>
+                        <div>
+                          <p class="detail-section-title">Artifact</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.Artifact }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-section-title">Job Name</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.JobName }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-section-title">Job Type</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.RunType }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-section-title">Config Name</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.ConfigName }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-section-title">Secret Name</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.SecretName }}</p>
+                        </div>
+                        <div class = "flex items-center">
+                          <p class="detail-section-title">Schedule</p>
+                          <p class="detail-section-text">{{ .Response.DataWorkerDeployment.WorkerDeploymentSpec.Schedule }}</p>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+    </div>
+</div>
+    <script>
+          document.addEventListener("click", (event) => {
+        const dropdown = document.getElementById("actionDropdownMenu");
+        const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+          dropdown.classList.add("hidden");
+        }
+      });
+    function workerDeploymentAction(action) {
+      ShowConfirm("Confirm Action", "Are you sure you want to proceed?", () => {
+          console.log("Confirmed!");
+          ManageDataWorkerDeployment(action,
+            `{{ .Response.DataWorkerDeployment.DeploymentId }}`,
+            `{{ .Response.ActionParams.API }}`,
+            `{{ .GlobalContext.AccessTokenKey }}`)
+      });
+    }
+    </script>
+</body>
+</html>

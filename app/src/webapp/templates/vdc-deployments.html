@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+        {{ template "main-sidebar.html" . }}
+
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <section id="grids" class="space-y-6">
+            <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+            <h1 class="text-2xl font-bold">{{ .SectionHeader }}</h1>
+        </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {{ range $id, $val := .Response.VdcDeployments }}
+                <div class="relative p-4 bg-white rounded-lg shadow-lg border border-gray-200">
+                    <a href="{{ $.Response.BackListingLink }}/{{ $val.DeploymentId }}" target="_blank" class="absolute top-2 right-2 text-blue-800 hover:underline">
+                        {{ template "view-details-svg.html" . }}
+                    </a>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">{{ $val.Name }}</h3>
+                    <div class="grid grid-cols-1 gap-2 text-sm text-gray-700">
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">ID:</span>
+                            <span class="flex items-center">
+                                {{ limitletters $val.DeploymentId 30 }}
+                                <button onclick="copyToClipboard('{{ $val.DataProductId }}')" title="Copy" class="ml-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                                        <path d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z"/>
+                                    </svg>                                  
+                                </button>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Infra Id:</span>
+                            <span class="flex items-center">{{ $val.InfraId }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Status:</span>
+                            <span class="px-3 py-1 text-sm font-medium rounded-full {{ if eq $val.Status `FAILED_ERR` }}text-red-800 bg-red-100{{ else }}text-green-800 bg-green-100{{ end }}">{{ $val.Status }}</span>
+                        </div>
+                        <div class="flex items-center justify-left">
+                            <span class="font-semibold pr-2">Deployed At:</span>
+                            <span class="flex items-center">{{ epochConverter $val.DeployedAt }}</span>
+                        </div>
+                    </div>
+                </div>
+                {{ else }}
+                <div class="text-center text-gray-500 m-20 text-4xl  w-full">
+                    <p>No vapusdata Containers Deployment found.</p>
+                </div>
+                {{ end }}
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,817 @@
+<div id="overview" class="overflow-x-auto overflow-y-auto  tab-content mt-6">
+    <h3 class="text-xl font-semibold mb-4">Basic Information</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class = "flex items-center">
+            <p class="text-gray-900 font-medium">Name:</p>
+            <p class="text-gray-600 break-words p-2">{{ .Response.DataProduct.Name }}</p>
+        </div>
+        <div class = "flex items-center">
+            <p class="text-gray-900 font-medium">Id:</p>
+            <p class="text-gray-600 break-words p-2" style="cursor: pointer;" onclick="copyToClipboard(`{{ .Response.DataProduct.DataProductId }}`)">{{ .Response.DataProduct.DataProductId }}</p>
+        </div>
+        <div class = "flex items-center">
+            <p class="text-gray-900 font-medium">Product Type:</p>
+            <p class="text-gray-600 break-words p-2">{{ .Response.DataProduct.ProductType }}</p>
+        </div>
+        <div class = "flex items-center">
+            <p class="text-gray-900 font-medium">Status:</p>
+            <p class="text-gray-600 break-words p-2">
+                <span class="px-3 py-1 text-sm font-medium 
+        {{ if inSlice .Response.DataProduct.Status `FAILED_ARCHIVE` `FAILED_PUBLISH` `FAILED_CONFIGURATION` `FAILED_UNPUBLISH` }}
+            text-red-800 bg-red-100
+        {{ else }}
+            text-green-800 bg-green-100
+        {{ end }}
+        rounded-full">
+                    {{ .Response.DataProduct.Status }}
+                </span>
+            </p>
+        </div>
+        <div class = "flex items-center">
+            <p class="text-gray-900 font-medium">Catalog:</p>
+            <p class="text-gray-600 break-words p-2">{{ .Response.DataProduct.Catalog }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Description:</p>
+            <p class="text-gray-600 break-words p-2" style="cursor: pointer;"
+                onclick="copyToClipboard(`{{ .Response.DataProduct.Description }}`)">{{ limitWords
+                .Response.DataProduct.Description 20 }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Digest:</p>
+            <p class="text-gray-600 break-words p-2">
+                {{ if .Response.DataProduct.SpecDigest }}
+                {{ .Response.DataProduct.SpecDigest.Digest }}
+                {{ else }}
+                N/A
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Owners:</p>
+            <p class="text-gray-600 break-words p-2">
+                {{ range $obj := .Response.DataProduct.ProductOwners }}
+                <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                    {{ $obj }}
+                </span>
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Categories:</p>
+            <p class="text-gray-600 break-words p-2">
+                {{ range $obj := .Response.DataProduct.Categories }}
+                <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                    {{ $obj }}
+                </span>
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Marketplace Ids:</p>
+            <p class="text-gray-600 break-words p-2">
+            <ul class="list-disc ml-5 text-gray-600">
+                {{ range $obj := .Response.DataProduct.MarketplaceIds }}
+                <li>{{ $obj }}</li>
+                {{ end }}
+            </ul>
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Tags:</p>
+            <p class="text-gray-600 break-words p-2">
+                {{ range $obj := .Response.DataProduct.Tags }}
+                <span
+                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                    {{ $obj }}
+                </span>
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Related Data Products:</p>
+            <p class="text-gray-600 break-words p-2">
+            <ul class="list-disc ml-5 text-gray-600">
+                {{ range $obj := .Response.DataProduct.RelatedDataProducts }}
+                <li>{{ $obj }}</li>
+                {{ end }}
+            </ul>
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Labels:</p>
+            <p class="text-gray-600 break-words p-2">
+            <ul class="list-disc ml-5 text-gray-600">
+                {{ range $val := .Response.DataProduct.Labels }}
+                <li>{{ $val.Key }} - <span
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-900">
+                        {{ $val.Value }}
+                    </span></li>
+                {{ end }}
+            </ul>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="schemas" class="overflow-x-auto overflow-y-auto tab-content mt-6 hidden">
+    <h3 class="text-xl font-semibold mb-4">Schemas</h3>
+    {{ range $id,$schema := .Response.DataProduct.Contract.Schemas }}
+    <div class="mb-4">
+        <button onclick="toggleSection(`{{ $schema.TrinoCatalog }}-{{ $id }}`)"
+            class="px-4 py-2 mt-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">
+            {{ $schema.Datastore }}
+        </button>
+    </div>
+    <div id="{{ $schema.TrinoCatalog }}-{{ $id }}" class="overflow-x-auto bg-white rounded-lg shadow-md hidden">
+        <h4 class="text-lg font-medium"> Tables </h4>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Table</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total Rows</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Data Length</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Average Row Length</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Schema</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Created At</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total Size</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {{ range $table := $schema.DataTables }}
+                <!-- Example Row -->
+                <tr onclick="toggleRow(`{{ $table.FedTableName }}`)" class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $table.Name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $table.TotalRows }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $table.DataLength }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $table.AverageRowLength }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $table.Schema }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $table.CreatedAt }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $table.TotalSize }}</td>
+                </tr>
+
+                <!-- Expanded Row Content -->
+                <tr id="{{ $table.FedTableName }}" class="hidden">
+                    <td colspan="5" class="px-6 py-4 bg-gray-50">
+                        <h4 class="text-sm font-semibold mb-2">Fields</h4>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white divide-y divide-gray-200">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th
+                                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Field</th>
+                                        <th
+                                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Type</th>
+                                        <th
+                                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Null</th>
+                                        <th
+                                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Default</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    {{ range $field := $table.Fields }}
+                                    <tr>
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $field.Field }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $field.Type }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $field.Null }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap">{{ $field.Default }}
+                                        </td>
+                                    </tr>
+                                    {{ end }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                {{ end }}
+                <!-- Additional rows... -->
+            </tbody>
+        </table>
+        <h4 class="text-lg font-medium p-3"> Constraints </h4>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Field </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Table </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Enforced</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Schema</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {{ range $constraints := $schema.Constraints }}
+                <!-- Example Row -->
+                <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.ConstraintType }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.ConstraintName }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.FieldName }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.TableName }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.Enforced }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $constraints.Schema }}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+
+    </div>
+    {{ end }}
+</div>
+
+<div id="compliances" class="overflow-x-auto overflow-y-auto tab-content mt-6 hidden">
+    <h3 class="text-xl font-semibold mb-4">Compliances</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <p class="text-gray-900 font-medium">Last Audited At:</p>
+            <p class="text-gray-600 break-words p-2">{{ epochConverter
+                .Response.DataProduct.Contract.Compliances.LastAuditedAt }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Compliance Owner:</p>
+            <p class="text-gray-600 break-words p-2">{{
+                .Response.DataProduct.Contract.Compliances.ComplianceOwner }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Status:</p>
+            <p class="text-gray-600 break-words p-2">
+                <span class="px-3 py-1 text-sm font-medium 
+        {{ if eq .Response.DataProduct.Contract.Compliances.ComplianceStatus.String `NON_COMPLIANT` }}
+            text-red-800 bg-red-100
+        {{ else }}
+            text-green-800 bg-green-100
+        {{ end }}
+        rounded-full">
+                    {{ .Response.DataProduct.Contract.Compliances.ComplianceStatus.String }}
+                </span>
+
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Next Audit Due:</p>
+            <p class="text-gray-600 break-words p-2">{{ epochConverter
+                .Response.DataProduct.Contract.Compliances.NextAuditDue }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Requirement Details:</p>
+            <p class="text-gray-600 break-words p-2">{{
+                .Response.DataProduct.Contract.Compliances.RequirementDetails }}</p>
+        </div>
+    </div>
+    <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+        <h3 class="text-lg font-medium p-2"> Fields </h3>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Schema</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Database</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Data Table</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Field Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Compliance Types</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {{ range $entity := .Response.DataProduct.Contract.Compliances.DataEntities }}
+                <!-- Example Row -->
+                <tr class="cursor-pointer hover:bg-gray-100">
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $entity.Name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $entity.Schema }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $entity.Database }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $entity.DataTable }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                            {{ $entity.FieldType }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {{ range $obj := $entity.ComplianceTypes }}
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-900">
+                            {{ $obj }}
+                        </span>
+                        {{ end }}
+                    </td>
+                </tr>
+                {{ end }}
+                <!-- Additional rows... -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="lineages" class="overflow-x-auto overflow-y-auto tab-content mt-6">
+    <h3 class="text-xl font-semibold mb-4">Version Lineage</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Version</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Added On</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Digest </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Diff </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Compatible Versions</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $val := .Response.DataProduct.Contract.Lineage.VersionLineage }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $val.Version }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ epochConverter $val.AddedOn }}</td>
+                <td class="px-6 py-4 whitespace-nowrap" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ $val.Digest }}`)">{{ $val.Digest }}</td>
+                <td class="px-6 py-4 whitespace-nowrap" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ $val.Diff }}`)">{{ limitletters $val.Diff 15 }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    {{ range $obj := $val.BackwardCompatibleVersions }}
+                    <span
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-black-100 text-white-900">
+                        {{ $obj }}
+                    </span>
+                    {{ end }}
+                </td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Version Lineage Available</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-5">Readiness</h3>
+    {{ if .Response.DataProduct.Contract.Readiness }}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <p class="text-gray-900 font-medium">Is Ready:</p>
+            <p class="text-gray-600 break-words p-2">{{
+                .Response.DataProduct.Contract.Readiness.IsReady }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Sla:</p>
+            <p class="text-gray-600 break-words p-2">
+                {{ if eq .Response.DataProduct.Contract.Readiness.Sla "" }}
+                N/A
+                {{ else }}
+                {{ .Response.DataProduct.Contract.Readiness.Sla }}%
+                {{ end }}
+            </p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">End Of Support:</p>
+            <p class="text-gray-600 break-words p-2">{{ epochConverter
+                .Response.DataProduct.Contract.Readiness.EndOfSupport }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">End Of Life:</p>
+            <p class="text-gray-600 break-words p-2">{{
+                .Response.DataProduct.Contract.Readiness.EndOfLife }}</p>
+        </div>
+        <div>
+            <p class="text-gray-900 font-medium">Time Of Availability:</p>
+            <p class="text-gray-600 break-words p-2">{{
+                .Response.DataProduct.Contract.Readiness.TimeOfAvailability }}</p>
+        </div>
+    </div>
+    {{ else }}
+    <p class="text-gray-600 break-words p-2">No Readiness Information Available</p>
+    {{ end }}
+    <h3 class="text-xl font-semibold mb-4 mt-5">Data Workers</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Worker Id</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Schedule</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    worker Type </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Run </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    View Details</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $obj := .Response.DataProduct.Contract.Lineage.DataWorkers }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.WorkerId }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Schedule }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.WorkerType }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Run }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">View <a target="_blank"
+                        href="/ui/data/manage/data-workers{{ $obj.WorkerId }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24"
+                            viewBox="0 0 40 40">
+                            <path fill="#c2e8ff" d="M1.5 5.5H34.5V38.5H1.5z"></path>
+                            <path fill="#7496c4" d="M34,6v32H2V6H34 M35,5H1v34h34V5L35,5z"></path>
+                            <path fill="#c2e8ff" d="M30.611 13.611H37.055V15.944H30.611z"
+                                transform="rotate(90 33.833 14.778)"></path>
+                            <path fill="#c2e8ff" d="M22 5H28.444V7.333H22z"></path>
+                            <g>
+                                <path fill="#8bb7f0"
+                                    d="M18.707 16L28.707 6 24.207 1.5 38.5 1.5 38.5 15.793 34 11.293 24 21.293z">
+                                </path>
+                                <path fill="#4e7ab5"
+                                    d="M38,2v12.586l-3.293-3.293L34,10.586l-0.707,0.707L24,20.586L19.414,16l9.293-9.293L29.414,6 l-0.707-0.707L25.414,2H38 M39,1H23l5,5L18,16l6,6l10-10l5,5V1L39,1z">
+                                </path>
+                            </g>
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Data Workers Available</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
+
+<div id="governance" class="overflow-x-auto overflow-y-auto overflow-y-auto tab-content mt-6">
+    <h3 class="text-xl font-semibold mb-4 mt-3">Transformer Policies</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Product Role</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Transformers</th>
+
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $obj := .Response.DataProduct.Contract.Governance.TransformerPolicies }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.SelectorLabel }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Entities</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {{ range $val := $obj.Transformers.Globals.Classified }}
+                            <!-- Example Row -->
+                            <tr class="cursor-pointer hover:bg-gray-100">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <ul class="list-disc ml-5 text-gray-600">
+                                        {{ range $v := $val.Entities }}
+                                        <li>{{ $v }}</li>
+                                        {{ end }}
+                                    </ul>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $val.Action }}</td>
+                            </tr>
+                            {{ else }}
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Classified
+                                    Transformer Rules Available</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Transformer Rules available</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-3">Attribute Policies</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Product Role</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Policies</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $obj := .Response.DataProduct.Contract.Governance.AttributePolicies }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.SelectorLabel }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Attribute Name</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Filter Value</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Consumer Attribute Ref</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {{ range $val := $obj.Filters }}
+                            <tr class="cursor-pointer hover:bg-gray-100">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $val.AttributeName }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $val.FilterValue }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $val.ConsumerAttributeRef }}
+                                </td>
+                            </tr>
+                            {{ else }}
+                            <tr>
+                                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Attribute policy available</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Attributes Rules available</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-3">DataStore Policies</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Product Role</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Policies</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $obj := .Response.DataProduct.Contract.Governance.DataStorePolicies }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.SelectorLabel }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Policy</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Rule</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr class="cursor-pointer hover:bg-gray-100">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    Database
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Database }}</td>
+                            </tr>
+                            <tr class="cursor-pointer hover:bg-gray-100">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    DataTables
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ range $p := $obj.DataTables }}
+                                    [{{ $p.TableName }}]
+                                    {{ end }}
+                                </td>
+                            </tr>
+                            <tr class="cursor-pointer hover:bg-gray-100">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    Schema
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Schema }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Database rules for this dataproduct, all tables
+                    are allowed for all users</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
+
+<div id="ioports" class="overflow-x-auto overflow-y-auto tab-content mt-6 hidden">
+    <h3 class="text-lg font-medium p-3">Input Ports</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Service</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Service Engine</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Source Id</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Database</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Data Tables</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $iport := .Response.DataProduct.Contract.IoPorts.InputPorts }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $iport.Service }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $iport.ServiceEngine }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $iport.SourceId }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $iport.Datarules.Database }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <ul class="list-disc ml-5 text-gray-600">
+                        {{ range $p := $iport.Datarules.Tables }}
+                        <li>{{ $p }}</li>
+                        {{ end }}
+                    </ul>
+                </td>
+            </tr>
+            {{ end }}
+            <!-- Additional rows... -->
+        </tbody>
+    </table>
+
+    <h3 class="text-lg font-medium p-3">Output Ports</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Endpoint</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    QueryPrompts</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $iport := .Response.DataProduct.Contract.IoPorts.ProductOutputPorts }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $iport.Name }}</td>
+                <td class="px-6 py-4 whitespace-nowrap" style="cursor: pointer;"
+                    onclick="copyToClipboard(`{{ $iport.Endpoint }}`)">{{ $iport.Endpoint }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <ul class="list-disc ml-5 text-gray-600">
+                        {{ range $p := $.Response.DataProduct.Contract.IoPorts.QueryPrompts }}
+                        <li>{{ $p }}</li>
+                        {{ end }}
+                    </ul>
+                </td>
+            </tr>
+            {{ end }}
+            <!-- Additional rows... -->
+        </tbody>
+    </table>
+
+    <h3 class="text-lg font-medium p-3">Artifacts</h3>
+    <div class="space-y-4">
+        {{ range $val := .Response.DataProduct.Contract.IoPorts.Artifacts }}
+        <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+            <h4 class="text-lg font-semibold text-gray-800">Artifact: {{ $val.Artifact }}</h4>
+            <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
+                <div>
+                    <p class="text-gray-900 font-medium">Digest:</p>
+                    <p class="text-gray-600 break-words p-2">{{ $val.Digest }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-900 font-medium">IsLatest:</p>
+                    <p class="text-gray-600 break-words p-2">{{ $val.IsLatest }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-900 font-medium">AddedOn:</p>
+                    <p class="text-gray-600 break-words p-2">{{ epochConverter $val.AddedOn }}</p>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+
+<div id="accessPolicies" class="overflow-x-auto overflow-y-auto tab-content mt-6">
+    <h3 class="text-xl font-semibold mb-4 mt-3">User Policies</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Product Role</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Access Scope</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Organization</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Users</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $obj := .Response.DataProduct.AccessPolicies.UserRules }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.SelectorLabel }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Access }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Organization }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <ul class="list-disc ml-5 text-gray-600">
+                        {{ range $val := $obj.Users }}
+                        <li>{{ $val }}</li>
+                        {{ end }}
+                    </ul>
+                </td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No User Rules available</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+
+    <h3 class="text-xl font-semibold mb-4 mt-3">Role Policies</h3>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Roles</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Access Scope</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Selector Label</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Organization</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {{ range $obj := .Response.DataProduct.AccessPolicies.RoleRules }}
+            <!-- Example Row -->
+            <tr class="cursor-pointer hover:bg-gray-100">
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <ul class="list-disc ml-5 text-gray-600">
+                        {{ range $val := $obj.Roles }}
+                        <li>{{ $val }}</li>
+                        {{ end }}
+                    </ul>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Access }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.SelectorLabel }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $obj.Organization }}</td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" class="px-6 py-4 whitespace-nowrap">No Role Rules available</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+
+</div>

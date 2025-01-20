@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+     {{ template "staticimports.html" . }}
+     {{ template "manage-platform-imports.html" . }}
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+    {{ template "main-sidebar.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+      <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+      <div class="max-w-8xl mx-auto bg-white rounded-lg shadow-lg p-6">
+
+          <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+            <h2 class="text-2xl font-semibold mb-4">{{ .SectionHeader }}</h2>
+            <div class="relative inline-block text-left">
+                {{ template "action-dropdown.html" . }}
+                <div id="actionDropdownMenu"
+                    class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+                    <ul class="py-1 text-gray-700">
+                        {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                        <!-- Edit Option -->
+                        <li>
+                            <a href="#"
+                                onclick="userAction(`{{ $.Response.User.UserId }}-{{ $k }}`,`{{ $k }}`)"
+                                class="flex items-center px-4 py-2 hover:bg-gray-100">
+                                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z" />
+                                </svg>
+                                {{ $k }}
+                            </a>
+                            <div hidden id="{{ $.Response.User.UserId }}-{{ $k }}">{{ $v }}</div>
+                        </li>
+                        {{ end }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+            <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+                <div class="max-w-8xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                    <!-- User Overview Section -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <p class="text-gray-900 font-medium">User ID:</p>
+                        <p class="text-gray-600">{{ .Response.User.UserId }}</p>
+                      </div>
+                      <div>
+                        <p class="text-gray-900 font-medium">Email:</p>
+                        <p class="text-gray-600">{{ .Response.User.Email }}</p>
+                      </div>
+                      <div>
+                        <p class="text-gray-900 font-medium">Display Name:</p>
+                        <p class="text-gray-600">{{ .Response.User.DisplayName }}</p>
+                      </div>
+                      <div>
+                        <p class="text-gray-900 font-medium">Status</p>
+                        <p class="text-gray-600">
+                          <span class="px-3 py-1 text-sm font-medium {{ if eq .Response.User.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                            {{ .Response.User.Status }}
+                          </span>
+                        </p>
+                      </div>
+                      <div>
+                        <p class="text-gray-900 font-medium">First Name:</p>
+                        <p class="text-gray-600">{{ .Response.User.FirstName }}</p>
+                      </div>
+                      <div>
+                        <p class="text-gray-900 font-medium">Last Name:</p>
+                        <p class="text-gray-600">{{ .Response.User.LastName }}</p>
+                      </div>
+                      <div>
+                        <p class="text-gray-900 font-medium">Onboarding Type:</p>
+                        <p class="text-gray-600">{{ .Response.User.InvitedType }}</p>
+                      </div>
+                      <div>
+                        <p class="text-gray-900 font-medium">Platform Role:</p>
+                        <p class="text-gray-600">
+                          {{ range $role := .GlobalContext.UserInfo.PlatformRoles }}
+                          <span
+                            class="px-3 py-1 text-sm font-medium text-gray-800 bg-gray-200 rounded-full">
+                            {{ $role }}
+                          </span>
+                          {{ end }}</p>
+                      </div>
+                    </div>
+                    
+                    <!-- Organization Roles Section -->
+                    <h3 class="text-xl font-semibold text-gray-800">Organization Roles:</h3>
+                    <div class="space-y-4">
+                        {{ range $id, $val := .Response.User.OrganizationRoles }}
+                      <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+                        <h4 class="text-lg font-semibold text-gray-800">Organization ID: {{ $val.OrganizationId }}</h4>
+                        <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                          <div>
+                            <p class="font-semibold text-gray-700">Roles</p>
+                            <ul class="list-disc ml-5 text-gray-600">
+                                {{ range $role := $val.Role }}
+                              <li>{{ $role }}</li>
+                              {{ end }}
+                            </ul>
+                          </div>
+                          <div>
+                            <p class="font-semibold text-gray-700">Invited On:</p>
+                            <p class="text-gray-600">{{ epochConverter $val.InvitedOn }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      {{ end }}
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+function userAction(destId, action) {
+            document.getElementById('actionTitle').innerHTML = "";
+            document.getElementById('actionTitle').innerHTML = action.toUpperCase();
+            document.getElementById('yamlSpecTitle').innerHTML = "";
+            document.getElementById('yamlSpecTitle').innerHTML = `Edit {{ .Response.User.UserId }} Spec`;
+            openYAMLedModal(`{{ .Response.ActionParams.API }}`,
+                `{{ .GlobalContext.AccessTokenKey }}`,
+                destId);
+        }
+
+</script>
+</html>

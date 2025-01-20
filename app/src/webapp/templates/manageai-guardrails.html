@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+  {{ template "header.html" . }}
+
+  <div class="flex h-screen">
+    {{ template "main-sidebar.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+      <section id="tables" class="space-y-6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+          <h1 class="text-2xl font-medium">{{ .SectionHeader }}</h1>
+          {{ template "create-new-resource.html" . }}
+        </div>
+        <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+          <table class="min-w-full divide-y divide-gray-200" id="guardrailsDataTable">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guardrail Id</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">View Details
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200 break-words">
+              {{ range $id, $val := .Response.AIGuardrails }}
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  {{ $val.Name }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap break-words" title="Click to copy {{ $val.GuardrailId }}" style="cursor: pointer" onclick="copyToClipboard(`{{ $val.GuardrailId }}`)">
+                  {{ $val.GuardrailId }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap"> <span
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ if eq $val.Base.Status `ACTIVE` }}bg-green-100 text-green-800 {{ else }} bg-red-100 text-red-800 {{ end }}">
+                    {{ $val.Base.Status }}
+                  </span></td>
+                <td class="px-6 py-4 justify-center">
+                  <a href="{{ $.Response.BackListingLink }}/{{ $val.GuardrailId }}"
+                   target="_blank" title="Open in new tab">
+                   {{ template "view-details-svg.html" . }}
+                  </a>
+                </td>
+              </tr>
+              {{ else }}
+              <tr>
+                <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center">No AI Guardrails found</td>
+              </tr>
+              {{ end }}
+            </tbody>
+            {{ template "table-pagination-footer.html" . }}
+          </table>
+        </div>
+      </section>
+    </div>
+    <div hidden id="createTemplate">{{ $.CreateTemplate }}</div>
+  </div>
+  <script>
+    function createNewResource() {
+      document.getElementById('actionTitle').innerHTML = "";
+      document.getElementById('actionTitle').innerHTML = "Create New AI Guardrail";
+      document.getElementById('yamlSpecTitle').innerHTML = "";
+      document.getElementById('yamlSpecTitle').innerHTML = `Enter your AI Guardrail spec here`;
+      openYAMLedModal(`{{ .Response.ActionParams.API }}`, `{{ .GlobalContext.AccessTokenKey }}`, `createTemplate`);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(() => {
+        addTablePagination({
+      tableId: "guardrailsDataTable",
+      rowsPerPage: 10,
+      prevPageBtn: document.getElementById("prevPage"),
+      nextPageBtn: document.getElementById("nextPage"),
+      currentPageSizeSpan: document.getElementById("currentPageSize"),
+      totalElementsSpan: document.getElementById("totalElements"),
+      });
+      }, 100);
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<div class="sidebar vapsudata-sidebar shadow-lg bg-black w-1/6 h-full overflow-y-auto">
+    <nav class="flex flex-col space-y-2 bg-black p-3" id="sidebar">
+        {{ range  $main := $.GlobalContext.NavMenuMap }}
+        <div class="main-item">
+            <div class="flex items-center justify-between w-full text-sm text-white p-1 rounded-md mb-1 cursor-pointer hover:bg-pink-900
+            {{ if eq $.GlobalContext.CurrentNav $main.ItemId }} mainsidebarselected {{ end }}"
+                onclick="toggleSubmenu(`{{ $main.ItemId }}`)">
+                <span class="flex items-center">
+                    {{ $main.Svg }}
+                    <a href="{{ $main.Url}}">{{ $main.ItemName }}</a>
+                </span>
+                {{ if $main.Children}}
+                <svg class="w-4 h-4 transition-transform transform rotate-0" id="{{ $main.ItemId }}-Arrow" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                {{ end }}
+            </div>
+            <div id="{{ $main.ItemId }}" class="submenu {{ if ne $.GlobalContext.CurrentNav $main.ItemId }} hidden{{ end }}  ml-6 ">
+                {{ range $sub := $main.Children }}
+                <a href="{{ $sub.Url }}" id="{{ $sub.ItemId }}" class="block text-xs text-white p-2 mt-2 mb-2 rounded-md hover:bg-pink-900
+                {{ if eq $.GlobalContext.CurrentSideBar $sub.ItemId }} subsidebarselected {{ end }}">
+                    {{ $sub.Svg }}
+                    {{ $sub.ItemName }}
+                </a>
+                {{ end }}
+            </div>
+        </div>
+        {{ end }}
+    </nav>
+</div>

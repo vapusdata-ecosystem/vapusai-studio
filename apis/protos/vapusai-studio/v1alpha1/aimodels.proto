@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/vapusai.proto";
+import "protos/models/v1alpha1/common.proto";
+
+package vapusai.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/vapusai/v1alpha1";
+
+service AIModels {
+    /**
+     * Retrieves a data worker deployment.
+     * @param {Manager} request - The request object containing the AI model node configurator.
+     * @returns {AIModelNodeResponse} The response object containing the AI model node configurator.
+     */
+    rpc Manager(AIModelNodeConfiguratorRequest) returns (AIModelNodeResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/models-nodes"
+            body: "*"
+        };
+    }
+
+    /**
+     * Retrieves a data worker deployment.
+     * @param {AIModelNodeGetterRequest} request - The request object containing the AI model node getter.
+     * @returns {AIModelNodeResponse} The response object containing the AI model node getter.
+     */
+    rpc Getter(AIModelNodeGetterRequest) returns (AIModelNodeResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/models-nodes/{ai_model_node_id}"
+        };
+    }
+}
+
+enum AIModelNodeConfiguratorActions {
+    INVALID_AINODE_CONFIG_ACTION = 0;
+    CONFIGURE_AIMODEL_NODES = 1;
+    PATCH_AIMODEL_NODES = 2;
+    DELETE_AIMODEL_NODES = 3;
+    SYNC_AI_MODELS = 4;
+}
+
+enum AIModelNodeAction {
+    INVALID_AIAGENT_ACTION = 0;
+    GENERATE_CONTENT = 1;
+    GENERATE_TRANSCRIPT = 2;
+    GENERATE_DATAQUERIES = 3;
+    GENERATE_IMAGES = 4;
+    GENERATE_VIDEOS = 5;
+    GENERATE_EMBEDDINGS = 6;
+}
+
+message AIModelNodeConfiguratorRequest {
+    AIModelNodeConfiguratorActions action = 1; // @gotags: yaml:"action"
+    repeated models.v1alpha1.AIModelNode spec = 2; // @gotags: yaml:"spec"
+}
+
+message AIModelNodeResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    message AIModelNodeResponse {
+        repeated models.v1alpha1.AIModelNode ai_model_nodes = 1; // @gotags: yaml:"aiModelNodes"
+        repeated models.v1alpha1.MapList available_models_pool = 2; // @gotags: yaml:"availableModelsPool"
+    }
+    AIModelNodeResponse output = 2; // @gotags: yaml:"output"
+}
+
+message AIModelNodeGetterRequest {
+    string ai_model_node_id = 1; // @gotags: yaml:"aiModelNodeId"
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"searchParam"
+}

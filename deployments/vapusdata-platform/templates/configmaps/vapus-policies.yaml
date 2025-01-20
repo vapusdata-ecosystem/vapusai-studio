@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.vapusdata.globalConfigs.policyConfig.name }}
+  labels:
+    {{- include "vapusdata.common.labels" . | nindent 4 }}
+data:
+  global-policies-config.yaml: |-
+    studioPolicies:
+      - "vrn:organization:ManageOrganization"
+      - "vrn:organization:GetOrganizations"
+      - "vrn:organization:*"
+      - "vrn:vapusData:CreateAccount"
+      - "vrn:vapusData:GetAccount"
+      - "vrn:vapusData:StoreDMSecrets"
+      - "vrn:vapusData:GetUsers"
+      - "vrn:vapusData:InviteUsers"
+      - "vrn:vapusData:*"
+      - "vrn:vapusai:GetLLMConfiguration"
+      - "vrn:vapusai:GetRagConfiguration"
+      - "vrn:vapusai:GetAvailableLlms"
+      - "vrn:vapusai:VapusAiInterface"
+      - "vrn:vapusai:*"
+    organizationPolicies:
+      - "vrn:organization:ManageOrganization"
+      - "vrn:organization:GetOrganizations"
+      - "vrn:organization:*"
+      - "vrn:vapusData:GetAccount"
+      - "vrn:vapusData:StoreDMSecrets"
+      - "vrn:vapusData:GetUsers"
+      - "vrn:vapusData:InviteUsers"
+      - "vrn:vapusData:*"
+      - "vrn:vapusai:ConfigureLlm"
+      - "vrn:vapusai:ConfigureRag"
+      - "vrn:vapusai:GetLLMConfiguration"
+      - "vrn:vapusai:GetRagConfiguration"
+      - "vrn:vapusai:GetAvailableLlms"
+      - "vrn:vapusai:VapusAiInterface"
+      - "vrn:vapusai:Train"
+      - "vrn:vapusai:CreateEmbeddings"
+      - "vrn:vapusai:RetrieveEmbeddings"
+      - "vrn:vapusai:*"
+    roles:
+        - name: anonymous
+          policies:
+            - "vrn:organization:GetOrganizations"
+            - "vrn:organization:GetAvailableLlms"
+        - name: studioOwners
+          policies:
+            - "vrn:vapusai:*"
+            - "vrn:organization:*"
+        - name: studioAuditors
+          policies:
+            - "vrn:vapusData:GetAccount"
+            - "vrn:vapusData:GetUsers"
+            - "vrn:organization:GetOrganizations"
+        - name: studioUsers
+          policies:
+            - "vrn:vapusData:GetAccount"
+            - "vrn:vapusData:GetUsers"
+            - "vrn:organization:GetOrganizations"
+        - name: organizationOwners
+          policies:
+            - "vrn:vapusai:ConfigureLlm"
+            - "vrn:vapusai:ConfigureRag"
+            - "vrn:vapusai:GetLLMConfiguration"
+            - "vrn:vapusai:GetRagConfiguration"
+            - "vrn:vapusai:GetAvailableLlms"
+            - "vrn:vapusai:VapusAiInterface"
+            - "vrn:vapusai:Train"
+            - "vrn:vapusai:CreateEmbeddings"
+            - "vrn:vapusai:RetrieveEmbeddings"
+            - "vrn:vapusData:GetAccount"
+            - "vrn:vapusData:StoreDMSecrets"
+            - "vrn:vapusData:GetUsers"
+            - "vrn:vapusData:InviteUsers"
+            - "vrn:organization:ManageOrganization"
+            - "vrn:organization:GetOrganizations"
+        - name: organizationUsers
+          policies:
+            - "vrn:vapusai:GetLLMConfiguration"
+            - "vrn:vapusai:GetRagConfiguration"
+            - "vrn:vapusai:GetAvailableLlms"
+            - "vrn:vapusai:VapusAiInterface"
+            - "vrn:vapusai:Train"
+            - "vrn:vapusai:CreateEmbeddings"
+            - "vrn:vapusai:RetrieveEmbeddings"
+            - "vrn:vapusData:GetAccount"
+            - "vrn:vapusData:StoreDMSecrets"
+            - "vrn:vapusData:GetUsers"
+            - "vrn:organization:GetOrganizations"
+
+        

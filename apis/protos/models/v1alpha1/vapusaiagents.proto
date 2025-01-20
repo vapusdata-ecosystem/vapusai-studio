@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+import "protos/models/v1alpha1/enums.proto";
+import "protos/models/v1alpha1/common.proto";
+
+package models.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+
+message VapusAIAgent {
+    string agent_id = 1; // @gotags: yaml:"agentId"
+    string name = 2; // @gotags: yaml:"name"
+    VapusAiAgentTypes agent_type = 3; // @gotags: yaml:"agentType"
+    string description = 4; // @gotags: yaml:"description"
+    string status = 5; // @gotags: yaml:"status"
+    string agent_version = 6; // @gotags: yaml:"agentVersion"
+    string org = 7; // @gotags: yaml:"org"
+    repeated string owners = 8; // @gotags: yaml:"owners"
+    repeated AIModelMap ai_model_map = 9; // @gotags: yaml:"aiModelMap"
+    bool editable = 10; // @gotags: yaml:"editable"
+    repeated Steps steps = 11; // @gotags: yaml:"steps"
+    repeated string labels = 12; // @gotags: yaml:"labels"
+    AIAgentSettings settings = 13; // @gotags: yaml:"settings"
+    VapusBase resource_base = 14; // @gotags: yaml:"resourceBase"
+}
+
+message AIModelMap {
+    string model_node_id = 1; // @gotags: yaml:"modelNodeId"
+    string model_name = 2; // @gotags: yaml:"modelName"
+}
+
+message Steps {
+    AgentStepEnum id = 1; // @gotags: yaml:"id"
+    string prompt = 2; // @gotags: yaml:"prompt"
+    string promptId = 3; // @gotags: yaml:"promptId"
+    // repeated Mapper input_templates = 4; // @gotags: yaml:"inputTemplates"
+    bool required = 5; // @gotags: yaml:"required"
+    bool auto_generate = 6; // @gotags: yaml:"autoGenerate"
+    AgentStepValueType value_type = 7; // @gotags: yaml:"valueType"
+}
+
+message AIAgentSettings {
+    string tool_call_schema = 1; // @gotags: yaml:"toolCallSchema"
+}
+

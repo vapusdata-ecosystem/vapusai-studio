@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ template "staticimports.html" . }}
+    <script src="/static/js/datamarketplace.js"></script>
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+    <div class="flex h-screen">
+        {{ template "main-sidebar.html" . }}
+        <div class="flex-grow p-4 overflow-y-auto w-5/6">
+            <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+                <h1 class="text-2xl font-bold">{{ .SectionHeader }}</h1>
+            </div>
+            <section id="charts" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {{ range $id, $val := .Response.DataCatalogs }}
+                    <a href="/ui/datamarketplace/data-catalogs/{{ $val.Name }}">
+                        <div class="relative p-6 bg-white rounded-lg shadow-md shadow-md">
+                            <div class="grid grid-cols-1 gap-2 text-sm text-gray-700">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-3 break-words">{{ $val.DisplayName }}
+                                </h3>
+                                <div class="flex items-center justify-left">
+                                    <span class="font-semibold pr-2">Description:</span>
+                                    <span class="flex items-center">{{ limitWords $val.Description 50}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {{ end }}
+                </div>
+            </section>
+            <!-- <div class="grid grid-cols-2 gap-4">
+            {{ range $id, $val := .Response.DataCatalogs }}
+            <div class="border-2 border-black p-4 rounded bg-white h-50">
+                <div class="font-bold text-lg mb-2">{{ $val.Name }}</div>
+                <div class="grid grid-cols-1 gap-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="font-semibold">Catalog Id:</span>
+                        <span>{{ $val.DataCatalogId }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">Organization:</span>
+                        <span>{{ $val.OrganizationId }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">Data Product Counts:</span>
+                        <span>{{ len $val.DataProducts }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">Description:</span>
+                        <span>{{ limitWords $val.Description 15}} <span class="text-gray-500">★</span></span>
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+
+        </div> -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebar');
+            const buttons = sidebar.getElementsByTagName('button');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuitems = document.getElementById('menuitems');
+            const buttons = menuitems.getElementsByTagName('a');
+
+            for (let button of buttons) {
+                button.addEventListener('click', function () {
+                    // Remove 'selected' class from all buttons
+                    for (let btn of buttons) {
+                        btn.classList.remove('selected');
+                    }
+                    // Add 'selected' class to the clicked button
+                    this.classList.add('selected');
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

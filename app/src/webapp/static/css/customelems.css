@@ -1,0 +1,169 @@
+  /* Main container styling */
+  .choices {
+      background-color: #ffffff;
+      /* Main div background */
+      color: rgb(23 37 81);
+      /* Main text color */
+      border: 4px solid rgb(23 37 81);
+      border-radius: 8px;
+  }
+
+  .choices__input {
+      display: inline-block;
+      vertical-align: baseline;
+      background-color: white !important;
+      font-size: 14px;
+      margin-bottom: 5px;
+      border: 0;
+      border-radius: 0;
+      max-width: 100%;
+      padding: 4px 0 4px 2px;
+      color:rgb(23 37 81) !important;
+  }
+
+  .choices__placeholders {
+      background-color: white !important;
+      color: rgb(23 37 81) !important;
+  }
+
+  /* Input area for search and placeholder */
+  .choices__inner {
+      background-color: #ffffff;
+      /* White background */
+      color:rgb(23 37 81);
+      /* Blue text */
+      border: none;
+  }
+
+  /* Selected items in the dropdown */
+  .choices__item--selectable {
+      background-color: rgb(23 37 81) !important;
+      /* Blue background */
+      color: #ffffff !important;
+      /* White text */
+      border-radius: 4px;
+      padding: 4px 8px;
+      margin: 2px;
+  }
+
+  /* Dropdown options */
+  .choices__list--dropdown .choices__item--choice {
+      background-color: rgb(23 37 81) !important;
+      /* Blue background */
+      color: #ffffff !important;
+      /* White text */
+      border-radius: 4px;
+  }
+
+  /* Remove hover effect for dropdown items */
+  .choices__list--dropdown .choices__item--choice:hover,
+  .choices__list--dropdown .choices__item--choice.is-highlighted {
+      background-color: rgb(23 37 81) !important;
+      /* Keep background blue */
+      color: #ffffff !important;
+      /* Keep text white */
+  }
+
+  /* Placeholder text */
+  .choices__placeholder {
+      color:rgb(23 37 81);
+      /* Blue placeholder text */
+      opacity: 0.8;
+  }
+
+
+  .vapus-dropdown {
+    position: relative;
+  }
+
+  .vapus-dropdown-toggle {
+    padding: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+
+  .vapus-dropdown-menu {
+    top: 100%;
+    left: 0;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+    position: relative;
+    background-color: #ffffff;
+    color:rgb(23 37 81);
+  }
+
+  .vapus-dropdown-menu.show {
+    display: block;
+  }
+
+  .vapus-dropdown-item {
+    padding: 3px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .vapus-dropdown-item.parent {
+    font-weight: bold;
+    cursor: default;
+    color: #010101;
+    background-color: #cecfcf;
+  }
+  .vapus-dropdown-item.child {
+    padding-left: 10px;
+  }
+
+  .vapus-dropdown-item.child:hover {
+    background-color: rgb(131 24 67);
+    color: #ffffff;
+  }
+
+
+  .json-box-container {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .json-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #000000;
+    border-bottom: 1px solid #000000;
+    color: #ffffff;
+  }
+
+  .json-box-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .json-box-header .copy-button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  .json-box {
+    background-color: #e7e7e7;
+    padding: 10px;
+    overflow: auto;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .fileuploader-list-selected {
+background-color: rgb(154 52 18 / var(--tw-bg-opacity, 1));
+color: #ffffff;
+  }

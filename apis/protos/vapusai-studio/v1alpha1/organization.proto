@@ -1,0 +1,309 @@
+/**
+ * @fileoverview
+ * This file contains the protocol buffer definitions for the VapusDataStudio API.
+ * The VapusDataStudioService API allows users to create and manage data marketplacees, which are
+ * virtualized data environments that provide a unified view of data from
+ * multiple sources.
+ *
+ * @packageDocumentation
+ */
+
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/common.proto";
+import "protos/models/v1alpha1/organizations.proto";
+import "protos/models/v1alpha1/enums.proto";
+import "protos/models/v1alpha1/users.proto";
+
+
+package vapusai.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/vapusai/v1alpha1";
+
+/**
+ * The StudioService is the main service interface for managing vapusai services.
+ * It provides methods for creating accounts, retrieving account information,
+ * creating data marketplacees, storing data marketplace secrets, and retrieving data marketplace information.
+ */
+service StudioService {
+    rpc StudioPublicInfo(models.v1alpha1.EmptyRequest) returns (StudioPublicInfoResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/Studio/public-info"
+        };
+    }
+
+    /**
+     * Manages a org.
+     * @param {OrganizationManagerRequest} request - The request object containing the org details.
+     * @returns {OrganizationResponse} The response object containing the result of the org management actions.
+     */
+    rpc OrganizationManager(OrganizationManagerRequest) returns (OrganizationResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/Studio/orgs"
+            body: "*"
+        };
+    }
+
+    /**
+     * Retrieves a org.
+     * @param {OrganizationGetterRequest} request - The request object containing the org ID.
+     * @returns {OrganizationResponse} The response object containing the retrieved org.
+     */
+    rpc OrganizationGetter(OrganizationGetterRequest) returns (OrganizationResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/Studio/orgs/{org_id}"
+        };
+    }
+
+    /**
+     * Retrieves information about theaccount.
+     * @param {AccountManager} request - The account creation request.
+     * @returns {AccountResponse} - The account creation response.
+     */
+    rpc AccountGetter(models.v1alpha1.EmptyRequest) returns (AccountResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/Studio"
+        };
+    }
+
+    /**
+     * Creates a new account with the specified name.
+     * @param {AccountManager} request - The account creation request.
+     * @returns {AccountResponse} - The account creation response.
+     */
+    rpc AccountManager(AccountManagerRequest) returns (AccountResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/Studio"
+            body: "*"
+        };
+    }
+}
+
+
+enum OrganizationAgentActions {
+    INVALID_ORG_ACTION = 0;
+    CONFIGURE_ORG = 1;
+    DELETE_ORG = 2;
+    UPGRADE_ORG_ARTIFACTS = 3;
+    PATCH_ORG = 4;
+    LIST_ORGS = 5;
+    DESCRIBE_ORG = 6;
+    ADD_ORG_USER = 7;
+}
+
+/**
+ * @typedef {Object} ManageOrganizationRequest
+ * @property {OrganizationAgentActions} actions - The actions to perform on the org.
+ * @property {models.v1alpha1.Organization} spec - The request body containing the org details.
+ */
+message OrganizationManagerRequest {
+    // The actions to perform on the org
+    OrganizationAgentActions actions = 1; // @gotags: yaml:"actions"
+    // The request body containing the org details
+    models.v1alpha1.Organization spec = 2; // @gotags: yaml:"spec"
+    // The list of org user operations
+    repeated models.v1alpha1.OrganizationUserOps users = 3; // @gotags: yaml:"users"
+}
+
+message OrganizationGetterRequest {
+    // The org ID to retrieve
+    string org_id = 1; // @gotags: yaml:"orgId"
+    // The search parameter for org retrieval
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"SearchParam"
+}
+
+message OrganizationResponse {
+    // The response from the org management service
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    // The list of orgs
+    message OrganizationOutput{
+        // The list of orgs
+        repeated models.v1alpha1.Organization orgs = 1; // @gotags: yaml:"orgs"
+        // The list of org users
+        message OrganizationUsers {
+            // The org
+            string org = 1; // @gotags: yaml:"org"
+            // The list of users
+            repeated models.v1alpha1.User users = 2; // @gotags: yaml:"users"
+        }
+        // The list of org users
+        repeated OrganizationUsers users = 2; // @gotags: yaml:"users"
+    }
+    // The output of the org response
+    OrganizationOutput output = 2; // @gotags: yaml:"output"
+}
+
+
+service UtilityService {
+    /**
+     * Stores the specified data marketplace secrets.
+     * @param {StoreDMSecretsRequest} request - The data marketplace secrets storage request.
+     * @returns {StoreDMSecretsResponse} - The data marketplace secrets storage response.
+     */
+    rpc StoreDMSecrets(StoreDMSecretsRequest) returns (StoreDMSecretsResponse){
+        option (google.api.http) = {
+            post: "/api/v1alpha1/Studio/secrets"
+            body: "*"
+        };
+    }
+
+    rpc Upload(UploadRequest) returns(UploadResponse){
+        option (google.api.http) = {
+            post: "/api/v1alpha1/utility/upload"
+            body: "*"
+        };
+    }
+
+    rpc UploadStream(stream UploadRequest) returns(UploadResponse){
+        option (google.api.http) = {
+            post: "/api/v1alpha1/utility/upload-stream"
+            body: "*"
+        };
+    }
+}
+
+message UploadResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    message ObjectUploadResult {
+        models.v1alpha1.FileData object = 1; // @gotags: yaml:"object"
+        string response_path = 2; // @gotags: yaml:"responsePath"
+        string error = 3; // @gotags: yaml:"error"
+        string fid = 4; // @gotags: yaml:"fid"
+    }
+    repeated ObjectUploadResult output = 2; // @gotags: yaml:"output"
+}
+
+message UploadRequest {
+    repeated models.v1alpha1.FileData objects = 1; // @gotags: yaml:"objects"
+    string resource = 2; // @gotags: yaml:"resource"
+    string resource_id = 3; // @gotags: yaml:"resourceId"
+}
+
+service PluginService {
+    rpc PluginManager(PluginManagerRequest) returns(PluginResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/plugins"
+            body: "*"
+        };
+    }
+
+    rpc PluginGetter(PluginGetterRequest) returns(PluginResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/plugins/{plugin_id}"
+        };
+    }
+    
+    rpc PluginAction(PluginActionRequest) returns(PluginActionResponse) {}
+}
+
+enum PluginAgentAction {
+    INVALID_PLUGIN_ACTION = 0;
+    CONFIGURE_PLUGIN = 1;
+    PATCH_PLUGIN = 2;
+    DELETE_PLUGIN = 3;
+    TEST_PLUGIN = 4;
+}
+
+enum AccountAgentActions {
+    INVALID_ACCOUNT_ACTION = 0;
+    CONFIGURE_AISTUDIO_MODEL = 1;
+    UPDATE_PROFILE = 2;
+}
+
+message StudioPublicInfoResponse {
+    string logo = 1;
+    string account_name = 2;
+    string favicon = 3;
+}
+
+message VapusSearchRequest {
+    string q = 1;// @gotags: yaml:"q"
+}
+
+/**
+ * The AccountManagerRequest message contains the information required to create or retrieve an account.
+ */
+message AccountManagerRequest {
+    AccountAgentActions actions = 1; // @gotags: yaml:"actions"
+    models.v1alpha1.Account spec = 2; // @gotags: yaml:"spec"
+}
+
+/**
+ * The AccountResponse message contains the response to an account creation or retrieval request.
+ */
+message AccountResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    models.v1alpha1.Account output = 2; // @gotags: yaml:"output"
+}
+
+/**
+ * The StoreDMSecretsRequest message contains the information required to store data marketplace secrets.
+ */
+message StoreDMSecretsRequest {
+    string name = 1; // @gotags: yaml:"name"
+    string v_path = 2; // @gotags: yaml:"vPath"
+    repeated models.v1alpha1.Mapper c_data = 3; // @gotags: yaml:"cData"
+}
+
+/**
+ * The StoreDMSecretsResponse message contains the response to a data marketplace secrets storage request.
+ */
+message StoreDMSecretsResponse {
+    models.v1alpha1.DMResponse dm_resp = 1;
+    string v_path = 2; // @gotags: yaml:"vPath"
+    string name = 3; // @gotags: yaml:"name"
+}
+
+message SampleResourceConfigurationOptions {
+    models.v1alpha1.ContentFormats format = 1; // @gotags: yaml:"format"
+    models.v1alpha1.RequestObjects request_obj = 2; // @gotags: yaml:"requestObj"
+    bool populate_fake_data = 3; // @gotags: yaml:"populateFakeData"
+}
+
+message SampleResourceConfiguration {
+    message ResourceConfigs {
+        models.v1alpha1.RequestObjects request_obj = 1; // @gotags: yaml:"requestObj"
+        string file_content = 2; // @gotags: yaml:"fileContent"
+        models.v1alpha1.ContentFormats format = 3; // @gotags: yaml:"format"
+    }
+     repeated ResourceConfigs output = 1; // @gotags: yaml:"output"
+
+}
+
+message PluginManagerRequest {
+    PluginAgentAction action = 1; // @gotags: yaml:"action"
+    models.v1alpha1.Plugin spec = 2; // @gotags: yaml:"spec"
+}
+
+message PluginGetterRequest {
+    string plugin_id = 1; // @gotags: yaml:"pluginId"
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"SearchParam"
+}
+
+message PluginResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated models.v1alpha1.Plugin output = 2; // @gotags: yaml:"output"
+}
+
+message SendEmailRequest {
+    bytes spec = 1;
+    string caller_agent_id = 2; // @gotags: yaml:"callerAgentId"
+}
+
+message SendEmailResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+}
+
+message PluginActionRequest {
+    string plugin_id = 1; // @gotags: yaml:"pluginId"
+    string plugin_type = 2; // @gotags: yaml:"pluginType"
+    bytes spec = 3; // @gotags: yaml:"spec"
+    string caller_resource = 4; // @gotags: yaml:"callerResource"
+    string caller_id = 5; // @gotags: yaml:"callerId"
+}
+
+message PluginActionResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+}

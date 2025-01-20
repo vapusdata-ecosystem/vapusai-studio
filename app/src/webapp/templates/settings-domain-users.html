@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+        {{ template "main-sidebar.html" . }}
+        {{ template "yaml-editor-modal.html" . }}
+        <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <section id="tables" class="space-y-6">
+          <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+            <h2 class="text-2xl font-semibold mb-4">Users</h2>
+            <div class="relative inline-block text-left">
+              {{ template "action-dropdown.html" . }}
+              <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+                <ul class="py-1 text-gray-700">
+                  {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                  <!-- Edit Option -->
+                  <li>
+                    <a href="#" onclick="addNewUsers(`{{ $k }}`,`{{ $k }}`)" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                      <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z"/>
+                      </svg>
+                      {{ $k }}
+                    </a>
+                    <div hidden id="{{ $k }}">{{ $v }}</div>
+                  </li>
+                  {{ end }}
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+            <table class="min-w-full divide-y divide-gray-200" id="usersDataTable">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Id</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invited On</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Display Name</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">View Details</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                  {{ range $id, $val := .Response.Users }}
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ $val.UserId }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ epochConverter $val.InvitedOn }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    
+                    {{ $val.DisplayName }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap"> <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ if eq $val.Status `ACTIVE` }}bg-green-100 text-green-800 {{ else }} bg-red-100 text-red-800 {{ end }}">
+                    {{ $val.Status }}
+                  </span></td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <a class="indescription-link" target="_blank" href="{{ $.Response.BackListingLink }}/{{ $val.UserId }}">
+                      {{ template "view-details-svg.html" . }}                                       
+                    </a>
+                  </td>
+                </tr>
+                {{ end }}
+              </tbody>
+              {{ template "table-pagination-footer.html" . }}
+            </table>
+          </div>
+        </section>
+       </div>
+  <script>
+  function addNewUsers(destId,action) {
+      document.getElementById('actionTitle').innerHTML = "";
+      document.getElementById('actionTitle').innerHTML = "Add New Users in Organization";
+      document.getElementById('yamlSpecTitle').innerHTML = "";
+      document.getElementById('yamlSpecTitle').innerHTML = `Enter users and their roles here`;
+      openYAMLedModal(`{{ .Response.ActionParams.API }}`,
+      `{{ .GlobalContext.AccessTokenKey }}`,
+      destId);
+  }
+  document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(() => {
+        addTablePagination({
+      tableId: "usersDataTable",
+      rowsPerPage: 10,
+      prevPageBtn: document.getElementById("prevPage"),
+      nextPageBtn: document.getElementById("nextPage"),
+      currentPageSizeSpan: document.getElementById("currentPageSize"),
+      totalElementsSpan: document.getElementById("totalElements"),
+      });
+      }, 100);
+    });
+  </script>
+      </div>
+
+
+</body>
+</html>

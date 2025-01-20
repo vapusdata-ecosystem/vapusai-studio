@@ -1,0 +1,105 @@
+<div class="sidebar vapsudata-sidebar border-r w-300 bg-blue-950 border-gray-300 h-screen">
+  <nav class="flex flex-col space-y-2 bg-blue-950 w-64 p-4 h-screen" id="sidebar">
+    <a href="/ui/settings" id="settingsProfile"
+      class="{{ if eq .GlobalContext.CurrentSideBar `settingsProfile` }} sidebarselected {{ end }} flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 m-2 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M5.121 17.804A9.969 9.969 0 0112 15a9.969 9.969 0 016.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0zM12 3c4.97 0 9 4.03 9 9s-4.03 9-9 9-9-4.03-9-9 4.03-9 9-9z" />
+      </svg>
+
+      Profile
+    </a>
+    <a href="/ui/settings/Organization" id="OrganizationSettings" class="{{ if eq .GlobalContext.CurrentSideBar `OrganizationSettings` }} sidebarselected {{ end }} flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.73 1.73 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.73 1.73 0 0 0-1.82-.33 1.73 1.73 0 0 0-1 1.57v.23a2 2 0 0 1-2 2h-.12a2 2 0 0 1-2-2v-.23a1.73 1.73 0 0 0-1-1.57 1.73 1.73 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.73 1.73 0 0 0 .33-1.82 1.73 1.73 0 0 0-1.57-1H4a2 2 0 0 1-2-2v-.12a2 2 0 0 1 2-2h.23a1.73 1.73 0 0 0 1.57-1 1.73 1.73 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.73 1.73 0 0 0 1.82.33h.23a1.73 1.73 0 0 0 1-1V4a2 2 0 0 1 2-2h.12a2 2 0 0 1 2 2v.23a1.73 1.73 0 0 0 1 1 1.73 1.73 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.73 1.73 0 0 0-.33 1.82v.23a1.73 1.73 0 0 0 1 1h.23a2 2 0 0 1 2 2v.12a2 2 0 0 1-2 2h-.23a1.73 1.73 0 0 0-1 1.57z"></path>
+      </svg>
+      Your Organization
+  </a>
+    <a href="/ui/settings/platform" id="settingsPlatform"
+      class="{{ if eq .GlobalContext.CurrentSideBar `settingsPlatform` }} sidebarselected {{ end }} flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 m-2 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 8v6M4 8v6m12 6h4a2 2 0 002-2v-3a2 2 0 00-2-2h-4m-8 7H4a2 2 0 01-2-2v-3a2 2 0 012-2h4m4-6V4m0 16v-4m0-12a2 2 0 100-4 2 2 0 000 4zm4 2a2 2 0 100-4 2 2 0 000 4zm-8 0a2 2 0 100-4 2 2 0 000 4z" />
+              </svg>               -->
+      <svg viewBox="0 0 24 24" class="w-6 h-6 m-2" xmlns="http://www.w3.org/2000/svg" fill="none"  stroke="currentColor">
+        <path
+          d="M12 0a6.5 6.5 0 0 0-6.5 6.5C5.5 8.8 7.2 10.9 9.5 11.2v1.3H7c-.8 0-1.5.7-1.5 1.5v5.5c0 .8.7 1.5 1.5 1.5h10c.8 0 1.5-.7 1.5-1.5v-5.5c0-.8-.7-1.5-1.5-1.5h-2.5v-1.3c2.3-.3 4-2.4 4-4.7A6.5 6.5 0 0 0 12 0zm0 2a4.5 4.5 0 0 1 4.5 4.5c0 2-1.7 3.5-3.5 3.5H11A4.5 4.5 0 0 1 6.5 6.5 4.5 4.5 0 0 1 12 2zm-1 14h2v1h-2v-1zm0 2h2v1h-2v-1z" />
+      </svg>
+      Platform
+    </a>
+    <a href="/ui/settings/platform-Organizations" id="platformOrganizations" class="flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900 {{ if eq .GlobalContext.CurrentSideBar `platformOrganizations` }} sidebarselected {{ end }}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"></path>
+      </svg>
+      Platform Organizations 
+  </a>
+    <a href="/ui/settings/resources" id="settingsResources"
+      class="{{ if eq .GlobalContext.CurrentSideBar `settingsResources` }} sidebarselected {{ end }} flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path
+          d="M19.4 15a1.73 1.73 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.73 1.73 0 0 0-1.82-.33 1.73 1.73 0 0 0-1 1.57v.23a2 2 0 0 1-2 2h-.12a2 2 0 0 1-2-2v-.23a1.73 1.73 0 0 0-1-1.57 1.73 1.73 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.73 1.73 0 0 0 .33-1.82 1.73 1.73 0 0 0-1.57-1H4a2 2 0 0 1-2-2v-.12a2 2 0 0 1 2-2h.23a1.73 1.73 0 0 0 1.57-1 1.73 1.73 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.73 1.73 0 0 0 1.82.33h.23a1.73 1.73 0 0 0 1-1V4a2 2 0 0 1 2-2h.12a2 2 0 0 1 2 2v.23a1.73 1.73 0 0 0 1 1 1.73 1.73 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.73 1.73 0 0 0-.33 1.82v.23a1.73 1.73 0 0 0 1 1h.23a2 2 0 0 1 2 2v.12a2 2 0 0 1-2 2h-.23a1.73 1.73 0 0 0-1 1.57z">
+        </path>
+      </svg>
+      Resources
+    </a>
+    <a href="/ui/settings/enums" id="settingsEnums"
+    class="{{ if eq .GlobalContext.CurrentSideBar `settingsEnums` }} sidebarselected {{ end }} flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 m-2" fill="currentColor">
+      <rect x="4" y="4" width="16" height="4" rx="2" fill="#3b82f6" />
+      <rect x="4" y="10" width="16" height="4" rx="2" fill="#60a5fa" />
+      <rect x="4" y="16" width="16" height="4" rx="2" fill="#93c5fd" />
+      <circle cx="2" cy="6" r="1.5" fill="#1e40af" />
+      <circle cx="2" cy="12" r="1.5" fill="#1e3a8a" />
+      <circle cx="2" cy="18" r="1.5" fill="#1e293b" />
+    </svg>
+    Enums
+  </a>
+    <a href="#" id="settingsIntegrations"
+      class="{{ if eq .GlobalContext.CurrentSideBar `settingsIntegrations` }} sidebarselected {{ end }} flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 m-2" fill="currentColor"  stroke="currentColor"> 
+        <path
+          d="M12 24v-1A13 13 0 0 1 1 12a13 13 0 0 1 3-7.69A2.5 2.5 0 1 0 5.5 6a13 13 0 0 0-4.5 9 13 13 0 0 0 13 13zM5.5 3.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" />
+        <path
+          d="M12 0v1a13 13 0 0 1 13 13 13 13 0 0 1-3 7.69A2.5 2.5 0 1 0 18.5 17 13 13 0 0 0 24 12 13 13 0 0 0 12 0zM18.5 21.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+        <path
+          d="M4.5 6a.5.5 0 0 0-.5.5A17 17 0 0 0 12 21.5l1.17.82a.5.5 0 0 0 .66 0L15 21.5A17 17 0 0 0 19.5 6.5a.5.5 0 0 0-.5-.5A10 10 0 0 1 12 3.5l-1.03-.92a.5.5 0 0 0-.67 0L9.28 3.5A10 10 0 0 1 4.5 6z" />
+      </svg>
+      Tokens
+    </a>
+    <a href="/ui/settings/plugins" id="settingsPlugins"
+      class="{{ if eq .GlobalContext.CurrentSideBar `settingsPlugins` }} sidebarselected {{ end }} flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 m-2 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 9.172a4 4 0 010 5.656m0 0L10 15.657l-2.828 2.828a4 4 0 01-5.656-5.656L6 10m6.828 6.828a4 4 0 01-5.656-5.656L10 6l5.657 5.657a4 4 0 010 5.656z" />
+              </svg>    
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10H6a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2M9 15l10-10a2.828 2.828 0 114 4L13 19a2 2 0 01-1.414.586h-2.172A2 2 0 018 17.414v-2.172A2 2 0 018.586 14L18 4" />
+              </svg> -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 m-2">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M6 9c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2h2V6a2 2 0 012-2h2c1.104 0 2 .896 2 2v2h2V6a2 2 0 012-2h2a2 2 0 012 2v2h2c1.104 0 2 .896 2 2v2c0 1.104-.896 2-2 2h-2v2a2 2 0 01-2 2h-2c-1.104 0-2-.896-2-2v-2h-2v2c0 1.104-.896 2-2 2h-2a2 2 0 01-2-2v-2H6a2 2 0 01-2-2V9z" />
+      </svg>
+      Plugins
+    </a>
+    <a href="/ui/settings/users" id="OrganizationUsers" class="{{ if eq .GlobalContext.CurrentSideBar `OrganizationUsers` }} sidebarselected {{ end }}flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" viewBox="0 0 24 24"fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      Users
+  </a>
+    <a href="/logout" id="LogoutPage"
+      class="{{ if eq .GlobalContext.CurrentSideBar `LogoutPage` }} sidebarselected {{ end }}flex items-center w-full text-white px-4 py-2 rounded-full hover:text-white hover:bg-pink-900">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 m-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+      </svg>
+      Logout
+    </a>
+  </nav>
+</div>

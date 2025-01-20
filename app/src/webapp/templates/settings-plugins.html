@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+  {{ template "main-sidebar.html" . }}
+  {{ template "yaml-editor-modal.html" . }}
+  <div class="flex-grow p-4 overflow-y-auto w-5/6">
+    <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+      <h1 class="text-2xl font-semibold text-grey-900">{{ .SectionHeader }}</h1>
+      {{ template "create-new-resource.html" . }}
+    </div>
+        <section id="tables" class="space-y-6">
+            <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+              <table class="min-w-full divide-y divide-gray-200" id = "pluginSettingsTable">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plugin</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plugin Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Scope</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {{ range $id, $val := .Response.Plugins }}
+                  <tr>
+                    <div hidden id="{{ $val.PluginId }}-spec">{{index $.Specs $val.PluginId }}</div>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $val.PluginService }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $val.PluginType }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $val.Name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $val.Scope }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span
+                        class="px-3 py-1 text-sm font-medium {{ if eq $val.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                        {{ $val.Status }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      {{ if $val.Editable }}
+                      {{ if eq $val.Organization $.GlobalContext.CurrentOrganization.OrganizationId }}
+                      <a class="indescription-link" href="#" onclick="managePlugin(
+                        `{{$val.Name}}`, `{{$val.PluginId}}`)">
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 40 40">
+                          <path fill="#c2e8ff" d="M1.5 5.5H34.5V38.5H1.5z"></path><path fill="#7496c4" d="M34,6v32H2V6H34 M35,5H1v34h34V5L35,5z"></path><path fill="#c2e8ff" d="M30.611 13.611H37.055V15.944H30.611z" transform="rotate(90 33.833 14.778)"></path><path fill="#c2e8ff" d="M22 5H28.444V7.333H22z"></path><g><path fill="#8bb7f0" d="M18.707 16L28.707 6 24.207 1.5 38.5 1.5 38.5 15.793 34 11.293 24 21.293z"></path><path fill="#4e7ab5" d="M38,2v12.586l-3.293-3.293L34,10.586l-0.707,0.707L24,20.586L19.414,16l9.293-9.293L29.414,6 l-0.707-0.707L25.414,2H38 M39,1H23l5,5L18,16l6,6l10-10l5,5V1L39,1z"></path></g>
+                        </svg>                                          
+                      </a>
+                      {{ end }}
+                      {{ end }}
+                    </td>
+                  </tr>
+                  {{ else}}
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap" colspan="6">No plugins found</td>
+                  </tr>
+                  {{ end }}
+                </tbody>
+                {{ template "table-pagination-footer.html" . }}
+              </table>
+            </div>
+          </section>
+        </div>
+</div>
+<div hidden id="createTemplate">{{ $.CreateTemplate }}</div>
+<script>
+  function createNewResource() {
+    document.getElementById('actionTitle').innerHTML = "";
+    document.getElementById('actionTitle').innerHTML = "Create New Plugin";
+    document.getElementById('yamlSpecTitle').innerHTML = "";
+    document.getElementById('yamlSpecTitle').innerHTML = `Enter your plugin spec & credential here`;
+    openYAMLedModal(`{{ .Response.ActionParams.API }}`, `{{ .GlobalContext.AccessTokenKey }}`, `createTemplate`);
+  }
+  function managePlugin(name,id) {
+    document.getElementById('actionTitle').innerHTML = "";
+    document.getElementById('actionTitle').innerHTML = "Manage "+name+" plugin";
+    document.getElementById('yamlSpecTitle').innerHTML = "";
+    document.getElementById('yamlSpecTitle').innerHTML = `Plugin Spec & Credential`;
+    openYAMLedModal(`{{ .Response.ActionParams.API }}`, `{{ .GlobalContext.AccessTokenKey }}`, id+"-spec");
+  }
+  document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(() => {
+        addTablePagination({
+      tableId: "pluginSettingsTable",
+      rowsPerPage: 10,
+      prevPageBtn: document.getElementById("prevPage"),
+      nextPageBtn: document.getElementById("nextPage"),
+      currentPageSizeSpan: document.getElementById("currentPageSize"),
+      totalElementsSpan: document.getElementById("totalElements"),
+      });
+      }, 100);
+
+    });
+</script>
+</body>
+</html>

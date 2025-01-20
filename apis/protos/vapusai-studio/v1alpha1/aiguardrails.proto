@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+// import "buf/validate/validate.proto";
+import "protos/models/v1alpha1/vapusai.proto";
+import "protos/models/v1alpha1/common.proto";
+
+package vapusai.v1alpha1;
+
+option go_package = "github.com/vapusdata-ecosystem/apis/protos/vapusai/v1alpha1";
+
+service AIGuardrails {
+    rpc Manager(GuardrailsManagerRequest) returns(GuardrailsResponse) {
+        option (google.api.http) = {
+            post: "/api/v1alpha1/guardrails"
+            body: "*"
+        };
+    }
+
+    rpc Getter(GuardrailsGetterRequest) returns(GuardrailsResponse) {
+        option (google.api.http) = {
+            get: "/api/v1alpha1/guardrails/{guardrail_id}"
+        };
+    }
+}
+
+enum VapusAIGuardrailsAction {
+    INVALID_GUARDRAIL_ACTION = 0;
+    CONFIGURE_GUARDRAIL = 1;
+    ARCHIVE_GUARDRAIL = 2;
+    PATCH_GUARDRAIL = 3;
+}
+
+message GuardrailsResponse {
+    models.v1alpha1.DMResponse dm_resp = 1; // @gotags: yaml:"dmResp"
+    repeated models.v1alpha1.AIGuardrails output = 2; // @gotags: yaml:"output"
+}
+
+message GuardrailsManagerRequest {
+    VapusAIGuardrailsAction action = 1; // @gotags: yaml:"action"
+    models.v1alpha1.AIGuardrails spec = 2; // @gotags: yaml:"spec"
+}
+
+message GuardrailsGetterRequest {
+    string guardrail_id = 1; // @gotags: yaml:"guardrailId"
+    models.v1alpha1.SearchParam search_param = 2; // @gotags: yaml:"SearchParam"
+}

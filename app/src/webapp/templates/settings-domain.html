@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {{ template "staticimports.html" . }}
+    {{ template "manage-platform-imports.html" . }}
+    <script src="/static/js/manage.js"></script>
+</head>
+<body class="bg-white flex flex-col h-screen">
+
+    {{ template "header.html" . }}
+
+<div class="flex h-screen">
+        {{ template "main-sidebar.html" . }}
+        {{ template "yaml-editor-modal.html" . }}
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+          {{ template "section-headers.html" . }}
+          <div class="relative inline-block text-left">
+            {{ template "action-dropdown.html" . }}
+            <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+              <ul class="py-1 text-gray-700">
+                {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                <!-- Edit Option -->
+                <li>
+                  <a href="#" onclick="OrganizationAction(`{{ $.Response.CurrentOrganization.OrganizationId }}-{{ $k }}`,`{{ $k }}`)" class="flex items-center px-4 py-2 hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z"/>
+                    </svg>
+                    {{ $k }}
+                  </a>
+                  <div hidden id="{{ $.Response.CurrentOrganization.OrganizationId }}-{{ $k }}">{{ $v }}</div>
+                </li>
+                {{ end }}
+                <!--li>
+                  <a href="#" onclick="openYAMLedModal(`{{ .Response.ActionParams.API }}`,`{{ .GlobalContext.AccessTokenKey }}`)" class="flex items-center px-4 py-2 text-red-600 hover:bg-gray-100" onclick="deleteAction()">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 2L5 4H3v2h18V4h-2l-1-2H6zm15 4v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6h18zm-9 2h-2v10h2V8zm4 0h-2v10h2V8z"/>
+                    </svg>
+                    Delete
+                  </a>
+                </li-->
+                <li>
+                  <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100" onclick="upgradeBaseOs(`{{ .Response.ActionParams.API }}`,`{{ .GlobalContext.AccessTokenKey }}`,`{{ .UpgradeOrganizationAction }}`)">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L2 7v2c0 5.25 3.25 10.17 10 15 6.75-4.83 10-9.75 10-15V7L12 2zm0 3.84l7 3.89v.95c0 3.98-2.45 8.19-7 11.57-4.55-3.38-7-7.59-7-11.57v-.95l7-3.89zm-1 3.16v5.25l4.5 2.67.75-1.23-3.75-2.22V9H11z"/>
+                    </svg>
+                    Upgrade Base OS
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Tabs -->
+        <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+        <div class="flex border-b border-gray-200">
+          <button onclick="showTab('basic-info')" class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Basic Info</button>
+          <button onclick="showTab('storage-info')" class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Storages</button>
+          <button onclick="showTab('networks')" class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Networks</button>
+          <button onclick="showTab('base-os')" class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Operating Systems</button>
+        </div>
+    
+        <!-- Tab Content -->
+        
+        <div id="basic-info" class="tab-content mt-2">
+          <h3 class="text-xl font-semibold mb-4">Basic Information</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-section-title">Display Name</p>
+              <p class="detail-section-text">{{ .Response.CurrentOrganization.DisplayName }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Organization ID</p>
+              <p class="detail-section-text">{{ .Response.CurrentOrganization.OrganizationId }}</p>
+            </div>
+            <div>
+                <p class="detail-section-title">Type</p>
+                <p class="detail-section-text">{{ .Response.CurrentOrganization.OrganizationType }}</p>
+              </div>
+              <div>
+                <p class="detail-section-title">Catalog</p>
+                <p class="detail-section-text">{{ .Response.CurrentOrganization.CatalogIndex }}</p>
+              </div>
+            <div>
+              <p class="detail-section-title">Status</p>
+              <p class="detail-section-text"><span class="px-3 py-1 text-sm font-medium {{ if eq .Response.CurrentOrganization.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{ .Response.CurrentOrganization.Status }}</span></p>
+            </div>
+            <!-- <div>
+              <p class="detail-section-title">Users</p>
+              <ul class="list-disc ml-5 text-gray-600">
+                {{ range $user := .Response.CurrentOrganization.Users }}
+              <li>{{ $user }}</li>
+              {{ end }}
+            </ul>
+            </div> -->
+          </div>
+        </br>
+          <h3 class="text-xl font-semibold text-gray-800">Attributes</h3>
+          {{ if .Response.CurrentOrganization.Attributes }}
+          <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+              <h4 class="text-lg font-semibold text-gray-800">JWT Params</h4>
+              <div class="flex flex-col sm:flex-row sm:justify-between mt-2">
+                <div>
+                  <p class="font-semibold text-gray-700">Secret Name</p>
+                  <p class="detail-section-text">
+                    {{ if .Response.CurrentOrganization.Attributes.AuthnJwtParams }}
+                      {{ .Response.CurrentOrganization.Attributes.AuthnJwtParams.Name }}
+                    {{ else }}
+                      N/A
+                    {{ end }}
+                  </p>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-700">Signing Algo</p>
+                    <p class="detail-section-text">
+                      {{ if .Response.CurrentOrganization.Attributes.AuthnJwtParams }}
+                        {{ .Response.CurrentOrganization.Attributes.AuthnJwtParams.SigningAlgorithm }}
+                      {{ else }}
+                        N/A
+                      {{ end }}
+                    </p>
+                  </div>
+              </div>
+            </div>
+          </div>
+          {{ else }}
+          <p class="text-gray-600">No attributes available.</p>
+          {{ end }}
+        </div>
+    
+        <div id="storage-info" class="tab-content mt-6 hidden">
+          <h3 class="text-xl font-semibold mb-4">Artifact Storage</h3>
+          {{ if .Response.CurrentOrganization.ArtifactStorage }}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-section-title">Storage Type</p>
+              <p class="detail-section-text">{{ .Response.CurrentOrganization.ArtifactStorage.BesType }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Storage Service</p>
+              <p class="detail-section-text">{{ .Response.CurrentOrganization.ArtifactStorage.BesService }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Onboarding Type</p>
+              <p class="detail-section-text">{{ .Response.CurrentOrganization.ArtifactStorage.BesOnboarding }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Storage Engine</p>
+              <p class="detail-section-text">{{ .Response.CurrentOrganization.ArtifactStorage.BesEngine }}</p>
+            </div>
+            <div>
+                <p class="detail-section-title">Address</p>
+                <p class="detail-section-text">{{ .Response.CurrentOrganization.ArtifactStorage.NetParams.Address }}</p>
+              </div>
+            <div>
+              <p class="detail-section-title">Status</p>
+              <p class="detail-section-text"><span class="px-3 py-1 text-sm font-medium {{ if eq .Response.CurrentOrganization.ArtifactStorage.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">{{ .Response.CurrentOrganization.ArtifactStorage.Status }}</span></p>
+            </div>
+          </div>
+          {{ else }}
+            <p class="text-gray-600">No storage information available.</p>
+          {{ end }}
+          <h3 class="text-xl font-semibold mb-4">Catalog Details</h3>
+          {{ range $obj := .Response.CurrentOrganization.DataCatalog }}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <p class="detail-section-title">Name</p>
+              <p class="detail-section-text">{{ $obj.Name }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Display Name</p>
+              <p class="detail-section-text">{{ $obj.DisplayName }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Id</p>
+              <p class="detail-section-text">{{ $obj.DataCatalogId }}</p>
+            </div>
+            <div>
+              <p class="detail-section-title">Description</p>
+              <p class="detail-section-text">{{ $obj.Description }}</p>
+            </div>
+          </div>
+          {{ end }}
+        </div>
+    
+        <div id="base-os" class="tab-content mt-6 hidden">
+            <div class="space-y-4">
+                {{ range $obj := .Response.CurrentOrganization.OrganizationArtifacts }}
+              <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+                <h4 class="text-lg font-semibold text-gray-800">Type: {{ $obj.ArtifactType }}</h4>
+                <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
+                    {{ range $val := $obj.Artifacts }}
+                    <div>
+                      <p class="detail-section-title">Url</p>
+                      <div class="flex items-center">
+                        <p class="text-gray-600"style="max-width: 500px; overflow-wrap: break-word;" style="max-width: 200px; overflow-wrap: break-word;">{{ $val.Artifact }}
+                        <button onclick="copyToClipboard('{{ $val.Artifact }}')" title="Copy" class="ml-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z"/>
+                          </svg>
+                          
+                        </button>
+                      </p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="detail-section-title">Digest</p>
+                        <div class="flex items-center">
+                            <p class="text-gray-600"style="max-width: 500px; overflow-wrap: break-word;" style="max-width: 200px; overflow-wrap: break-word;">{{ $val.Digest }}
+                            <button onclick="copyToClipboard('{{ $val.Digest }}')" title="Copy" class="ml-2">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                                <path d="M13 3H7a2 2 0 0 0-2 2v10h2V5h6V3zm4 4H11a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm0 12H11V9h6v10z"/>
+                              </svg>                              
+                            </button>
+                          </p>
+                        </div>
+                    </div>
+                      <div>
+                        <p class="detail-section-title">IsLatest</p>
+                        <p class="detail-section-text">{{ $val.IsLatest }}</p>
+                      </div>
+                      <div>
+                        <p class="detail-section-title">AddedOn</p>
+                        <p class="detail-section-text">{{ epochConverter $val.AddedOn }}</p>
+                      </div>
+                      {{ end }}
+                </div>
+              </div>
+              {{ end }}
+            </div>
+          </div>
+
+          <div id="networks" class="tab-content mt-6 hidden">
+            <h3 class="text-xl font-semibold mb-4">Kubernetes Infra</h3>
+              <div class="space-y-4">
+                  {{ range $obj := .Response.CurrentOrganization.DataProductInfraPlatform }}
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+                  <h4 class="text-lg font-semibold text-gray-800">Type: {{ $obj.Name }}</h4>
+                  <div class="flex flex-col sm:flex-row sm:justify-between mt-2 grid grid-cols-2 gap-6">
+                    <div>
+                        <p class="detail-section-title">Name</p>
+                        <p class="detail-section-text" >{{ $obj.Name }}</p>
+                    </div>
+                    <div>
+                        <p class="detail-section-title">Id</p>
+                        <p class="detail-section-text" >{{ $obj.InfraId }}</p>
+                    </div>
+                    <div>
+                        <p class="detail-section-title">Service</p>
+                        <p class="detail-section-text" >{{ $obj.InfraService }}</p>
+                    </div>
+                    <div>
+                        <p class="detail-section-title">Service Provider</p>
+                        <p class="detail-section-text" >{{ $obj.ServiceProvider }}</p>
+                    </div>
+                    <div>
+                        <p class="detail-section-title">Secret Name</p>
+                        <p class="detail-section-text" >{{ $obj.SecretName }}</p>
+                    </div>
+                    <div>
+                        <p class="detail-section-title">Is Default</p>
+                        <p class="detail-section-text" >{{ $obj.IsDefault }}</p>
+                    </div>
+                  </div>
+                </div>
+                {{ end }}
+              </div>
+            </div>
+</div>
+      </div>
+    </div>
+      <!-- JavaScript for Tabs -->
+      <script>
+        function showTab(tabId) {
+          const tabs = document.querySelectorAll('.tab-content');
+          tabs.forEach(tab => tab.classList.add('hidden'));
+    
+          document.getElementById(tabId).classList.remove('hidden');
+          
+          const buttons = document.querySelectorAll('.tab-button');
+          buttons.forEach(button => button.classList.remove('active-tab'));
+          
+          document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+        }
+    
+        // Show the first tab by default
+        document.addEventListener('DOMContentLoaded', () => {
+          showTab('basic-info');
+        });
+
+          document.addEventListener("click", (event) => {
+            const dropdown = document.getElementById("actionDropdownMenu");
+            const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+            if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+              dropdown.classList.add("hidden");
+            }
+          });
+          function OrganizationAction(destId,action) {
+            document.getElementById('actionTitle').innerHTML = "";
+            document.getElementById('actionTitle').innerHTML = action.toUpperCase();
+            document.getElementById('yamlSpecTitle').innerHTML = "";
+            document.getElementById('yamlSpecTitle').innerHTML = `Edit {{ .Response.CurrentOrganization.Name }} Spec`;
+            openYAMLedModal(`{{ .Response.ActionParams.API }}`,
+            `{{ .GlobalContext.AccessTokenKey }}`,
+            destId);
+          }
+        </script>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+  {{ template "header.html" . }}
+
+  <div class="flex h-screen">
+    {{ template "main-sidebar.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+      <section id="tables" class="space-y-6">
+        <h1 class="text-lg font-medium">{{ .SectionHeader }}</h1>
+        <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+          <table class="min-w-full divide-y divide-gray-200" id="platformResourcesTable">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource Name
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Available
+                  Actions</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Generate Yaml
+                  Spec</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              {{ range $resource, $actions := .Response.ResourceActionsMap }}
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">{{ $resource }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <ul class="list-disc ml-5 text-gray-600">
+                    {{ range $action := $actions }}
+                    <li>{{ $action }}</li>
+                    {{ end }}
+                  </ul>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div hidden id="yamlSpec-{{ $resource }}">{{index $.Response.SpecMap $resource }}</div>
+                  <a href="#" onclick="downloadElementIntoYAML('yamlSpec-{{ $resource }}',`{{ $resource }}`)"
+                    class="flex items-center px-4 py-2 hover:bg-gray-100">
+                    <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24" fill="none" class="mr-2"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M5 20h14v2H5v-2zm7-2c-.28 0-.53-.11-.71-.29L8 13.41l1.41-1.41L11 14.17V4h2v10.17l1.59-1.59L16 13.41l-3.29 3.29c-.18.18-.43.29-.71.29z"
+                        fill="#000" />
+                    </svg>
+                    Download YAML
+                  </a>
+                </td>
+              </tr>
+              {{ end }}
+            </tbody>
+            {{ template "table-pagination-footer.html" . }}
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(() => {
+        addTablePagination({
+      tableId: "platformResourcesTable",
+      rowsPerPage: 5,
+      prevPageBtn: document.getElementById("prevPage"),
+      nextPageBtn: document.getElementById("nextPage"),
+      currentPageSizeSpan: document.getElementById("currentPageSize"),
+      totalElementsSpan: document.getElementById("totalElements"),
+      });
+      }, 100);
+
+    });
+
+</script>
+</body>
+
+</html>

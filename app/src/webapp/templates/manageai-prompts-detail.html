@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {{ template "staticimports.html" . }}
+  {{ template "manage-platform-imports.html" . }}
+</head>
+
+<body class="bg-white flex flex-col h-screen">
+
+  {{ template "header.html" . }}
+
+  <div class="flex flex-col md:flex-row h-screen">
+    {{ template "main-sidebar.html" . }}
+    {{ template "yaml-editor-modal.html" . }}
+    <div class="flex-grow p-4 overflow-y-auto w-5/6">
+        <div class="flex justify-between mb-2 items-center border-2 border-gray-200 rounded-lg shadow-md p-3">
+          {{ template "section-headers.html" . }}
+
+          <div class="relative inline-block text-left">
+            {{ template "action-dropdown.html" . }}
+            <div id="actionDropdownMenu" class="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg z-10 hidden">
+              <ul class="py-1 text-gray-700">
+                {{ range $k, $v := .Response.ActionParams.ActionMap }}
+                <!-- Edit Option -->
+                <li>
+                  <a href="#" onclick="aiPromptAction(`{{ $.Response.AIPrompt.PromptId }}-{{ $k }}`,`{{ $k }}`)"
+                    class="flex items-center px-4 py-2 hover:bg-gray-100">
+                    <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                      viewBox="0 0 24 24">
+                      <path
+                        d="M15.232 4.232a1 1 0 0 1 1.415 0l3.122 3.122a1 1 0 0 1 0 1.415l-11.3 11.3a1 1 0 0 1-.707.293H5a1 1 0 0 1-1-1v-2.829a1 1 0 0 1 .293-.707l11.3-11.3zM16.646 2.818L17.788 3.96l-10.464 10.464-1.142-1.142L16.646 2.818zM3 21h18v2H3v-2z" />
+                    </svg>
+                    {{ $k }}
+                  </a>
+                  <div hidden id="{{ $.Response.AIPrompt.PromptId }}-{{ $k }}">{{ $v }}</div>
+                </li>
+                {{ end }}
+                <li>
+                  <a href="{{ .AIStudio}}?aiModelNode={{ $.Response.AIPrompt.PromptId }}"
+                    class="flex items-center px-4 py-2 hover:bg-gray-100" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                      stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M11 12v9m-4-4h8a4 4 0 004-4v-5a4 4 0 00-4-4H9a4 4 0 00-4 4v5a4 4 0 004 4z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 2.992V12m-4-4h8m-4-4H7" />
+                    </svg>
+                    Use In AI Studio
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Tabs -->
+        <div class="overflow-x-auto bg-white rounded-lg border-2 pl-2 pt-2 shadow-md">
+        <div class="flex border-b border-gray-200">
+          <button onclick="showTab('spec')"
+            class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none">Spec</button>
+          <button onclick="showTab('dryrunset')"
+            class="tab-button px-4 py-2 font-semibold text-gray-600  focus:outline-none ">Dry Run</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="spec" class="tab-content mt-2">
+          <h3 class="text-xl font-semibold mb-4">Basic Information</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Name:</p>
+              <p class="text-gray-600 break-words p-2">{{ stringCheck .Response.AIPrompt.Name }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Id:</p>
+              <p class="text-gray-600 break-words p-2"  style="cursor: pointer;"
+              onclick="copyToClipboard(`{{ $.Response.AIPrompt.PromptId }}`)">{{stringCheck .Response.AIPrompt.PromptId }}</p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Prompt Type:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ range $obj := .Response.AIPrompt.PromptTypes }}
+                <span class="px-3 py-1 text-sm font-medium rounded-full text-purple-800 bg-purple-100">
+                  {{ $obj }}
+                </span>
+                {{ end }}
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">Preferred Models:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ range $obj := .Response.AIPrompt.PreferredModels }}
+                <span class="px-3 py-1 text-sm font-medium rounded-full text-gray-800 bg-gray-100">
+                  {{ $obj }}
+                </span>
+                {{ end }}
+              </p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Labels:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ range $obj := .Response.AIPrompt.Labels }}
+                <span class="px-3 py-1 text-sm font-medium rounded-full text-yellow-800 bg-yellow-100">
+                  {{ $obj }}
+                </span>
+                {{ end }}
+              </p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Owner :</p>
+              <p class="text-gray-600 break-words p-2">
+                {{stringCheck .Response.AIPrompt.PromptOwner }}
+              </p>
+            </div>
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Organization :</p>
+              <p class="text-gray-600 break-words p-2">
+                {{stringCheck .Response.AIPrompt.Organization }}
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">User Message:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ .Response.AIPrompt.Prompt.UserMessage }}
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">System Message:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ .Response.AIPrompt.Prompt.SystemMessage }}
+              </p>
+            </div>
+            {{ if .Response.AIPrompt.Prompt.Sample }}
+            <div>
+              <p class="text-gray-900 font-medium">Sample Input:</p>
+              <p class="text-gray-600 break-words p-2">
+                {{ .Response.AIPrompt.Prompt.Sample.InputText }}
+              </p>
+            </div>
+            <div>
+              <p class="text-gray-900 font-medium">Sample Response:</p>
+              <p class="text-gray-600 break-words p-2" style="max-width: 200px; overflow-wrap: break-word;">
+                {{ .Response.AIPrompt.Prompt.Sample.Response }}
+              </p>
+            </div>
+            {{ end}}
+            <div class = "flex items-center">
+              <p class="text-gray-900 font-medium">Status:</p>
+              <p class="text-gray-600 break-words p-2">
+                <span
+                  class="px-3 py-1 text-sm font-medium {{ if eq .Response.AIPrompt.Status `ACTIVE` }}text-green-800 bg-green-100{{ else }}text-red-800 bg-red-100{{ end }} rounded-full">
+                  {{ .Response.AIPrompt.Status }}
+                </span>
+              </p>
+            </div>
+          </div>
+          <h3 class="text-xl font-semibold mb-4 mt-3">Tags</h3>
+          <div class="bg-gray-50 p-4 rounded-lg shadow-md">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tag</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="cursor-pointer hover:bg-gray-100">
+                  <td class="px-6 py-4 whitespace-nowrap">Input Tag</td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ .Response.AIPrompt.Prompt.InputTag }}</td>
+                </tr>
+                <tr class="cursor-pointer hover:bg-gray-100">
+                  <td class="px-6 py-4 whitespace-nowrap">Result Tag</td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ .Response.AIPrompt.Prompt.OutputTag }}</td>
+                </tr>
+                <tr class="cursor-pointer hover:bg-gray-100">
+                  <td class="px-6 py-4 whitespace-nowrap">Context Tag</td>
+                  <td class="px-6 py-4 whitespace-nowrap">{{ .Response.AIPrompt.Prompt.ContextTag }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="dryrunset" class="tab-content mt-2">
+          <div class="w-full bg-white shadow-lg rounded-lg p-6">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+              <h1 class="text-xl font-bold text-gray-800">Rendered Template</h1>
+              <button id="copyJsonBtn" onclick="copyToClipboardUsingElement(`jsonViewer`)"
+                class="text-gray-500 hover:text-blue-500 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M8 2C6.895 2 6 2.895 6 4v12c0 1.105.895 2 2 2h8c1.105 0 2-.895 2-2V4c0-1.105-.895-2-2-2H8zM8 4h8v12H8V4zm-4 4H3v8a2 2 0 002 2h6v-2H5V8zm14 0h1v8a2 2 0 01-2 2h-6v2h6a4 4 0 004-4V8z" />
+                </svg>
+                Copy Template
+              </button>
+            </div>
+            <div id="jsonViewer"
+              class="bg-gray-50 border border-gray-300 rounded-lg p-4 text-sm font-mono text-gray-800 overflow-x-auto overflow-y-auto"
+              style="max-height: 400px; max-width: 1240px; white-space: pre-wrap;">
+              <pre> {{ escapeHTML .Response.AIPrompt.Template }}</pre>
+            </div>
+          </div>
+        </div>
+</div>
+    </div>
+  </div>
+  <!-- JavaScript for Tabs -->
+  <script>
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.add('hidden'));
+
+      document.getElementById(tabId).classList.remove('hidden');
+
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => button.classList.remove('active-tab'));
+
+      document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active-tab');
+    }
+
+    // Show the first tab by default
+    document.addEventListener('DOMContentLoaded', () => {
+      showTab('spec');
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("actionDropdownMenu");
+      const button = document.querySelector("button[onclick='toggleActionDropdownMenu()']");
+      if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+    function aiPromptAction(destId, action) {
+      document.getElementById('actionTitle').innerHTML = "";
+      document.getElementById('actionTitle').innerHTML = action.toUpperCase();
+      document.getElementById('yamlSpecTitle').innerHTML = "";
+      document.getElementById('yamlSpecTitle').innerHTML = `Edit {{ .Response.AIPrompt.Name }} Spec`;
+      openYAMLedModal(`{{ .Response.ActionParams.API }}`,
+        `{{ .GlobalContext.AccessTokenKey }}`,
+        destId);
+    }
+
+
+  </script>
+
+</body>
+
+</html>
