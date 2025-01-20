@@ -31,7 +31,7 @@ Example:
 {
   "text": ["example sentence 1", "example sentence 2"]
 }
-
+```
 
 ### 2. **SensitivityAnalyzer**
 
@@ -54,3 +54,4 @@ Example:
   "action": "ANALYZE",
   "postDetectAction": "REDACT"
 }
+```
