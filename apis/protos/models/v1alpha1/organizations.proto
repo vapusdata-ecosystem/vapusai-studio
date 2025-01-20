@@ -14,7 +14,7 @@ import "protos/models/v1alpha1/enums.proto";
 
 package models.v1alpha1;
 
-option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+option go_package = "github.com/vapusdata-oss/apis/protos/models/v1alpha1";
 
 /**
  * Message representing an account.

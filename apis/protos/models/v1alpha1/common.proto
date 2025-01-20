@@ -7,7 +7,7 @@ import "google/protobuf/struct.proto";
 
 package models.v1alpha1;
 
-option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+option go_package = "github.com/vapusdata-oss/apis/protos/models/v1alpha1";
 
 message SearchParam {
   string q = 1; //  @gotags: yaml:"q"

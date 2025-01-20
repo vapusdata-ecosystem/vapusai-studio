@@ -16,7 +16,7 @@ package v1alpha1
 
 import (
 	context "context"
-	v1alpha1 "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1"
+	v1alpha1 "github.com/vapusdata-oss/apis/protos/models/v1alpha1"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"

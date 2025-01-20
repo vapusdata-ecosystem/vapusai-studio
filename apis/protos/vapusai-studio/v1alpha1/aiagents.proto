@@ -7,7 +7,7 @@ import "protos/models/v1alpha1/vapusaiagents.proto";
 
 package vapusai.v1alpha1;
 
-option go_package = "github.com/vapusdata-ecosystem/apis/protos/vapusai/v1alpha1";
+option go_package = "github.com/vapusdata-oss/apis/protos/vapusai/v1alpha1";
 
 
 service AIAgents {

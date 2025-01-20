@@ -5,7 +5,7 @@ import "protos/models/v1alpha1/common.proto";
 
 package models.v1alpha1;
 
-option go_package = "github.com/vapusdata-ecosystem/apis/protos/models/v1alpha1";
+option go_package = "github.com/vapusdata-oss/apis/protos/models/v1alpha1";
 
 message VapusAIAgent {
     string agent_id = 1; // @gotags: yaml:"agentId"

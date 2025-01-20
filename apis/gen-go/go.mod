@@ -1,4 +1,4 @@
-module github.com/vapusdata-ecosystem/apis
+module github.com/vapusdata-oss/apis
 
 go 1.23
 
