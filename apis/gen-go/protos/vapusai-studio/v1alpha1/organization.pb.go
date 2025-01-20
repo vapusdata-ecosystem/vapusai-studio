@@ -199,7 +199,7 @@ func (AccountAgentActions) EnumDescriptor() ([]byte, []int) {
 	return file_protos_vapusai_studio_v1alpha1_organization_proto_rawDescGZIP(), []int{2}
 }
 
-// *
+//*
 // @typedef {Object} ManageOrganizationRequest
 // @property {OrganizationAgentActions} actions - The actions to perform on the org.
 // @property {models.v1alpha1.Organization} spec - The request body containing the org details.
@@ -611,7 +611,7 @@ func (x *VapusSearchRequest) GetQ() string {
 	return ""
 }
 
-// *
+//*
 // The AccountManagerRequest message contains the information required to create or retrieve an account.
 type AccountManagerRequest struct {
 	state         protoimpl.MessageState
@@ -668,7 +668,7 @@ func (x *AccountManagerRequest) GetSpec() *v1alpha1.Account {
 	return nil
 }
 
-// *
+//*
 // The AccountResponse message contains the response to an account creation or retrieval request.
 type AccountResponse struct {
 	state         protoimpl.MessageState
@@ -725,7 +725,7 @@ func (x *AccountResponse) GetOutput() *v1alpha1.Account {
 	return nil
 }
 
-// *
+//*
 // The StoreDMSecretsRequest message contains the information required to store data marketplace secrets.
 type StoreDMSecretsRequest struct {
 	state         protoimpl.MessageState
@@ -790,7 +790,7 @@ func (x *StoreDMSecretsRequest) GetCData() []*v1alpha1.Mapper {
 	return nil
 }
 
-// *
+//*
 // The StoreDMSecretsResponse message contains the response to a data marketplace secrets storage request.
 type StoreDMSecretsResponse struct {
 	state         protoimpl.MessageState

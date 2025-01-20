@@ -6,6 +6,9 @@
   },
   "tags": [
     {
+      "name": "AIUtility"
+    },
+    {
       "name": "AIAgents"
     },
     {
@@ -45,7 +48,7 @@
   "paths": {
     "/api/v1alpha1/Studio": {
       "get": {
-        "summary": "*\nRetrieves information about theaccount.\n@param {AccountManager} request - The account creation request.\n@returns {AccountResponse} - The account creation response.",
+        "summary": "*\r\nRetrieves information about theaccount.\r\n@param {AccountManager} request - The account creation request.\r\n@returns {AccountResponse} - The account creation response.",
         "operationId": "StudioService_AccountGetter",
         "responses": {
           "200": {
@@ -66,7 +69,7 @@
         ]
       },
       "post": {
-        "summary": "*\nCreates a new account with the specified name.\n@param {AccountManager} request - The account creation request.\n@returns {AccountResponse} - The account creation response.",
+        "summary": "*\r\nCreates a new account with the specified name.\r\n@param {AccountManager} request - The account creation request.\r\n@returns {AccountResponse} - The account creation response.",
         "operationId": "StudioService_AccountManager",
         "responses": {
           "200": {
@@ -85,7 +88,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "*\nThe AccountManagerRequest message contains the information required to create or retrieve an account.",
+            "description": "*\r\nThe AccountManagerRequest message contains the information required to create or retrieve an account.",
             "in": "body",
             "required": true,
             "schema": {
@@ -100,7 +103,7 @@
     },
     "/api/v1alpha1/Studio/authz": {
       "get": {
-        "summary": "*\nRetrieves authorization information.\n@param {AuthzGetterRequest} request - The request object.\n@returns {AuthzResponse} The response object.",
+        "summary": "*\r\nRetrieves authorization information.\r\n@param {AuthzGetterRequest} request - The request object.\r\n@returns {AuthzResponse} The response object.",
         "operationId": "UserManagementService_AuthzGetter",
         "responses": {
           "200": {
@@ -137,7 +140,7 @@
         ]
       },
       "post": {
-        "summary": "*\nManages authorization operations.\n@param {AuthzManagerRequest} request - The request object.\n@returns {AuthzResponse} The response object.",
+        "summary": "*\r\nManages authorization operations.\r\n@param {AuthzManagerRequest} request - The request object.\r\n@returns {AuthzResponse} The response object.",
         "operationId": "UserManagementService_AuthzManager",
         "responses": {
           "200": {
@@ -170,7 +173,7 @@
     },
     "/api/v1alpha1/Studio/login": {
       "get": {
-        "summary": "*\nHandles login requests.\n@param {models.v1alpha1.EmptyRequest} request - The request object.\n@returns {LoginHandlerResponse} The response object.",
+        "summary": "*\r\nHandles login requests.\r\n@param {models.v1alpha1.EmptyRequest} request - The request object.\r\n@returns {LoginHandlerResponse} The response object.",
         "operationId": "UserManagementService_LoginHandler",
         "responses": {
           "200": {
@@ -193,7 +196,7 @@
     },
     "/api/v1alpha1/Studio/login/callback": {
       "post": {
-        "summary": "*\nHandles login callbacks.\n@param {LoginCallBackRequest} request - The request object.\n@returns {AccessTokenResponse} The response object.",
+        "summary": "*\r\nHandles login callbacks.\r\n@param {LoginCallBackRequest} request - The request object.\r\n@returns {AccessTokenResponse} The response object.",
         "operationId": "UserManagementService_LoginCallback",
         "responses": {
           "200": {
@@ -226,7 +229,7 @@
     },
     "/api/v1alpha1/Studio/orgs": {
       "post": {
-        "summary": "*\nManages a org.\n@param {OrganizationManagerRequest} request - The request object containing the org details.\n@returns {OrganizationResponse} The response object containing the result of the org management actions.",
+        "summary": "*\r\nManages a org.\r\n@param {OrganizationManagerRequest} request - The request object containing the org details.\r\n@returns {OrganizationResponse} The response object containing the result of the org management actions.",
         "operationId": "StudioService_OrganizationManager",
         "responses": {
           "200": {
@@ -245,7 +248,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "*\n@typedef {Object} ManageOrganizationRequest\n@property {OrganizationAgentActions} actions - The actions to perform on the org.\n@property {models.v1alpha1.Organization} spec - The request body containing the org details.",
+            "description": "*\r\n@typedef {Object} ManageOrganizationRequest\r\n@property {OrganizationAgentActions} actions - The actions to perform on the org.\r\n@property {models.v1alpha1.Organization} spec - The request body containing the org details.",
             "in": "body",
             "required": true,
             "schema": {
@@ -260,7 +263,7 @@
     },
     "/api/v1alpha1/Studio/orgs/{orgId}": {
       "get": {
-        "summary": "*\nRetrieves a org.\n@param {OrganizationGetterRequest} request - The request object containing the org ID.\n@returns {OrganizationResponse} The response object containing the retrieved org.",
+        "summary": "*\r\nRetrieves a org.\r\n@param {OrganizationGetterRequest} request - The request object containing the org ID.\r\n@returns {OrganizationResponse} The response object containing the retrieved org.",
         "operationId": "StudioService_OrganizationGetter",
         "responses": {
           "200": {
@@ -382,7 +385,7 @@
     },
     "/api/v1alpha1/Studio/secrets": {
       "post": {
-        "summary": "*\nStores the specified data marketplace secrets.\n@param {StoreDMSecretsRequest} request - The data marketplace secrets storage request.\n@returns {StoreDMSecretsResponse} - The data marketplace secrets storage response.",
+        "summary": "*\r\nStores the specified data marketplace secrets.\r\n@param {StoreDMSecretsRequest} request - The data marketplace secrets storage request.\r\n@returns {StoreDMSecretsResponse} - The data marketplace secrets storage response.",
         "operationId": "UtilityService_StoreDMSecrets",
         "responses": {
           "200": {
@@ -401,7 +404,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "*\nThe StoreDMSecretsRequest message contains the information required to store data marketplace secrets.",
+            "description": "*\r\nThe StoreDMSecretsRequest message contains the information required to store data marketplace secrets.",
             "in": "body",
             "required": true,
             "schema": {
@@ -416,7 +419,7 @@
     },
     "/api/v1alpha1/Studio/users": {
       "post": {
-        "summary": "*\nManages user operations.\n@param {UserManagerRequest} request - The request object.\n@returns {UserResponse} The response object.",
+        "summary": "*\r\nManages user operations.\r\n@param {UserManagerRequest} request - The request object.\r\n@returns {UserResponse} The response object.",
         "operationId": "UserManagementService_UserManager",
         "responses": {
           "200": {
@@ -449,7 +452,7 @@
     },
     "/api/v1alpha1/Studio/users/{userId}": {
       "get": {
-        "summary": "*\nRetrieves user information.\n@param {UserGetterRequest} request - The request object.\n@returns {UserResponse} The response object.",
+        "summary": "*\r\nRetrieves user information.\r\n@param {UserGetterRequest} request - The request object.\r\n@returns {UserResponse} The response object.",
         "operationId": "UserManagementService_UserGetter",
         "responses": {
           "200": {
@@ -644,7 +647,7 @@
     },
     "/api/v1alpha1/auth/token": {
       "post": {
-        "summary": "*\nGenerates a access token for the given user.\n@param {AccessTokenInterfaceRequest} request - The request object.\n@returns {AccessTokenResponse} The response object.",
+        "summary": "*\r\nGenerates a access token for the given user.\r\n@param {AccessTokenInterfaceRequest} request - The request object.\r\n@returns {AccessTokenResponse} The response object.",
         "operationId": "UserManagementService_AccessTokenInterface",
         "responses": {
           "200": {
@@ -663,7 +666,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "*\nRepresents a request to generate a Studio access token.",
+            "description": "*\r\nRepresents a request to generate a Studio access token.",
             "in": "body",
             "required": true,
             "schema": {
@@ -678,7 +681,7 @@
     },
     "/api/v1alpha1/chat": {
       "post": {
-        "summary": "Generates content based on the given prompt parameters.\n@param {ChatRequest} request - The request object containing the generate interface.\n@returns {ChatResponse} The response object containing the generated content.",
+        "summary": "Generates content based on the given prompt parameters.\r\n@param {ChatRequest} request - The request object containing the generate interface.\r\n@returns {ChatResponse} The response object containing the generated content.",
         "operationId": "AIModelStudio_Chat",
         "responses": {
           "200": {
@@ -711,7 +714,7 @@
     },
     "/api/v1alpha1/chat-stream": {
       "post": {
-        "summary": "Generates content in a streaming fashion based on the given prompt parameters.\n@param {ChatRequest} request - The request object containing the generate interface.\n@returns {stream GenerateStreamResponse} The response object containing the generated content in a stream.",
+        "summary": "Generates content in a streaming fashion based on the given prompt parameters.\r\n@param {ChatRequest} request - The request object containing the generate interface.\r\n@returns {stream GenerateStreamResponse} The response object containing the generated content in a stream.",
         "operationId": "AIModelStudio_ChatStream",
         "responses": {
           "200": {
@@ -753,7 +756,7 @@
     },
     "/api/v1alpha1/embeddings": {
       "post": {
-        "summary": "Generates embeddings for the given input text.\n@param {EmbeddingsInterface} request - The request object containing the embeddings interface.\n@returns {EmbeddingsResponse} The response object containing the embeddings.",
+        "summary": "Generates embeddings for the given input text.\r\n@param {EmbeddingsInterface} request - The request object containing the embeddings interface.\r\n@returns {EmbeddingsResponse} The response object containing the embeddings.",
         "operationId": "AIModelStudio_GenerateEmbeddings",
         "responses": {
           "200": {
@@ -856,7 +859,7 @@
     },
     "/api/v1alpha1/models-nodes": {
       "post": {
-        "summary": "*\nRetrieves a data worker deployment.\n@param {Manager} request - The request object containing the AI model node configurator.\n@returns {AIModelNodeResponse} The response object containing the AI model node configurator.",
+        "summary": "*\r\nRetrieves a data worker deployment.\r\n@param {Manager} request - The request object containing the AI model node configurator.\r\n@returns {AIModelNodeResponse} The response object containing the AI model node configurator.",
         "operationId": "AIModels_Manager",
         "responses": {
           "200": {
@@ -889,7 +892,7 @@
     },
     "/api/v1alpha1/models-nodes/{aiModelNodeId}": {
       "get": {
-        "summary": "*\nRetrieves a data worker deployment.\n@param {AIModelNodeGetterRequest} request - The request object containing the AI model node getter.\n@returns {AIModelNodeResponse} The response object containing the AI model node getter.",
+        "summary": "*\r\nRetrieves a data worker deployment.\r\n@param {AIModelNodeGetterRequest} request - The request object containing the AI model node getter.\r\n@returns {AIModelNodeResponse} The response object containing the AI model node getter.",
         "operationId": "AIModels_Getter",
         "responses": {
           "200": {
@@ -998,7 +1001,7 @@
     },
     "/api/v1alpha1/prompts": {
       "post": {
-        "summary": "Creates a new prompt.\n@param {PromptManagerRequest} request - The request object containing the prompt manager.\n@returns {PromptResponse} The response object containing the created prompt.",
+        "summary": "Creates a new prompt.\r\n@param {PromptManagerRequest} request - The request object containing the prompt manager.\r\n@returns {PromptResponse} The response object containing the created prompt.",
         "operationId": "AIPrompts_Manager",
         "responses": {
           "200": {
@@ -1031,7 +1034,7 @@
     },
     "/api/v1alpha1/prompts/{promptId}": {
       "get": {
-        "summary": "Retrieves a prompt.\n@param {PromptGetterRequest} request - The request object containing the prompt getter.\n@returns {PromptResponse} The response object containing the retrieved prompt.",
+        "summary": "Retrieves a prompt.\r\n@param {PromptGetterRequest} request - The request object containing the prompt getter.\r\n@returns {PromptResponse} The response object containing the retrieved prompt.",
         "operationId": "AIPrompts_Getter",
         "responses": {
           "200": {
@@ -1194,6 +1197,72 @@
         ],
         "tags": [
           "PluginService"
+        ]
+      }
+    },
+    "/vapusdata.ai_studio.v1alpha1.AIUtility/GenerateEmbedding": {
+      "post": {
+        "summary": "*\r\nGenerates Vector Embeddings for the given text.\r\n@param {GenerateEmbeddingRequest} request - The request object containing the query parameters.\r\n@returns {GenerateEmbeddingResponse} The response object containing the query results.",
+        "operationId": "AIUtility_GenerateEmbedding",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GenerateEmbeddingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenerateEmbeddingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIUtility"
+        ]
+      }
+    },
+    "/vapusdata.ai_studio.v1alpha1.AIUtility/SensitivityAnalyzer": {
+      "post": {
+        "summary": "*\r\nAnalyzed and acts on the given text.\r\n@param {SensitivityAnalyzerRequest} request - The request object containing the query parameters.\r\n@returns {SensitivityAnalyzerResponse} The response object containing the query results.",
+        "operationId": "AIUtility_SensitivityAnalyzer",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/SensitivityAnalyzerResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/Status"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SensitivityAnalyzerRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AIUtility"
         ]
       }
     }
@@ -1717,7 +1786,7 @@
           "title": "@gotags: yaml:\"idToken\""
         }
       },
-      "description": "*\nRepresents a Studio access token."
+      "description": "*\r\nRepresents a Studio access token."
     },
     "AccessTokenAgentUtility": {
       "type": "string",
@@ -1752,7 +1821,7 @@
           "title": "@gotags: yaml:\"refreshToken\""
         }
       },
-      "description": "*\nRepresents a request to generate a Studio access token."
+      "description": "*\r\nRepresents a request to generate a Studio access token."
     },
     "AccessTokenResponse": {
       "type": "object",
@@ -1770,7 +1839,7 @@
           "title": "@gotags: yaml:\"tokenScope\""
         }
       },
-      "description": "*\nRepresents a response containing a Studio access token."
+      "description": "*\r\nRepresents a response containing a Studio access token."
     },
     "AccessTokenScope": {
       "type": "string",
@@ -1829,7 +1898,7 @@
           "title": "@gotags: yaml:\"settings\""
         }
       },
-      "description": "*\nMessage representing an account."
+      "description": "*\r\nMessage representing an account."
     },
     "AccountAgentActions": {
       "type": "string",
@@ -1852,7 +1921,7 @@
           "title": "@gotags: yaml:\"spec\""
         }
       },
-      "description": "*\nThe AccountManagerRequest message contains the information required to create or retrieve an account."
+      "description": "*\r\nThe AccountManagerRequest message contains the information required to create or retrieve an account."
     },
     "AccountProfile": {
       "type": "object",
@@ -1895,7 +1964,7 @@
           "title": "@gotags: yaml:\"output\""
         }
       },
-      "description": "*\nThe AccountResponse message contains the response to an account creation or retrieval request."
+      "description": "*\r\nThe AccountResponse message contains the response to an account creation or retrieval request."
     },
     "AccountSettings": {
       "type": "object",
@@ -1905,6 +1974,15 @@
           "title": "@gotags: yaml:\"googleAnalyticsTagId\""
         }
       }
+    },
+    "Actions": {
+      "type": "string",
+      "enum": [
+        "INVALID_ACTION",
+        "ANALYZE",
+        "ACT"
+      ],
+      "default": "INVALID_ACTION"
     },
     "Address": {
       "type": "object",
@@ -2113,6 +2191,26 @@
       ],
       "default": "STRING"
     },
+    "AnalyzedOutput": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string",
+          "format": "int64"
+        },
+        "end": {
+          "type": "string",
+          "format": "int64"
+        },
+        "score": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
     "Any": {
       "type": "object",
       "properties": {
@@ -2170,7 +2268,7 @@
           "title": "@gotags: yaml:\"status\""
         }
       },
-      "description": "*\nMessage representing the OIDC authentication parameters."
+      "description": "*\r\nMessage representing the OIDC authentication parameters."
     },
     "AuthzAgentActions": {
       "type": "string",
@@ -2253,7 +2351,7 @@
         "BE_DEFAULT_STUDIO"
       ],
       "default": "BSO_INVALID",
-      "description": "*\nEnum representing the onboarding options for backend storage."
+      "description": "*\r\nEnum representing the onboarding options for backend storage."
     },
     "BackendStorages": {
       "type": "object",
@@ -2283,7 +2381,7 @@
           "title": "@gotags: yaml:\"besEngine\""
         }
       },
-      "description": "*\nMessage representing the backend storages."
+      "description": "*\r\nMessage representing the backend storages."
     },
     "ChatMessageObject": {
       "type": "object",
@@ -2510,7 +2608,7 @@
           "title": "@gotags: yaml:\"saltVal\""
         }
       },
-      "description": "*\n@message\nRepresents the credential salt value."
+      "description": "*\r\n@message\r\nRepresents the credential salt value."
     },
     "DMResponse": {
       "type": "object",
@@ -2550,7 +2648,7 @@
         "DSDT_BLOB"
       ],
       "default": "INVALID_DST",
-      "description": "*\n@enum\nEnumerates the types of content in data sources."
+      "description": "*\r\n@enum\r\nEnumerates the types of content in data sources."
     },
     "EOSReasons": {
       "type": "string",
@@ -2572,36 +2670,6 @@
         "FLOAT_64"
       ],
       "default": "FLOAT_32"
-    },
-    "Embeddings": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "$ref": "#/definitions/EmbeddingType",
-          "title": "@gotags: yaml:\"type\""
-        },
-        "dimension": {
-          "type": "string",
-          "format": "int64",
-          "title": "@gotags: yaml:\"dimension\""
-        },
-        "embeddings32": {
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "float"
-          },
-          "title": "@gotags: yaml:\"embeddings32\""
-        },
-        "embeddings64": {
-          "type": "array",
-          "items": {
-            "type": "number",
-            "format": "double"
-          },
-          "title": "@gotags: yaml:\"embeddings64\""
-        }
-      }
     },
     "EmbeddingsInterface": {
       "type": "object",
@@ -2629,7 +2697,7 @@
       "type": "object",
       "properties": {
         "output": {
-          "$ref": "#/definitions/Embeddings",
+          "$ref": "#/definitions/v1alpha1.Embeddings",
           "title": "@gotags: yaml:\"output\""
         }
       }
@@ -2716,6 +2784,45 @@
         "zone": {
           "type": "string",
           "title": "@gotags: yaml:\"zone\""
+        }
+      }
+    },
+    "GenerateEmbeddingRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "GenerateEmbeddingResponse": {
+      "type": "object",
+      "properties": {
+        "embeddings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/GenerateEmbeddingResponse.Embeddings"
+          }
+        }
+      }
+    },
+    "GenerateEmbeddingResponse.Embeddings": {
+      "type": "object",
+      "properties": {
+        "embedding": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "index": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
@@ -3144,7 +3251,7 @@
           "title": "The list of org user operations"
         }
       },
-      "description": "*\n@typedef {Object} ManageOrganizationRequest\n@property {OrganizationAgentActions} actions - The actions to perform on the org.\n@property {models.v1alpha1.Organization} spec - The request body containing the org details."
+      "description": "*\r\n@typedef {Object} ManageOrganizationRequest\r\n@property {OrganizationAgentActions} actions - The actions to perform on the org.\r\n@property {models.v1alpha1.Organization} spec - The request body containing the org details."
     },
     "OrganizationOutput": {
       "type": "object",
@@ -3401,6 +3508,44 @@
             "$ref": "#/definitions/Plugin"
           },
           "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "PostDetectActions": {
+      "type": "string",
+      "enum": [
+        "INVALID_PDA",
+        "REDACT",
+        "FAKE",
+        "EMPTY"
+      ],
+      "default": "INVALID_PDA"
+    },
+    "ProcessedOutput": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "index": {
+          "type": "string",
+          "format": "int64"
+        },
+        "action": {
+          "$ref": "#/definitions/PostDetectActions"
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "AnalyzedOutputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/AnalyzedOutput"
+          }
         }
       }
     },
@@ -3704,6 +3849,41 @@
         }
       }
     },
+    "SensitivityAnalyzerRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "action": {
+          "$ref": "#/definitions/Actions"
+        },
+        "postDetectAction": {
+          "$ref": "#/definitions/PostDetectActions"
+        }
+      }
+    },
+    "SensitivityAnalyzerResponse": {
+      "type": "object",
+      "properties": {
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ProcessedOutput"
+          }
+        }
+      }
+    },
     "Status": {
       "type": "object",
       "properties": {
@@ -3767,7 +3947,7 @@
         "AZURE_VAULT"
       ],
       "default": "INVALID_STORAGE_ENGINE",
-      "description": "*\n@enum\nEnumerates the storage engines supported by the Vapus Data Studio system."
+      "description": "*\r\n@enum\r\nEnumerates the storage engines supported by the Vapus Data Studio system."
     },
     "StorageService": {
       "type": "string",
@@ -3786,7 +3966,7 @@
         "GCP_CLOUD_SQL"
       ],
       "default": "INVALID_DS_SERVICE",
-      "description": "*\n@enum\nEnumerates the storage services supported by the Vapus Data Studio system."
+      "description": "*\r\n@enum\r\nEnumerates the storage services supported by the Vapus Data Studio system."
     },
     "StoreDMSecretsRequest": {
       "type": "object",
@@ -3808,7 +3988,7 @@
           "title": "@gotags: yaml:\"cData\""
         }
       },
-      "description": "*\nThe StoreDMSecretsRequest message contains the information required to store data marketplace secrets."
+      "description": "*\r\nThe StoreDMSecretsRequest message contains the information required to store data marketplace secrets."
     },
     "StoreDMSecretsResponse": {
       "type": "object",
@@ -3825,7 +4005,7 @@
           "title": "@gotags: yaml:\"name\""
         }
       },
-      "description": "*\nThe StoreDMSecretsResponse message contains the response to a data marketplace secrets storage request."
+      "description": "*\r\nThe StoreDMSecretsResponse message contains the response to a data marketplace secrets storage request."
     },
     "StudioPublicInfoResponse": {
       "type": "object",
@@ -4441,6 +4621,36 @@
         "output": {
           "$ref": "#/definitions/AIModelNodeResponse.AIModelNodeResponse",
           "title": "@gotags: yaml:\"output\""
+        }
+      }
+    },
+    "v1alpha1.Embeddings": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/EmbeddingType",
+          "title": "@gotags: yaml:\"type\""
+        },
+        "dimension": {
+          "type": "string",
+          "format": "int64",
+          "title": "@gotags: yaml:\"dimension\""
+        },
+        "embeddings32": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "float"
+          },
+          "title": "@gotags: yaml:\"embeddings32\""
+        },
+        "embeddings64": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": "@gotags: yaml:\"embeddings64\""
         }
       }
     }

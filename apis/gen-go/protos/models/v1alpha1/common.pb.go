@@ -856,7 +856,7 @@ func (x *DynamicMessageUpdate) GetBody() *DynamicMessage {
 	return nil
 }
 
-// *
+//*
 // @message
 // Represents the package server construct.
 type ArtifactGrid struct {
@@ -1339,7 +1339,7 @@ func (*EmptyRequest) Descriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_common_proto_rawDescGZIP(), []int{19}
 }
 
-// *
+//*
 // Message representing the backend storages.
 type BackendStorages struct {
 	state         protoimpl.MessageState
@@ -1428,7 +1428,7 @@ func (x *BackendStorages) GetBesEngine() StorageEngine {
 	return StorageEngine_INVALID_STORAGE_ENGINE
 }
 
-// *
+//*
 // Message representing the OIDC authentication parameters.
 type AuthnOIDC struct {
 	state         protoimpl.MessageState
@@ -1572,7 +1572,7 @@ func (x *BaseResponse) GetWorkflowId() string {
 	return ""
 }
 
-// *
+//*
 // @message
 // Represents the credential salt value.
 type CredentialSalt struct {

@@ -27,12 +27,12 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AIModelsClient interface {
-	// *
+	//*
 	// Retrieves a data worker deployment.
 	// @param {Manager} request - The request object containing the AI model node configurator.
 	// @returns {AIModelNodeResponse} The response object containing the AI model node configurator.
 	Manager(ctx context.Context, in *AIModelNodeConfiguratorRequest, opts ...grpc.CallOption) (*AIModelNodeResponse, error)
-	// *
+	//*
 	// Retrieves a data worker deployment.
 	// @param {AIModelNodeGetterRequest} request - The request object containing the AI model node getter.
 	// @returns {AIModelNodeResponse} The response object containing the AI model node getter.
@@ -71,12 +71,12 @@ func (c *aIModelsClient) Getter(ctx context.Context, in *AIModelNodeGetterReques
 // All implementations must embed UnimplementedAIModelsServer
 // for forward compatibility
 type AIModelsServer interface {
-	// *
+	//*
 	// Retrieves a data worker deployment.
 	// @param {Manager} request - The request object containing the AI model node configurator.
 	// @returns {AIModelNodeResponse} The response object containing the AI model node configurator.
 	Manager(context.Context, *AIModelNodeConfiguratorRequest) (*AIModelNodeResponse, error)
-	// *
+	//*
 	// Retrieves a data worker deployment.
 	// @param {AIModelNodeGetterRequest} request - The request object containing the AI model node getter.
 	// @returns {AIModelNodeResponse} The response object containing the AI model node getter.

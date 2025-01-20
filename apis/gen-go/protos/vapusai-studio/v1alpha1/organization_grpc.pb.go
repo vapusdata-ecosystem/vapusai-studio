@@ -46,22 +46,22 @@ const (
 // creating data marketplacees, storing data marketplace secrets, and retrieving data marketplace information.
 type StudioServiceClient interface {
 	StudioPublicInfo(ctx context.Context, in *v1alpha1.EmptyRequest, opts ...grpc.CallOption) (*StudioPublicInfoResponse, error)
-	// *
+	//*
 	// Manages a org.
 	// @param {OrganizationManagerRequest} request - The request object containing the org details.
 	// @returns {OrganizationResponse} The response object containing the result of the org management actions.
 	OrganizationManager(ctx context.Context, in *OrganizationManagerRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
-	// *
+	//*
 	// Retrieves a org.
 	// @param {OrganizationGetterRequest} request - The request object containing the org ID.
 	// @returns {OrganizationResponse} The response object containing the retrieved org.
 	OrganizationGetter(ctx context.Context, in *OrganizationGetterRequest, opts ...grpc.CallOption) (*OrganizationResponse, error)
-	// *
+	//*
 	// Retrieves information about theaccount.
 	// @param {AccountManager} request - The account creation request.
 	// @returns {AccountResponse} - The account creation response.
 	AccountGetter(ctx context.Context, in *v1alpha1.EmptyRequest, opts ...grpc.CallOption) (*AccountResponse, error)
-	// *
+	//*
 	// Creates a new account with the specified name.
 	// @param {AccountManager} request - The account creation request.
 	// @returns {AccountResponse} - The account creation response.
@@ -136,22 +136,22 @@ func (c *studioServiceClient) AccountManager(ctx context.Context, in *AccountMan
 // creating data marketplacees, storing data marketplace secrets, and retrieving data marketplace information.
 type StudioServiceServer interface {
 	StudioPublicInfo(context.Context, *v1alpha1.EmptyRequest) (*StudioPublicInfoResponse, error)
-	// *
+	//*
 	// Manages a org.
 	// @param {OrganizationManagerRequest} request - The request object containing the org details.
 	// @returns {OrganizationResponse} The response object containing the result of the org management actions.
 	OrganizationManager(context.Context, *OrganizationManagerRequest) (*OrganizationResponse, error)
-	// *
+	//*
 	// Retrieves a org.
 	// @param {OrganizationGetterRequest} request - The request object containing the org ID.
 	// @returns {OrganizationResponse} The response object containing the retrieved org.
 	OrganizationGetter(context.Context, *OrganizationGetterRequest) (*OrganizationResponse, error)
-	// *
+	//*
 	// Retrieves information about theaccount.
 	// @param {AccountManager} request - The account creation request.
 	// @returns {AccountResponse} - The account creation response.
 	AccountGetter(context.Context, *v1alpha1.EmptyRequest) (*AccountResponse, error)
-	// *
+	//*
 	// Creates a new account with the specified name.
 	// @param {AccountManager} request - The account creation request.
 	// @returns {AccountResponse} - The account creation response.
@@ -323,7 +323,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UtilityServiceClient interface {
-	// *
+	//*
 	// Stores the specified data marketplace secrets.
 	// @param {StoreDMSecretsRequest} request - The data marketplace secrets storage request.
 	// @returns {StoreDMSecretsResponse} - The data marketplace secrets storage response.
@@ -399,7 +399,7 @@ func (x *utilityServiceUploadStreamClient) CloseAndRecv() (*UploadResponse, erro
 // All implementations must embed UnimplementedUtilityServiceServer
 // for forward compatibility
 type UtilityServiceServer interface {
-	// *
+	//*
 	// Stores the specified data marketplace secrets.
 	// @param {StoreDMSecretsRequest} request - The data marketplace secrets storage request.
 	// @returns {StoreDMSecretsResponse} - The data marketplace secrets storage response.
