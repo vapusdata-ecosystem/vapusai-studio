@@ -40,8 +40,9 @@ class TestGenerateEmbedding(unittest.TestCase):
 
         
         self.assertTrue(response.embeddings, "Response embeddings are empty.")
+        
         for embedding in response.embeddings:
-            
+            print(embedding.index)
             self.assertIsInstance(embedding.index, int, "Index is not an integer.")
             self.assertIsInstance(list(embedding.embedding), list, "Embedding is not a list.")
             self.assertTrue(

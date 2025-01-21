@@ -4,6 +4,7 @@ import sys
 import os
 from grpc_reflection.v1alpha import reflection
 from utils.importer import proto_importer
+from interceptors.interceptor import Interceptor
 proto_importer()
 
 
@@ -15,7 +16,7 @@ from helpers.config import load_vapusaiserver_config,VapusAiConfig
 from helpers.logger import *
 from helpers import settings
 # from server.boot import ServerBoot
-from controller.vapusmlutilities import AIUtilityServicer
+from controller.vapusmlutilities import AIUtilityService
 
 class GrpcServer:
     """
@@ -68,8 +69,8 @@ class GrpcServer:
         port = cls.serviceConfig.networkConfig.mlutilitySvc.port
         service_logger.info("Starting server on port {port}", port=port)
         try:
-            cls.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-            vapus_aiutilities_pb2_grpc.add_AIUtilityServicer_to_server(AIUtilityServicer(), cls.server)
+            cls.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10),interceptors=[Interceptor()])
+            vapus_aiutilities_pb2_grpc.add_AIUtilityServicer_to_server(AIUtilityService(), cls.server)
             # SERVICE_NAMES = (
             #     pb2.DESCRIPTOR.services_by_name['AIUtility'].full_name,
             #     reflection.SERVICE_NAME,
