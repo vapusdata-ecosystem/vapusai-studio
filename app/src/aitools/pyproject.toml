@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "mlutilties"
+name = "aitools"
 version = "0.1.0"
 description = ""
 authors = ["Vikrant Singh <vikrant@vapusdata.com>"]
@@ -17,8 +17,15 @@ pylint = "^3.3.3"
 sentence-transformers = "^3.3.1"
 pyyaml = "^6.0.2"
 grpc-interceptor = "^0.15.4"
+bandit = "^1.8.2"
+pyjwt = "^2.10.1"
+pydantic-settings = "^2.7.1"
+python-dotenv = "^1.0.1"
 
 
+
+[tool.poetry.group.dev.dependencies]
+pyinstaller = "^6.11.1"
 
 [build-system]
 requires = ["poetry-core"]

@@ -5,6 +5,7 @@ import os
 from grpc_reflection.v1alpha import reflection
 from utils.importer import proto_importer
 from interceptors.interceptor import Interceptor
+import argparse
 proto_importer()
 
 
@@ -87,9 +88,12 @@ class GrpcServer:
         """
         Starts the gRPC server by loading the service configuration, initializing secrets, configuring the logger, and initializing the server.
         """ 
-        # localConfigPath = cls.serviceConfig.configPath = sys.argv[1]
-        # srvConf = sys.argv[1]
-        cls.serviceConfig = load_vapusaiserver_config(sys.argv[1])
+        
+        parser = argparse.ArgumentParser(description="Configure and start the gRPC server.")
+        parser.add_argument("--conf", required=True, help="Path to the service configuration file.")
+        args = parser.parse_args()
+        config_path = args.conf
+        cls.serviceConfig = load_vapusaiserver_config(config_path)
         settings.set_service_config(cls.serviceConfig)
         service_logger.info("Loaded service config")
         #cls.secretsConfig = init_vapus_backend_secrets(cls.serviceConfig.mainConfig.vapusBEDbStore.path, cls.serviceConfig.mainConfig.vapusBESecretStore.path)
