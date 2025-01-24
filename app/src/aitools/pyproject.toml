@@ -21,6 +21,9 @@ bandit = "^1.8.2"
 pyjwt = "^2.10.1"
 pydantic-settings = "^2.7.1"
 python-dotenv = "^1.0.1"
+pyinstaller = "^6.11.1"
+buf = "^1.0.0"
+spacy = "^3.8.4"
 
 
 

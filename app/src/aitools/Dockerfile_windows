@@ -1,5 +1,4 @@
-FROM ubuntu:24.04
-
+FROM mcr.microsoft.com/windows/nanoserver:ltsc2025
 # Install dependencies and create a user with user group
 USER root
 
@@ -9,7 +8,7 @@ RUN useradd -m -u 503 -g vapusdata vapusdata-vapusai-app
 
 RUN mkdir -p /src
 
-COPY ./dist/aitools/aitools /src
+COPY ./dist/aitools/aitools.exe /src
 
 WORKDIR /src
 
@@ -25,6 +24,6 @@ WORKDIR /src
 
 EXPOSE 9025
 
-RUN date -u
+RUN powershell -Command "Get-Date"
 
-CMD ["./aitools","--conf","/data/vapusdata"]
+CMD ["./aitools.exe","--conf","/data/vapusdata"]
