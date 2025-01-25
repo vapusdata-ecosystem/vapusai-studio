@@ -5,6 +5,7 @@ import os
 # from grpc_reflection.v1alpha import reflection
 from utils.importer import proto_importer
 from interceptors.interceptor import Interceptor
+from database.connector import DatabaseConnector
 import argparse
 proto_importer()
 
@@ -72,6 +73,11 @@ class GrpcServer:
         try:
             cls.server = grpc.server(futures.ThreadPoolExecutor(max_workers=10),interceptors=[Interceptor()])
             vapus_aiutilities_pb2_grpc.add_AIUtilityServicer_to_server(AIUtilityService(), cls.server)
+            '''
+            connecting to database
+            '''
+            
+
             # SERVICE_NAMES = (
             #     pb2.DESCRIPTOR.services_by_name['AIUtility'].full_name,
             #     reflection.SERVICE_NAME,
@@ -83,7 +89,14 @@ class GrpcServer:
             raise e
         
        
-
+    def startDBEngine(cls):
+        db_connector = DatabaseConnector()
+        dbSecret = cls.serviceConfig.mainConfig.vapusBESecretStorage.secret
+        try:
+            engine = db_connector.NewConnection(dbSecret)
+        except Exception as e:
+            raise(e)
+        return engine
     def configure(cls):
         """
         Starts the gRPC server by loading the service configuration, initializing secrets, configuring the logger, and initializing the server.
@@ -108,6 +121,7 @@ class GrpcServer:
         """
         cls.configure()
         cls.init_server()
+        egnine = cls.startDBEngine()
         # ServerBoot.boot(service_logger)
 
         try:

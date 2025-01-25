@@ -24,6 +24,9 @@ python-dotenv = "^1.0.1"
 pyinstaller = "^6.11.1"
 buf = "^1.0.0"
 spacy = "^3.8.4"
+cloud-sql-python-connector = "^1.16.0"
+sqlalchemy = "^2.0.37"
+psycopg2 = "^2.9.10"
 
 
 
