@@ -418,7 +418,7 @@ func (x *LoginCallBackRequest) GetHost() string {
 	return ""
 }
 
-// *
+//*
 // Represents a Studio access token.
 type AccessToken struct {
 	state         protoimpl.MessageState
@@ -491,7 +491,7 @@ func (x *AccessToken) GetIdToken() string {
 	return ""
 }
 
-// *
+//*
 // Represents a request to generate a Studio access token.
 type AccessTokenInterfaceRequest struct {
 	state         protoimpl.MessageState
@@ -627,7 +627,7 @@ func (x *RegisterUserRequest) GetOrganization() string {
 	return ""
 }
 
-// *
+//*
 // Represents a response containing a Studio access token.
 type AccessTokenResponse struct {
 	state         protoimpl.MessageState
@@ -692,7 +692,7 @@ func (x *AccessTokenResponse) GetTokenScope() v1alpha1.AccessTokenScope {
 	return v1alpha1.AccessTokenScope(0)
 }
 
-// *
+//*
 // Represents a request to retrieve users.
 type GetUsersRequest struct {
 	state         protoimpl.MessageState
@@ -757,7 +757,7 @@ func (x *GetUsersRequest) GetQ() string {
 	return ""
 }
 
-// *
+//*
 // Represents a response containing users.
 type GetUserResponse struct {
 	state         protoimpl.MessageState

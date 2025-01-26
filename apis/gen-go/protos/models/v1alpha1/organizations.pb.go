@@ -25,7 +25,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// *
+//*
 // Message representing an account.
 type Account struct {
 	state         protoimpl.MessageState
@@ -360,7 +360,7 @@ func (x *Organization) GetOrgType() OrganizationTypes {
 	return OrganizationTypes_CONSUMER_ORG
 }
 
-// *
+//*
 // Message representing the LDAP authentication parameters.
 type AuthnLDAP struct {
 	state         protoimpl.MessageState

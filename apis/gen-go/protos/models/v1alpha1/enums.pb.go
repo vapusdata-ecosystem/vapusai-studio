@@ -997,7 +997,7 @@ func (ApiTokenType) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{16}
 }
 
-// *
+//*
 // Enum representing the retention frequency for data compliance.
 type Frequency int32
 
@@ -1063,7 +1063,7 @@ func (Frequency) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{17}
 }
 
-// *
+//*
 // Enum representing the types of backend storage.
 type BackendStorageTypes int32
 
@@ -1120,7 +1120,7 @@ func (BackendStorageTypes) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{18}
 }
 
-// *
+//*
 // Enum representing the onboarding options for backend storage.
 type BackendStorageOnboarding int32
 
@@ -1177,7 +1177,7 @@ func (BackendStorageOnboarding) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{19}
 }
 
-// *
+//*
 // Enum representing the services for backend storage.
 type BackendStorageServices int32
 
@@ -1243,7 +1243,7 @@ func (BackendStorageServices) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{20}
 }
 
-// *
+//*
 // @enum
 // Enumerates the storage engines supported by the Vapus Data Studio system.
 type StorageEngine int32
@@ -1313,7 +1313,7 @@ func (StorageEngine) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{21}
 }
 
-// *
+//*
 // @enum
 // Enumerates the storage services supported by the Vapus Data Studio system.
 type StorageService int32
@@ -1392,7 +1392,7 @@ func (StorageService) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{22}
 }
 
-// *
+//*
 // @enum
 // Enumerates the service providers supported by the Vapus Data Studio system.
 type ServiceProvider int32
@@ -1453,7 +1453,7 @@ func (ServiceProvider) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{23}
 }
 
-// *
+//*
 // @enum
 // Enumerates the types of content in data sources.
 type DataSourceType int32
@@ -1508,7 +1508,7 @@ func (DataSourceType) EnumDescriptor() ([]byte, []int) {
 	return file_protos_models_v1alpha1_enums_proto_rawDescGZIP(), []int{24}
 }
 
-// *
+//*
 // @enum
 // Enumerates the types of packages.
 type ArtifactTypes int32

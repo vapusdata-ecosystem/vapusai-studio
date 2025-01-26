@@ -47,40 +47,40 @@ const (
 // *
 // The UserManagementService is the service interface for managing users across vapusai services.
 type UserManagementServiceClient interface {
-	// *
+	//*
 	// Generates a access token for the given user.
 	// @param {AccessTokenInterfaceRequest} request - The request object.
 	// @returns {AccessTokenResponse} The response object.
 	AccessTokenInterface(ctx context.Context, in *AccessTokenInterfaceRequest, opts ...grpc.CallOption) (*AccessTokenResponse, error)
 	RegisterUser(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*AccessTokenResponse, error)
-	// *
+	//*
 	// Manages user operations.
 	// @param {UserManagerRequest} request - The request object.
 	// @returns {UserResponse} The response object.
 	UserManager(ctx context.Context, in *UserManagerRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	RefreshTokenManager(ctx context.Context, in *RefreshTokenManagerRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 	RefreshTokenGetter(ctx context.Context, in *RefreshTokenGetterRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
-	// *
+	//*
 	// Retrieves user information.
 	// @param {UserGetterRequest} request - The request object.
 	// @returns {UserResponse} The response object.
 	UserGetter(ctx context.Context, in *UserGetterRequest, opts ...grpc.CallOption) (*UserResponse, error)
-	// *
+	//*
 	// Manages authorization operations.
 	// @param {AuthzManagerRequest} request - The request object.
 	// @returns {AuthzResponse} The response object.
 	AuthzManager(ctx context.Context, in *AuthzManagerRequest, opts ...grpc.CallOption) (*AuthzResponse, error)
-	// *
+	//*
 	// Retrieves authorization information.
 	// @param {AuthzGetterRequest} request - The request object.
 	// @returns {AuthzResponse} The response object.
 	AuthzGetter(ctx context.Context, in *AuthzGetterRequest, opts ...grpc.CallOption) (*AuthzResponse, error)
-	// *
+	//*
 	// Handles login requests.
 	// @param {models.v1alpha1.EmptyRequest} request - The request object.
 	// @returns {LoginHandlerResponse} The response object.
 	LoginHandler(ctx context.Context, in *v1alpha1.EmptyRequest, opts ...grpc.CallOption) (*LoginHandlerResponse, error)
-	// *
+	//*
 	// Handles login callbacks.
 	// @param {LoginCallBackRequest} request - The request object.
 	// @returns {AccessTokenResponse} The response object.
@@ -202,40 +202,40 @@ func (c *userManagementServiceClient) LoginCallback(ctx context.Context, in *Log
 // *
 // The UserManagementService is the service interface for managing users across vapusai services.
 type UserManagementServiceServer interface {
-	// *
+	//*
 	// Generates a access token for the given user.
 	// @param {AccessTokenInterfaceRequest} request - The request object.
 	// @returns {AccessTokenResponse} The response object.
 	AccessTokenInterface(context.Context, *AccessTokenInterfaceRequest) (*AccessTokenResponse, error)
 	RegisterUser(context.Context, *RegisterUserRequest) (*AccessTokenResponse, error)
-	// *
+	//*
 	// Manages user operations.
 	// @param {UserManagerRequest} request - The request object.
 	// @returns {UserResponse} The response object.
 	UserManager(context.Context, *UserManagerRequest) (*UserResponse, error)
 	RefreshTokenManager(context.Context, *RefreshTokenManagerRequest) (*RefreshTokenResponse, error)
 	RefreshTokenGetter(context.Context, *RefreshTokenGetterRequest) (*RefreshTokenResponse, error)
-	// *
+	//*
 	// Retrieves user information.
 	// @param {UserGetterRequest} request - The request object.
 	// @returns {UserResponse} The response object.
 	UserGetter(context.Context, *UserGetterRequest) (*UserResponse, error)
-	// *
+	//*
 	// Manages authorization operations.
 	// @param {AuthzManagerRequest} request - The request object.
 	// @returns {AuthzResponse} The response object.
 	AuthzManager(context.Context, *AuthzManagerRequest) (*AuthzResponse, error)
-	// *
+	//*
 	// Retrieves authorization information.
 	// @param {AuthzGetterRequest} request - The request object.
 	// @returns {AuthzResponse} The response object.
 	AuthzGetter(context.Context, *AuthzGetterRequest) (*AuthzResponse, error)
-	// *
+	//*
 	// Handles login requests.
 	// @param {models.v1alpha1.EmptyRequest} request - The request object.
 	// @returns {LoginHandlerResponse} The response object.
 	LoginHandler(context.Context, *v1alpha1.EmptyRequest) (*LoginHandlerResponse, error)
-	// *
+	//*
 	// Handles login callbacks.
 	// @param {LoginCallBackRequest} request - The request object.
 	// @returns {AccessTokenResponse} The response object.
